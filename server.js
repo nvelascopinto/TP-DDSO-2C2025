@@ -5,12 +5,12 @@ export class Server {
   #controllers = {}
   #app
   #routes
-  
+
   constructor(app, port) {
     this.#app = app
     this.port = port
     this.#routes = []
-    this.#app.use(express.json()) 
+    this.#app.use(express.json())
   }
 
   get app() {
@@ -34,7 +34,7 @@ export class Server {
   }
 
   configureRoutes() {
-    this.#routes.forEach(route => this.#app.use(route(this.getController.bind(this)))) 
+    this.#routes.forEach(route => this.#app.use(route(this.getController.bind(this))))
   }
 
   launch() {
