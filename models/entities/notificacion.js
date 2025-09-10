@@ -1,10 +1,10 @@
 export class Notificacion {
-    constructor(usuarioDestino, mensaje, fechaAlta, leida, fechaLeida) { // falta id
+    constructor(usuarioDestino, mensaje) { // falta id
         this.usuarioDestino = usuarioDestino
         this.mensaje = mensaje
-        this.fechaAlta = fechaAlta
-        this.leida = leida
-        this.fechaLeida = leida
+        this.fechaAlta = new Date()
+        this.leida = false
+        this.fechaLeida = null
     }
 
     marcarComoleida() {

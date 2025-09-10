@@ -1,6 +1,6 @@
 export class cambioEstadoPedido {
-    constructor(fecha, estado, pedido, usuario, motivo) {
-        this.fecha = fecha
+    constructor(estado, pedido, usuario, motivo) {
+        this.fecha = new Date() // suponemos que se crea cuando se hace cambio
         this.estado = estado // chequear q sea parte del enum
         this.pedido = pedido
         this.usuario = usuario

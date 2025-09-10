@@ -4,6 +4,6 @@ export class usuario{
         this.email = email
         this.telefono = telefono
         this.tipoUsuario = tipoUsuario
-        this.fechaAlta = date()
+        this.fechaAlta = new Date()
     }
 }

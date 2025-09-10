@@ -1,11 +1,8 @@
 import { z } from "zod"
+import { tipoUsuario } from "./tipoUsuario"
 
 export class Producto { // falta id
     constructor(vendedor, titulo, descripcion, categoria, precio, moneda, stock, fotos, activo){
-        z.object({
-        stock: z.number().nonnegative(),
-        precio: z.number().nonnegative()
-        })
         this.vendedor = vendedor
         this.titulo = titulo
         this.descripcion = descripcion
@@ -14,10 +11,11 @@ export class Producto { // falta id
         this.moneda = moneda
         this.stock = stock
         this.fotos = fotos
+        this.activo = activo
     }
 
     estaDisponible(cantidad) {
-        return this.stock >= cantidad
+        return this.stock >= cantidad && this.activo
     }
 
     reducirStock(cantidad) {
@@ -28,3 +26,13 @@ export class Producto { // falta id
         this.stock += cantidad
     }
 }
+
+export  const productoSchema =  z.object({
+        stock: z.number().nonnegative(),
+        precio: z.number().nonnegative(),
+        vendedor : z.object ({
+            tipoUsuario : z.enum(Object.values(tipoUsuario))
+        } )
+        }).refine(obj => obj.vendedor.tipoUsuario === tipoUsuario.VENDEDOR, {
+            message: "El producto solo puede ser asignado a un usuario VENDEDOR"
+        })

@@ -12,3 +12,5 @@ export class direccionEntrega {
         this.longitud = longitud
     }
 }
+
+//TODO : Chequeo de tipos
