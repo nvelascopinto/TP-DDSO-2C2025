@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { tipoUsuario } from "./tipoUsuario"
 
-export class Producto { // falta id
+export class Producto {
     constructor(vendedor, titulo, descripcion, categoria, precio, moneda, stock, fotos, activo){
         this.vendedor = vendedor
         this.titulo = titulo
@@ -27,6 +27,7 @@ export class Producto { // falta id
     }
 }
 
+// mover cuando tenga su controller o a una carpeta schema
 export  const productoSchema =  z.object({
         stock: z.number().nonnegative(),
         precio: z.number().nonnegative(),
@@ -35,4 +36,4 @@ export  const productoSchema =  z.object({
         } )
         }).refine(obj => obj.vendedor.tipoUsuario === tipoUsuario.VENDEDOR, {
             message: "El producto solo puede ser asignado a un usuario VENDEDOR"
-        })
+})

@@ -9,11 +9,21 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/ewd7QYGY)",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "zod": "^4.1.5"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ddsw-mn/2025-2c-backend-grupo-10.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ddsw-mn/2025-2c-backend-grupo-10/issues"
+  },
+  "homepage": "https://github.com/ddsw-mn/2025-2c-backend-grupo-10#readme"
 }

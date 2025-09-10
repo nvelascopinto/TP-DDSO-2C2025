@@ -9,4 +9,15 @@ export class pedidoRepository {
         this.pedidos.push(pedido)
         return pedido
     }
+
+    consultar(id){
+        const pedido = this.findById(id)
+        return pedido 
+    }
+
+    // FUNCIONES AUXILIARES
+
+    findById(id) {
+        return this.pedidos.find(p => p.id === id) || null
+    }
 }
