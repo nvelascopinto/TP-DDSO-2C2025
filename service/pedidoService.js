@@ -2,11 +2,10 @@ import { pedidoRepository } from "../models/repositories/pedidoRepository.js";
 import {estado} from "../models/entities/estadoPedido.js"
 import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js";
 import { PedidoInexistenteError } from "../errors/pedidoInexistenteError.js";
-import express from "express"
-
+import { pedidoStockInsuficiente } from "../errors/pedidoStockInsuficiente.js";
 export class PedidoService {
 
-    constructor() {
+    constructor(pedidoRepository) {
         this.pedidoRepository = pedidoRepository
     }
     
@@ -16,7 +15,7 @@ export class PedidoService {
         const stockValido = nuevoPedido.validarStock()
 
         if(!stockValido){
-            return null
+            throw new pedidoStockInsuficiente(id)
         }
         
         const pedidoGuardado = this.pedidoRepository.crear(nuevoPedido)
@@ -26,7 +25,7 @@ export class PedidoService {
 
     cancelar(cambioEstadoJSON, idPedido) {
         usuarioEsValido(cambioEstadoJSON.idUsuario)
-        pedido = pedidoEsValido(idPedido)
+        const pedido = pedidoEsValido(idPedido)
         pedidoYaEnviado(pedido)
         pedido.actualizarEstado(estado.CANCELADO,cambioEstadoJSON.idUsuario, cambioEstadoJSON.motivo)
     }

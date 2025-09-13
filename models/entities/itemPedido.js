@@ -1,6 +1,6 @@
-export class itemPedido{
+import {z} from "zod"
+export class itemPedido {
     constructor(producto, cantidad, precioUnitario){
-        
         this.producto = producto
         this.cantidad = cantidad
         this.precioUnitario = precioUnitario

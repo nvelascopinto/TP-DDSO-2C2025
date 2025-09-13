@@ -1,10 +1,11 @@
+import { conversorItems } from "./conversorItems.js";
 import { Pedido } from "../models/entities/pedido.js";
 
-export function convertJSONtoPedido (JSONPedido) {
+export function convertJSONtoPedido (nuevoPedidoJSON) {
     return new Pedido(
                 nuevoPedidoJSON.comprador,
                 nuevoPedidoJSON.vendedor,
-                nuevoPedidoJSON.items,
+                conversorItems(nuevoPedidoJSON.items),
                 nuevoPedidoJSON.moneda,
                 nuevoPedidoJSON.direccionEntrega
             )

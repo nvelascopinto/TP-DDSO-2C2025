@@ -7,7 +7,7 @@ const pathPedido = "/pedidos"
 export default function pedidosRoutes(getController) {
     const router = express.Router()
 
-    router.post(pathPedido + "/:id/cancelacion", (req,res) => {
+    router.post(pathPedido + "/:id/cancelacion", (req,res, next) => {
         try { 
         getController(PedidoController).cancelar(req,res)
         } catch (err) {
@@ -15,7 +15,7 @@ export default function pedidosRoutes(getController) {
         }
     })
 
-    router.get(pathPedido + "/:id", (req, res) => {
+    router.get(pathPedido + "/:id", (req, res, next) => {
         
         try { 
             getController(PedidoController).consultar(req, res)
@@ -24,7 +24,7 @@ export default function pedidosRoutes(getController) {
         }
     })
 
-    router.post(pathPedido, (req, res) => {
+    router.post(pathPedido, (req, res, next) => {
        
         try { 
              getController(PedidoController).crear(req, res)

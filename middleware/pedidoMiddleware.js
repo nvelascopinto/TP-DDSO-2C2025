@@ -1,7 +1,9 @@
 import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js";
 import { PedidoInexistenteError } from "../errors/pedidoInexistenteError.js";
 import {YaEnEstadoError} from  "../errors/yaEnEstadoError.js";
-export function pedidosErrorHandler(error, _req, res, _next) {
+import {pedidoStockInsuficiente} from "../errors/pedidoStockInsuficiente.js"
+
+export function pedidosErrorHandler(error, req, res, next) {
     console.log(error.message);
 
     switch (error.name) {
@@ -16,6 +18,11 @@ export function pedidosErrorHandler(error, _req, res, _next) {
             })
             return
         case YaEnEstadoError.name:
+            res.status(409).json({
+                message: error.message
+            })
+            return
+        case pedidoStockInsuficiente.name :
             res.status(409).json({
                 message: error.message
             })

@@ -8,7 +8,9 @@ import { HealthController } from "./controllers/healthController.js"
 import { PedidoController } from "./controllers/pedidoController.js"
 import { PedidoService } from "./service/pedidoService.js"
 import { pedidoRepository } from "./models/repositories/pedidoRepository.js" // cambiar a mayuscula
-// import {ProductoRepository} from "./models/repository/productoRepository.js"
+import { ProductoController } from "./controllers/productoController.js"
+import { ProductoService } from "./service/productoService.js"
+import { ProductoRepository } from "./models/repositories/productoRepository.js"
 
 const app = express()
 app.use(express.json())
@@ -24,12 +26,15 @@ const healthController = new HealthController()
 
 const pedidoRepo = new pedidoRepository()
 const pedidoService = new PedidoService(pedidoRepo)
-const pedidioController = new PedidoController(pedidoService)
+const pedidoController = new PedidoController(pedidoService)
+
+const productoRepo = new ProductoRepository()
+const productoService = new ProductoService(productoRepo)
+const productoController = new ProductoController(productoService) 
 
 server.setController(HealthController, healthController)
-server.setController(PedidoController, pedidioController)
-
-
+server.setController(PedidoController, pedidoController)
+server.setController(ProductoController, productoController)
 
 
 routes.forEach(route => server.addRoute(route))

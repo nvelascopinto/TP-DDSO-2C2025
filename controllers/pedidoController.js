@@ -9,23 +9,10 @@ export class PedidoController {
         this.pedidoService = pedidoService
     }
 
-
     crear(req, res) {
         const body = req.body
-        const resultBody = pedidoSchema.safeParse(body)
-
-        if (resultBody.error) {
-            res.status(400).json(resultBody.error.issues)
-            return
-        }
-
-        const nuevoPedido = this.pedidoService.crear(convertJSONtoPedido(resultBody.data))
-
-        if (!nuevoPedido) {
-            return res.status(409).json({
-                error: "Stock insuficiente para uno o mas productos del pedido"
-            })
-        }
+        const pedido = convertJSONtoPedido(body)
+        const nuevoPedido = this.pedidoService.crear(pedido)
 
         return res.status(201).json(nuevoPedido)
     }
@@ -74,14 +61,14 @@ export class PedidoController {
     }
 }
 
-const pedidoSchema = z.object({
+/*const pedidoSchema = z.object({
     comprador: z.object({
         tipoUsuario: z.enum(Object.values(tipoUsuario))
     }),
     
 }).refine(obj => obj.vendedor.tipoUsuario === tipoUsuario.VENDEDOR, {
     message: "El pedido solo puede ser vendido por un VENDEDOR"
-})
+})*/
 
 const idTransform = z.string().transform(((val, ctx) => {
     const num = Number(val);

@@ -13,11 +13,11 @@ export class ProductoRepository {
     actualizar(id, productoModificado) {
         const indice = this.productos.findIndex(p => p.id === id);
         if(indice === -1) return null
-        const productoModificado = {
+        const nuevoProducto = {
             ...this.productos[indice],
             ...productoModificado
         }
-        this.productos[indice] = productoModificado
-        return productoModificado
+        this.productos[indice] = nuevoProducto
+        return nuevoProducto
     }
 }

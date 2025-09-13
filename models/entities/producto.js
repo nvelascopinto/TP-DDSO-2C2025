@@ -1,8 +1,9 @@
 import { z } from "zod"
-import { tipoUsuario } from "./tipoUsuario"
+import { tipoUsuario } from "./tipoUsuario.js"
 
 export class Producto {
     constructor(vendedor, titulo, descripcion, categoria, precio, moneda, stock, fotos, activo){
+        this.id = null
         this.vendedor = vendedor
         this.titulo = titulo
         this.descripcion = descripcion
