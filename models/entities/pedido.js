@@ -1,10 +1,12 @@
 
 import estado from "./estadoPedido.js"
 import { cambioEstadoPedido } from "./cambioEstadoPedido.js"
-
+import { YaEnEstadoError } from "../../errors/yaEnEstadoError.js"
 export class Pedido {
-    constructor(comprador, items, total, moneda, direccionEntrega) {
-        this.comprador = comprador //chequear
+    constructor(comprador,vendedor, items, moneda, direccionEntrega) {
+        this.id = null // inciialmente se pone en null hasta que es guardado en el Repo
+        this.comprador = comprador // se debe chequear si es comprador ?
+        this.vendedor = vendedor
         this.items = items
         this.total = this.calcularTotal()
         this.moneda = moneda
@@ -20,7 +22,7 @@ export class Pedido {
 
     actualizarEstado(nuevoEstado, quien, motivo) {
         if(this.estado === nuevoEstado) {
-            throw new YaEnEstadoError("El producto ya esta en estado " + nuevoEstado)
+            throw new YaEnEstadoError(nuevoEstado)
         }
         this.estado = nuevoEstadostado
         const cambio = new cambioEstadoPedido(nuevoEstado, this, quien, motivo)
@@ -34,9 +36,3 @@ export class Pedido {
 
 }
 
-class YaEnEstadoError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = "YaEnEstadoError";
-  
-}}

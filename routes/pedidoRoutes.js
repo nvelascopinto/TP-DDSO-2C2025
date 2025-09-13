@@ -1,23 +1,37 @@
 import {PedidoController} from "../controllers/pedidoController.js"
-
+import { pedidosErrorHandler } from "../middleware/pedidoMiddleware.js"
 import express from "express"
 
-const pathPedido = "/pedido"
+const pathPedido = "/pedidos"
 
 export default function pedidosRoutes(getController) {
     const router = express.Router()
 
-    router.patch(pathPedido + "/:id", (req,res) => {
+    router.post(pathPedido + "/:id/cancelacion", (req,res) => {
+        try { 
         getController(PedidoController).cancelar(req,res)
+        } catch (err) {
+            next(err)
+        }
     })
 
     router.get(pathPedido + "/:id", (req, res) => {
-        getController(PedidoController).consultar(req, res)
+        
+        try { 
+            getController(PedidoController).consultar(req, res)
+        } catch (err) {
+            next(err)
+        }
     })
 
     router.post(pathPedido, (req, res) => {
-        getController(PedidoController).crear(req, res)
+       
+        try { 
+             getController(PedidoController).crear(req, res)
+        } catch (err) {
+            next(err)
+        }
     })
-
+    router.use(pedidosErrorHandler)
     return router
 }

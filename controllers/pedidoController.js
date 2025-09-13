@@ -1,12 +1,14 @@
 import { PedidoService } from "../service/pedidoService.js"
 import { z } from "zod"
 import {tipoUsuario} from "../models/entities/tipoUsuario.js"
+import { convertJSONtoPedido } from "../conversores/conversoresPedido.js"
 
 export class PedidoController {
 
     constructor(pedidoService) {
         this.pedidoService = pedidoService
     }
+
 
     crear(req, res) {
         const body = req.body
@@ -17,7 +19,7 @@ export class PedidoController {
             return
         }
 
-        const nuevoPedido = this.pedidoService.crear(resultBody.data)
+        const nuevoPedido = this.pedidoService.crear(convertJSONtoPedido(resultBody.data))
 
         if (!nuevoPedido) {
             return res.status(409).json({
@@ -44,33 +46,33 @@ export class PedidoController {
             res.status(400).json(resultBody.error.issues)
             return
         }
-        try {
-            const pedidoCancelado = this.pedidoService.cancelar(cambioEstado.body, id)
-            res.status(200).json(pedidoCancelado)
-            return
-        } catch (error) {
+        // try {
+            
+        // } catch (error) {
 
-            switch (error.name) {
-                case "UsuarioInexistenteError":
-                    res.status(401).json({
-                        message: error.message
-                    })
-                case "PedidoInexistenteError":
-                    res.status(404).json({
-                        message: error.message
-                    })
-                case "YaEnEstadoError":
-                    res.status(409).json({
-                        message: error.message
-                    })
-                default:
-                    res.status(400)
+        //     switch (error.name) {
+        //         case "UsuarioInexistenteError":
+        //             res.status(401).json({
+        //                 message: error.message
+        //             })
+        //         case "PedidoInexistenteError":
+        //             res.status(404).json({
+        //                 message: error.message
+        //             })
+        //         case "YaEnEstadoError":
+        //             res.status(409).json({
+        //                 message: error.message
+        //             })
+        //         default:
+        //             res.status(400)
 
-            }
-            return
-        }
+        //     }
+            
+        // }
 
-        return res.status(200).json(pedidoCancelado)
+        const pedidoCancelado = this.pedidoService.cancelar(cambioEstado.body, id)
+        res.status(200).json(pedidoCancelado)
+        return
     }
 
     consultar(req, res) {
@@ -99,9 +101,10 @@ export class PedidoController {
 const pedidoSchema = z.object({
     comprador: z.object({
         tipoUsuario: z.enum(Object.values(tipoUsuario))
-    })
-}).refine(obj => obj.vendedor.tipoUsuario === tipoUsuario.COMPRADOR, {
-    message: "El pedido solo puede ser asignado a un usuario COMPRADOR"
+    }),
+    
+}).refine(obj => obj.vendedor.tipoUsuario === tipoUsuario.VENDEDOR, {
+    message: "El pedido solo puede ser vendido por un VENDEDOR"
 })
 
 const idTransform = z.string().transform(((val, ctx) => {
