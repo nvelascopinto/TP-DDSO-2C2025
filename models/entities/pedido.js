@@ -1,5 +1,5 @@
 
-import estado from "./estadoPedido.js"
+import {estado} from "./estadoPedido.js"
 import { cambioEstadoPedido } from "./cambioEstadoPedido.js"
 import { YaEnEstadoError } from "../../errors/yaEnEstadoError.js"
 export class Pedido {
@@ -32,6 +32,10 @@ export class Pedido {
 
     validarStock() {
         return this.items.every(item => item.producto.estaDisponible(item.cantidad))
+    }
+
+    mostrarItems() {
+        return items.reduce((mensaje, item) =>{ mensaje + item.mostrarProducto +"/n"}, "")
     }
 
 }

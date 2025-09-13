@@ -46,30 +46,6 @@ export class PedidoController {
             res.status(400).json(resultBody.error.issues)
             return
         }
-        // try {
-            
-        // } catch (error) {
-
-        //     switch (error.name) {
-        //         case "UsuarioInexistenteError":
-        //             res.status(401).json({
-        //                 message: error.message
-        //             })
-        //         case "PedidoInexistenteError":
-        //             res.status(404).json({
-        //                 message: error.message
-        //             })
-        //         case "YaEnEstadoError":
-        //             res.status(409).json({
-        //                 message: error.message
-        //             })
-        //         default:
-        //             res.status(400)
-
-        //     }
-            
-        // }
-
         const pedidoCancelado = this.pedidoService.cancelar(cambioEstado.body, id)
         res.status(200).json(pedidoCancelado)
         return

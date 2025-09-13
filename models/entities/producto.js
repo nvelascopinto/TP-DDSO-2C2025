@@ -25,6 +25,17 @@ export class Producto {
     aumentarStock(cantidad) {
         this.stock += cantidad
     }
+
+    mostrarProducto(){
+        return "VENDEDOR : " + this.vendedor +
+                "/n TITULO: " + this.titulo + 
+                "/n DESCRIPCION: " + this.descripcion + 
+                "/n CATEGORIA: " + this.categoria + 
+                "/n PRECIO UNITARIO: " + this.precio + 
+                "/n MONEDA: " + this.moneda + 
+                "/n STOCK DISPONIBLE: " + this.stock + 
+                "/n FOTOS: " + this.fotos  
+    }
 }
 
 // mover cuando tenga su controller o a una carpeta schema

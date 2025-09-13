@@ -1,4 +1,4 @@
-import { Pedido } from "../models/entities/pedido";
+import { Pedido } from "../models/entities/pedido.js";
 
 export function convertJSONtoPedido (JSONPedido) {
     return new Pedido(
