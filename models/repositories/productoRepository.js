@@ -20,4 +20,7 @@ export class ProductoRepository {
         this.productos[indice] = nuevoProducto
         return nuevoProducto
     }
+    findById(id) {
+        return this.productos.find(p => p.id === id) || null
+    }
 }

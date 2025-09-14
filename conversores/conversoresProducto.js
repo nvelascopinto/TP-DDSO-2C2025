@@ -1,7 +1,7 @@
-import {Producto} from "../models/entities/producto.js"
+import { ProductoDTO } from "../models/DTO/productoDTO.js"
 
 export function convertJSONtoProducto (JSONProducto) {
-    return new Producto(
+    return new ProductoDTO(
                 JSONProducto.vendedor,
                 JSONProducto.titulo, 
                 JSONProducto.descripcion ,

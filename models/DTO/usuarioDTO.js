@@ -1,11 +1,8 @@
-export class Usuario{
+export class UsuarioDto {
     constructor(nombre, email, telefono, tipoUsuario){
-        this.id = null
         this.nombre = nombre
         this.email = email
         this.telefono = telefono
         this.tipoUsuario = tipoUsuario
-        this.fechaAlta = new Date()
     }
-    
 }

@@ -1,0 +1,28 @@
+import { ErrorHandler } from "../middleware/middlware.js"
+import { UsuarioController } from "../controllers/usuarioController.js"
+import express from "express"
+const pathUsuario = "/usuarios"
+
+export default function usuariosRoutes(getController) {
+    const router = express.Router()
+
+    router.post(pathUsuario, (req, res, next) => {
+       
+        try { 
+             getController(UsuarioController).crearUsuario(req, res)
+        } catch (err) {
+            next(err)
+        }
+    })
+
+    router.get(pathUsuario + "/:id", (req, res, next) => {
+       
+        try { 
+             getController(UsuarioController).verUsuario(req, res)
+        } catch (err) {
+            next(err)
+        }
+    })
+    router.use(ErrorHandler)
+    return router
+}

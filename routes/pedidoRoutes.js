@@ -1,4 +1,5 @@
 import {PedidoController} from "../controllers/pedidoController.js"
+import { ErrorHandler } from "../middleware/middlware.js"
 import { pedidosErrorHandler } from "../middleware/pedidoMiddleware.js"
 import express from "express"
 
@@ -32,6 +33,6 @@ export default function pedidosRoutes(getController) {
             next(err)
         }
     })
-    router.use(pedidosErrorHandler)
+    router.use(ErrorHandler)
     return router
 }

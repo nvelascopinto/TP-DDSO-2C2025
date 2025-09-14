@@ -1,12 +1,31 @@
 import { conversorItems } from "./conversorItems.js";
-import { Pedido } from "../models/entities/pedido.js";
+import { PedidoDTO } from "../models/DTO/pedidosDTO.js";
+import { direccionEntregaDTO } from "../models/DTO/direccionEntregaDTO.js";
 
 export function convertJSONtoPedido (nuevoPedidoJSON) {
-    return new Pedido(
+
+    
+    return new PedidoDTO(
                 nuevoPedidoJSON.comprador,
                 nuevoPedidoJSON.vendedor,
                 conversorItems(nuevoPedidoJSON.items),
                 nuevoPedidoJSON.moneda,
-                nuevoPedidoJSON.direccionEntrega
+                convertJSONtoDireccionEntrega(nuevoPedidoJSON.direccionEntrega)
             )
+}
+
+
+export function convertJSONtoDireccionEntrega(direccionJSON) {
+    return new direccionEntregaDTO(
+            direccionJSON.calle,
+            direccionJSON.altura,
+            direccionJSON.piso, 
+            direccionJSON.departamento ,
+            direccionJSON.codigoPostal ,
+            direccionJSON.ciudad ,
+            direccionJSON.provinica ,
+            direccionJSON.pais,
+            direccionJSON.latitud ,
+            direccionJSON.longitud
+    )
 }

@@ -7,7 +7,7 @@ export class Pedido {
         this.id = null // inciialmente se pone en null hasta que es guardado en el Repo
         this.comprador = comprador // se debe chequear si es comprador ?
         this.vendedor = vendedor
-        this.items = []
+        this.items = items
         this.total = this.calcularTotal()
         this.moneda = moneda
         this.direccionEntrega = direccionEntrega

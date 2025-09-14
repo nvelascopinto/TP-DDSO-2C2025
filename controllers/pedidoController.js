@@ -57,7 +57,7 @@ export class PedidoController {
             return
         }
 
-        res.json(pedido);
+        res.status(200).json(pedido);
     }
 }
 

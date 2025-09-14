@@ -1,6 +1,7 @@
 import {ProductoController} from "../controllers/productoController.js"
 import express from "express"
 import { productoErrorHandler } from "../middleware/productoMiddleware.js"
+import { ErrorHandler } from "../middleware/middlware.js"
 
 const pathProducto = "/productos"
 
@@ -15,6 +16,6 @@ export default function ProductosRoutes(getController) {
             next(err)
         }
     })
-    router.use(productoErrorHandler)
+    router.use(ErrorHandler)
     return router
 }
