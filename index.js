@@ -34,7 +34,7 @@ const usuarioService = new UsuriosService(usuarioRepository)
 const pedidoService = new PedidoService(pedidoRepo,usuarioService,productoRepo)
 const pedidoController = new PedidoController(pedidoService)
 const usuarioController = new UsuarioController(usuarioService)
-const productoService = new ProductoService(productoRepo)
+const productoService = new ProductoService(productoRepo, usuarioService)
 const productoController = new ProductoController(productoService) 
 
 server.setController(HealthController, healthController)

@@ -59,6 +59,42 @@ export class PedidoController {
 
         res.status(200).json(pedido);
     }
+
+    marcarEnviado(req, res) {
+        const resultId = idTransform.safeParse(req.params.id)
+
+        if (resultId.error) {
+            res.status(400).json(resultId.error.issues)
+            return
+        }
+
+        const id = resultId.data
+
+        const cambioEstadoBody = req.body
+        const cambioEstado = cambioEstadoSchema.safeParse(cambioEstadoBody)
+        if (cambioEstado.error) {
+            res.status(400).json(resultBody.error.issues)
+            return
+        }
+        const pedidoEnviado = this.pedidoService.marcarEnviado(cambioEstado.body, id)
+        res.status(200).json(pedidoEnviado)
+        return
+    }
+
+    verHistorialUsuario(req, res) {
+       const resultId = idTransform.safeParse(req.params.id)
+
+        if (resultId.error) {
+            res.status(400).json(resultId.error.issues)
+            return
+        }
+
+        const id = resultId.data
+
+        const pedido = this.pedidoService.consultarHistorial(id);
+
+        res.status(200).json(pedido);
+    }
 }
 
 /*const pedidoSchema = z.object({

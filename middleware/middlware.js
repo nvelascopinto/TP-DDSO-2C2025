@@ -2,7 +2,7 @@ import { DatosInvalidos } from "../errors/datosInvalidos.js";
 import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js";
 import { UsuarioSinPermiso } from "../errors/usuarioSinPermisos.js";
 import { PedidoInexistenteError } from "../errors/pedidoInexistenteError.js";
-import {YaEnEstadoError} from  "../errors/yaEnEstadoError.js";
+import { YaEnEstadoError } from  "../errors/yaEnEstadoError.js";
 import {pedidoStockInsuficiente} from "../errors/pedidoStockInsuficiente.js"
 import { ProductoInexistente } from "../errors/productoInexistente.js";
 export function ErrorHandler(error, req, res, next) {

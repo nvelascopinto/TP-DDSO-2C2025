@@ -8,3 +8,11 @@ export const estado = Object.freeze({
     ENTREGADO: "Entregado",
     CANCELADO: "Cancelado"
 })
+
+export const ordenEstados = [
+  estado.PENDIENTE,
+  estado.CONFIRMADO,
+  estado.EN_PREPARACION,
+  estado.ENVIADO,
+  estado.ENTREGADO
+];

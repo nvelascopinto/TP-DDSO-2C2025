@@ -1,9 +1,9 @@
 
 export class UsuarioSinPermiso extends Error {
-  constructor(id, accion) {
+  constructor(id) {
     super();
     this.name = "UsuarioSinPermiso";
-    this.message = "El usuario de ID " + id + " no tiene permiso par " + accion;
+    this.message = "El usuario de ID " + id + " no tiene permiso";
   
 }}
 

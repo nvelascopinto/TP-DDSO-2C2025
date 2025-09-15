@@ -15,6 +15,11 @@ export class pedidoRepository {
         return pedido 
     }
 
+    consultarHistorial(id) {
+        const pedidosUsuario = this.pedidos.filter(p => p.id === id)
+        return pedidosUsuario
+    }
+
     // FUNCIONES AUXILIARES
 
     findById(id) {

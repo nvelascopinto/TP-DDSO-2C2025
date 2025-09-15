@@ -1,5 +1,6 @@
 import { pedidoRepository } from "../models/repositories/pedidoRepository.js";
 import {estado} from "../models/entities/estadoPedido.js"
+import {ordenEstados} from "../models/entities/estadoPedido.js"
 import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js";
 import { PedidoInexistenteError } from "../errors/pedidoInexistenteError.js";
 import { pedidoStockInsuficiente } from "../errors/pedidoStockInsuficiente.js";
@@ -13,6 +14,8 @@ import { ProductoInexistente } from "../errors/productoInexistente.js";
 import { monedaValidator } from "../validadores/validadorMoneda.js";
 import { direccionSchema } from "../validadores/validadorDireccion.js";
 import { DatosInvalidos } from "../errors/datosInvalidos.js";
+import { CambioEstadoInvalidoError } from "../errors/cambioEstadoInvalidoError.js";
+import { YaEnEstadoError } from "../errors/yaEnEstadoError.js";
 export class PedidoService {
 
     constructor(pedidoRepository, usuarioService, productoRepository) {
@@ -52,6 +55,7 @@ export class PedidoService {
         const direccion = this.convertirADireccion(pedidoDTO.direccionEntregaDTO)
         return new Pedido(comprador, vendedor, items, moneda, direEntrega)
     }
+
     convertirADireccion(direDTO){
         const direRe = direccionSchema.safeParce(direDTO)
 
@@ -63,6 +67,7 @@ export class PedidoService {
         direResult = direRe.data
         return new direccionEntrega(direResult.calle, direResult.altura, direResult.piso, direResult.departamento, direResult.codigoPostal, direResult.ciudad, direResult.provincia, direResult.pais, direResult.latitud, direResult.longitud)
     }
+    
     convertirAItem(itemDTO) {
         const itemResult = itemSchema.safeParse(itemDTO)
         if(!itemResult.success) {
@@ -78,10 +83,16 @@ export class PedidoService {
     cancelar(cambioEstadoJSON, idPedido) {
         this.usuarioEsValido(cambioEstadoJSON.idUsuario)
         const pedido = this.consultar(idPedido)
-        this.pedidoYaEnviado(pedido)
+        this.esValidoCambioEstado(CANCELADO,pedido)
         pedido.actualizarEstado(estado.CANCELADO,cambioEstadoJSON.idUsuario, cambioEstadoJSON.motivo)
     }
 
+    marcarEnviado(cambioEstadoJSON, idPedido) {
+        const usuario = this.usuarioService.obtenerUsuario(id, [tipoUsuario.VENDEDOR])
+        const pedido = this.consultar(idPedido)
+        this.esValidoCambioEstado(ENVIADO, pedido)
+        pedido.actualizarEstado(estado.ENVIADO,cambioEstadoJSON.idUsuario, cambioEstadoJSON.motivo)
+    }
     consultar(id) {
         const pedido = this.pedidoRepository.consultar(id)
         if (pedido == null) {
@@ -90,7 +101,7 @@ export class PedidoService {
         return pedido
     }
 
-    usuarioEsValido(id){
+    usuarioEsValido(id) {
         const usuario = this.usuarioService.obtenerUsuario(id, [tipoUsuario.COMPRADOR, tipoUsuario.VENDEDOR, tipoUsuario.ADMIN])
         if(usuario !== null) {
             throw new UsuarioInexistenteError(id)
@@ -99,13 +110,37 @@ export class PedidoService {
     }
 
         
-    pedidoYaEnviado(pedido){
+    /* YA NO SE USA
+    pedidoYaEnviado(pedido) {
         if (pedido.estado === estado.ENVIADO) {
             throw new PedidoInexistenteError(pedido.id)
         }
         return
+    }*/
+   
+   consultarHistorial(id) {
+        if (this.usuarioEsValido(id)) { // chequear
+           const historialPedidos = this.pedidoRepository.consultarHistorial(id)
+           if(historialPedidos == null) {
+             throw new HistorialInexistenteError(id)
+           }
+           return historialPedidos
+        }
     }
     
+    esValidoCambioEstado(nuevoEstado, pedido){
+        const estadoActual = pedido.estado
+        const indiceEstadoActual = ordenEstados.indexOf(estadoActual);
+        const indiceEstadoNuevo = ordenEstados.indexOf(nuevoEstado);
+
+        if(indiceEstadoNuevo == indiceEstadoActual) {
+            throw new YaEnEstadoError(nuevoEstado)
+           }
+        if(indiceEstadoNuevo > indiceEstadoActual) {
+             throw new CambioEstadoInvalidoError(estadoActual,nuevoEstado)
+           }
+        return true
+        }
 }
 
 

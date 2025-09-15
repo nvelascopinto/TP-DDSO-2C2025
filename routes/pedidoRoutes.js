@@ -16,6 +16,14 @@ export default function pedidosRoutes(getController) {
         }
     })
 
+    router.post(pathPedido + "/:id/enviado", (req,res, next) => {
+        try { 
+        getController(PedidoController).marcarEnviado(req,res)
+        } catch (err) {
+            next(err)
+        }
+    })
+
     router.get(pathPedido + "/:id", (req, res, next) => {
         
         try { 
@@ -33,6 +41,15 @@ export default function pedidosRoutes(getController) {
             next(err)
         }
     })
+
+    router.get(pathPedido + "/historial/:id", (req, res, next) => {
+        try {
+            getController(PedidoController).verHistorialUsuario(req, res); // cambiar nombre
+        } catch (err) {
+            next(err);
+        }
+    });
+
     router.use(ErrorHandler)
     return router
 }

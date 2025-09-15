@@ -19,7 +19,7 @@ export class UsuarioController {
         
            
         
-        const usuario= convertJSONtoUsuario(usuarioResult.data)
+        const usuario = convertJSONtoUsuario(body)
         
         const nuevoUsuario = this.usuarioService.crearUsuario(usuario)
 
