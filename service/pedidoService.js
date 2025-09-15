@@ -1,5 +1,5 @@
 import { pedidoRepository } from "../models/repositories/pedidoRepository.js";
-import {estado} from "../models/entities/estadoPedido.js"
+import {autorizadosAEstado, estado} from "../models/entities/estadoPedido.js"
 import {ordenEstados} from "../models/entities/estadoPedido.js"
 import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js";
 import { PedidoInexistenteError } from "../errors/pedidoInexistenteError.js";
@@ -96,11 +96,11 @@ export class PedidoService {
         pedido.actualizarEstado(estado.CANCELADO,cambioEstadoJSON.idUsuario, cambioEstadoJSON.motivo)
     }
 
-    marcarEnviado(cambioEstadoJSON, idPedido) {
-        const usuario = this.usuarioService.obtenerUsuario(id, [tipoUsuario.VENDEDOR])
+    marcarEnviado(idVendedor, idPedido) {
+        this.usuarioService.obtenerUsuario(idVendedor, [tipoUsuario.VENDEDOR])
         const pedido = this.consultar(idPedido)
         this.esValidoCambioEstado(estado.ENVIADO, pedido)
-        pedido.actualizarEstado(estado.ENVIADO,cambioEstadoJSON.idUsuario, cambioEstadoJSON.motivo)
+        pedido.actualizarEstado(estado.ENVIADO,idVendedor, "Envio del pedido")
     }
     consultar(id) {
         const pedido = this.pedidoRepository.consultar(id)
@@ -118,17 +118,16 @@ export class PedidoService {
         return true
     }
 
-        
-    /* YA NO SE USA
-    pedidoYaEnviado(pedido) {
-        if (pedido.estado === estado.ENVIADO) {
-            throw new PedidoInexistenteError(pedido.id)
+    usuarioEstaAutorizado(id, roles) {
+        const usuario = this.usuarioService.obtenerUsuario(id, roles )
+        if(usuario == null) {
+            throw new UsuarioInexistenteError(id)
         }
-        return
-    }*/
-   
+        return true
+    }
+
    consultarHistorial(id) {
-        if (this.usuarioEsValido(id)) { // chequear
+        if (this.usuarioEsValido(id)) { 
            const historialPedidos = this.pedidoRepository.consultarHistorial(id)
            if(historialPedidos.length == 0) {
              throw new HistorialInexistenteError(id)
@@ -145,11 +144,18 @@ export class PedidoService {
         if(indiceEstadoNuevo == indiceEstadoActual) {
             throw new YaEnEstadoError(nuevoEstado)
            }
-        if(indiceEstadoNuevo > indiceEstadoActual) {
+        if(indiceEstadoNuevo < indiceEstadoActual) {
              throw new CambioEstadoInvalidoError(estadoActual,nuevoEstado)
            }
         return true
         }
+
+    cambioEstado(cambioEstado, idPedido) {
+        this.usuarioEstaAutorizado(cambioEstado.idUsuario, autorizadosAEstado[cambioEstado.estado])
+        const pedido = this.consultar(idPedido)
+        this.esValidoCambioEstado(estado[cambioEstado.estado],pedido)
+        pedido.actualizarEstado(estado[cambioEstado.estado],cambioEstado.idUsuario, cambioEstado.motivo)
+    }
 }
 
 

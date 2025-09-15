@@ -1,6 +1,6 @@
 export class CambioEstadoInvalidoError extends Error {
   constructor(estadoActual, nuevoEstado) {
-    super(message);
+    super();
     this.name = "CambioEstadoInvalidoError"
-    this.message = "El pedido no puede pasar del estado " + estadoActual + " a el estado " + nuevoEstado
+    this.message = "El pedido no puede pasar del estado " + estadoActual + " al estado " + nuevoEstado
 }}

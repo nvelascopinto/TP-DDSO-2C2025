@@ -40,6 +40,8 @@ export class UsuarioController {
 
         res.status(200).json(usuario);
     }
+
+    
 }
 
 const idTransform = z.string().transform(((val, ctx) => {

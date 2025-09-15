@@ -8,7 +8,7 @@ const pathPedido = "/pedidos"
 export default function pedidosRoutes(getController) {
     const router = express.Router()
 
-    router.post(pathPedido + "/:id/cancelacion", (req,res, next) => {
+    router.post(pathPedido + "/:id/cancelado", (req,res, next) => {
         try { 
         getController(PedidoController).cancelar(req,res)
         } catch (err) {
@@ -45,6 +45,14 @@ export default function pedidosRoutes(getController) {
     router.get(pathPedido + "/historial/:id", (req, res, next) => {
         try {
             getController(PedidoController).verHistorialUsuario(req, res); // cambiar nombre
+        } catch (err) {
+            next(err);
+        }
+    });
+
+    router.post(pathPedido + "/:id/cambioEstado", (req, res, next) => {
+        try {
+            getController(PedidoController).cambioEstado(req, res); // cambiar nombre
         } catch (err) {
             next(err);
         }
