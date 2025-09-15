@@ -1,7 +1,7 @@
 import { tipoUsuario } from "../models/entities/tipoUsuario.js";
 
 export function tipoUsuarioValidator (tipoUser){
-    if(!Object.keys(tipoUsuario).includes(tipoUser)){
+    if(!Object.values(tipoUsuario).includes(tipoUser)){
         return null
     }
     return tipoUser

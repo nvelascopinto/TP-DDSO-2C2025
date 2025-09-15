@@ -12,12 +12,13 @@ export class UsuriosService {
         this.usuarioRepository = usuarioRepository
     }
     obtenerUsuario(id, roles) {
+        console.log("id de obtenerUsuario",id)
         const user = this.usuarioRepository.findById(id)
         if(!user) {
             throw new UsuarioInexistenteError(id)
         }
 
-        if(!roles.includes(tipoUsuario[user.tipoUsuario])) {
+        if(!roles.includes(user.tipoUsuario)) {
             throw new UsuarioSinPermiso(id)
         
         }
@@ -46,6 +47,7 @@ export class UsuriosService {
             throw new UsuarioInexistenteError(id)
         }
 
+        
         return usuario
     }
  }

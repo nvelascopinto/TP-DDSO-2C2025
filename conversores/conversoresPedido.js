@@ -23,7 +23,7 @@ export function convertJSONtoDireccionEntrega(direccionJSON) {
             direccionJSON.departamento ,
             direccionJSON.codigoPostal ,
             direccionJSON.ciudad ,
-            direccionJSON.provinica ,
+            direccionJSON.provincia ,
             direccionJSON.pais,
             direccionJSON.latitud ,
             direccionJSON.longitud

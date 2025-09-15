@@ -9,5 +9,5 @@ export function convertJSONtoUsuario (JSONUsuario) {
                 JSONUsuario.telefono ,
                 JSONUsuario.tipoUsuario
                 
-            )
+    )
 }

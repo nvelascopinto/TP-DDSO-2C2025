@@ -5,6 +5,7 @@ import { PedidoInexistenteError } from "../errors/pedidoInexistenteError.js";
 import { YaEnEstadoError } from  "../errors/yaEnEstadoError.js";
 import {pedidoStockInsuficiente} from "../errors/pedidoStockInsuficiente.js"
 import { ProductoInexistente } from "../errors/productoInexistente.js";
+import { HistorialInexistenteError } from "../errors/historialInexistenteError.js";
 export function ErrorHandler(error, req, res, next) {
 
     console.log(error.message);
@@ -44,6 +45,11 @@ export function ErrorHandler(error, req, res, next) {
             res.status(409).json({
                 message: error.message
             })
+            return
+        case HistorialInexistenteError.name :
+                    res.status(404).json({
+                        message: error.message
+                    })
             return
         default:
             res.status(500).json({error : "Algo salio mal en el Servidor"})

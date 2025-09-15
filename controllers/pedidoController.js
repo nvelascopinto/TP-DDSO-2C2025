@@ -30,10 +30,10 @@ export class PedidoController {
         const cambioEstadoBody = req.body
         const cambioEstado = cambioEstadoSchema.safeParse(cambioEstadoBody)
         if (cambioEstado.error) {
-            res.status(400).json(resultBody.error.issues)
+            res.status(400).json(cambioEstado.error.issues)
             return
         }
-        const pedidoCancelado = this.pedidoService.cancelar(cambioEstado.body, id)
+        const pedidoCancelado = this.pedidoService.cancelar(cambioEstado.data, id)
         res.status(200).json(pedidoCancelado)
         return
     }

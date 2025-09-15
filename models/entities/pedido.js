@@ -13,7 +13,7 @@ export class Pedido {
         this.direccionEntrega = direccionEntrega
         this.estado = estado.PENDIENTE
         this.fechaCreacion = new Date()
-        this.historialPedidos = []
+        this.historialCambioPedidos = []
     }
 
     calcularTotal() {
@@ -25,8 +25,8 @@ export class Pedido {
             throw new YaEnEstadoError(nuevoEstado)
         }
         this.estado = nuevoEstado
-        const cambio = new cambioEstadoPedido(nuevoEstado, this, quien, motivo)
-        this.historialPedidos.push(cambio)
+        const cambio = new cambioEstadoPedido(nuevoEstado, this.id, quien, motivo)
+        this.historialCambioPedidos.push(cambio)
         return
     }
 

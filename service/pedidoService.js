@@ -16,6 +16,7 @@ import { direccionSchema } from "../validadores/validadorDireccion.js";
 import { DatosInvalidos } from "../errors/datosInvalidos.js";
 import { CambioEstadoInvalidoError } from "../errors/cambioEstadoInvalidoError.js";
 import { YaEnEstadoError } from "../errors/yaEnEstadoError.js";
+import { HistorialInexistenteError } from "../errors/historialInexistenteError.js";
 export class PedidoService {
 
     constructor(pedidoRepository, usuarioService, productoRepository) {
@@ -42,9 +43,13 @@ export class PedidoService {
     convertirAPedido (pedidoDTO) {
         const comprador =  this.usuarioService.obtenerUsuario(pedidoDTO.compradorID, [tipoUsuario.COMPRADOR])
         const vendedor = this.usuarioService.obtenerUsuario(pedidoDTO.vendedorID, [tipoUsuario.VENDEDOR])
-
-        const items = pedidoDTO.itemsDTO.map(item => this.convertirAItem(item))
-        if (items.every(item => item.vendedor.id === vendedor.id)) {
+        console.log("COMPRADOR", comprador)
+        const items = pedidoDTO.itemsDTO.map(item =>{
+            const it = this.convertirAItem(item)
+            console.log("ITEM EN CONVERTIR PEDIDO", item)
+            return it
+        } )
+        if (!items.every(item => item.producto.vendedor.id === vendedor.id)) {
             throw new DatosInvalidos("Los productos del pedido deben ser todos del mismo vendedor")
         }
         const moneda = monedaValidator(pedidoDTO.moneda)
@@ -52,45 +57,49 @@ export class PedidoService {
             throw new PedidoDatosInvalidosInvalido("La moneda ingresada no esta dentro de las opciones ofrecidas")
         }
 
-        const direccion = this.convertirADireccion(pedidoDTO.direccionEntregaDTO)
+        const direEntrega = this.convertirADireccion(pedidoDTO.direccionEntregaDTO)
+        console.log("DIRECCION ENTREGA CONVERTIDA", direEntrega)
         return new Pedido(comprador, vendedor, items, moneda, direEntrega)
     }
 
     convertirADireccion(direDTO){
-        const direRe = direccionSchema.safeParce(direDTO)
-
+        console.log(direDTO)
+        const direRe = direccionSchema.safeParse(direDTO)
+        console.log("SAFE PARSE", direRe)
         if(!direRe.success) {
             
             throw new DatosInvalidos(direRe.error.issues[0].message)
         
         }
-        direResult = direRe.data
+        const direResult = direDTO
+        console.log(direDTO)
         return new direccionEntrega(direResult.calle, direResult.altura, direResult.piso, direResult.departamento, direResult.codigoPostal, direResult.ciudad, direResult.provincia, direResult.pais, direResult.latitud, direResult.longitud)
     }
     
     convertirAItem(itemDTO) {
+       
         const itemResult = itemSchema.safeParse(itemDTO)
         if(!itemResult.success) {
             throw new DatosInvalidos(itemResult.error.issues[0].message)
         }
-        const producto = this.productoRepository.findById(itemResult.data.productoID)
+        const producto = this.productoRepository.findById(itemDTO.productoID)
         if(!producto) {
-            throw new ProductoInexistente(itemResult.data.productoID)
+            throw new ProductoInexistente(itemDTO.productoID)
         }
-        return new itemPedido(producto,itemResult.data.cantidad, itemResult.data.precioUnitario)
+        return new itemPedido(producto,itemDTO.cantidad, itemDTO.precioUnitario)
     }
 
     cancelar(cambioEstadoJSON, idPedido) {
         this.usuarioEsValido(cambioEstadoJSON.idUsuario)
         const pedido = this.consultar(idPedido)
-        this.esValidoCambioEstado(CANCELADO,pedido)
+        this.esValidoCambioEstado(estado.CANCELADO,pedido)
         pedido.actualizarEstado(estado.CANCELADO,cambioEstadoJSON.idUsuario, cambioEstadoJSON.motivo)
     }
 
     marcarEnviado(cambioEstadoJSON, idPedido) {
         const usuario = this.usuarioService.obtenerUsuario(id, [tipoUsuario.VENDEDOR])
         const pedido = this.consultar(idPedido)
-        this.esValidoCambioEstado(ENVIADO, pedido)
+        this.esValidoCambioEstado(estado.ENVIADO, pedido)
         pedido.actualizarEstado(estado.ENVIADO,cambioEstadoJSON.idUsuario, cambioEstadoJSON.motivo)
     }
     consultar(id) {
@@ -103,7 +112,7 @@ export class PedidoService {
 
     usuarioEsValido(id) {
         const usuario = this.usuarioService.obtenerUsuario(id, [tipoUsuario.COMPRADOR, tipoUsuario.VENDEDOR, tipoUsuario.ADMIN])
-        if(usuario !== null) {
+        if(usuario == null) {
             throw new UsuarioInexistenteError(id)
         }
         return true
@@ -121,7 +130,7 @@ export class PedidoService {
    consultarHistorial(id) {
         if (this.usuarioEsValido(id)) { // chequear
            const historialPedidos = this.pedidoRepository.consultarHistorial(id)
-           if(historialPedidos == null) {
+           if(historialPedidos.length == 0) {
              throw new HistorialInexistenteError(id)
            }
            return historialPedidos

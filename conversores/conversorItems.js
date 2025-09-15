@@ -1,11 +1,12 @@
-import {itemPedido} from "../models/entities/itemPedido.js"
-
+import { itemDTO } from "../models/DTO/itemDTO.js";
 export function conversorItems(nuevoJSONItems) {
-    return nuevoJSONItems.forEach(item =>
+    const items = nuevoJSONItems.map(item => 
         new itemDTO(
             item.producto,
             item.cantidad,
-            item.precioUnitario
-        )
+            item.precioUnitario)
+    
+
     );
+    return items
 }

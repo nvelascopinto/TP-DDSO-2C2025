@@ -8,7 +8,7 @@ export const direccionSchema = z.object({
     departamento : z.string().nullable(),
     codigoPostal : z.number(),
     ciudad : z.string(),
-    provincia: z.string(),
+    provinica: z.string(),
     pais: z.string(),
     latitud :z.number(),
     longitud : z.number(),
