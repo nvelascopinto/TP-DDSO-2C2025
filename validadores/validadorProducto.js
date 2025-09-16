@@ -13,7 +13,6 @@ export const productoSchema = z.object({
   precio: z.number().nonnegative("Precio no puede ser negativo"),
   stock: z
     .number()
-    .int("Stock debe ser un entero")
-    .nonnegative("Stock no puede ser negativo"),
+    .positive("Stock debe ser un numero mayor a 0"),
   activo: z.boolean(),
 })

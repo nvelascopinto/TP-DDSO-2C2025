@@ -31,8 +31,8 @@ export class PedidoService {
       
         const stockValido = nuevoPedido.validarStock()
 
-        if(!stockValido){
-            throw new pedidoStockInsuficiente(id)
+        if(stockValido === false){
+            throw new pedidoStockInsuficiente()
         }
         
         const pedidoGuardado = this.pedidoRepository.crear(nuevoPedido)
@@ -43,10 +43,8 @@ export class PedidoService {
     convertirAPedido (pedidoDTO) {
         const comprador =  this.usuarioService.obtenerUsuario(pedidoDTO.compradorID, [tipoUsuario.COMPRADOR])
         const vendedor = this.usuarioService.obtenerUsuario(pedidoDTO.vendedorID, [tipoUsuario.VENDEDOR])
-        console.log("COMPRADOR", comprador)
         const items = pedidoDTO.itemsDTO.map(item =>{
             const it = this.convertirAItem(item)
-            console.log("ITEM EN CONVERTIR PEDIDO", item)
             return it
         } )
         if (!items.every(item => item.producto.vendedor.id === vendedor.id)) {
@@ -63,16 +61,15 @@ export class PedidoService {
     }
 
     convertirADireccion(direDTO){
-        console.log(direDTO)
+      
         const direRe = direccionSchema.safeParse(direDTO)
-        console.log("SAFE PARSE", direRe)
+        
         if(!direRe.success) {
             
             throw new DatosInvalidos(direRe.error.issues[0].message)
         
         }
         const direResult = direDTO
-        console.log(direDTO)
         return new direccionEntrega(direResult.calle, direResult.altura, direResult.piso, direResult.departamento, direResult.codigoPostal, direResult.ciudad, direResult.provincia, direResult.pais, direResult.latitud, direResult.longitud)
     }
     
@@ -90,16 +87,23 @@ export class PedidoService {
     }
 
     cancelar(cambioEstadoJSON, idPedido) {
-        this.usuarioEsValido(cambioEstadoJSON.idUsuario)
         const pedido = this.consultar(idPedido)
-        this.esValidoCambioEstado(estado.CANCELADO,pedido)
+         const valido =this.usuarioEsValidoCompra(cambioEstadoJSON.idUsuario, pedido)
+       
+      
+        if(valido === false) {
+            throw new UsuarioSinPermiso(cambioEstadoJSON.idUsuario)
+        }
+
+        this.esValidoCambioEstado(estado.CANCELADO,pedido.estado)
         pedido.actualizarEstado(estado.CANCELADO,cambioEstadoJSON.idUsuario, cambioEstadoJSON.motivo)
+        return pedido 
     }
 
     marcarEnviado(idVendedor, idPedido) {
         this.usuarioService.obtenerUsuario(idVendedor, [tipoUsuario.VENDEDOR])
         const pedido = this.consultar(idPedido)
-        this.esValidoCambioEstado(estado.ENVIADO, pedido)
+        this.esValidoCambioEstado(estado.ENVIADO, pedido.estado)
         pedido.actualizarEstado(estado.ENVIADO,idVendedor, "Envio del pedido")
     }
     consultar(id) {
@@ -107,14 +111,18 @@ export class PedidoService {
         if (pedido == null) {
             throw new PedidoInexistenteError(id)
         }
+    
         return pedido
     }
 
+    usuarioEsValidoCompra(id, pedido) {
+        usuario = this.usuarioService.obtenerUsuario(id, [tipoUsuario.COMPRADOR, tipoUsuario.VENDEDOR, tipoUsuario.ADMIN])
+        
+        return (pedido.comprador.id == usuario.id || pedido.vendedor.id == usuario.id || usuario.tipoUsuario === "Admin")
+    }
     usuarioEsValido(id) {
-        const usuario = this.usuarioService.obtenerUsuario(id, [tipoUsuario.COMPRADOR, tipoUsuario.VENDEDOR, tipoUsuario.ADMIN])
-        if(usuario == null) {
-            throw new UsuarioInexistenteError(id)
-        }
+        usuario = this.usuarioService.obtenerUsuario(id, [tipoUsuario.COMPRADOR, tipoUsuario.VENDEDOR, tipoUsuario.ADMIN])
+        
         return true
     }
 
@@ -136,27 +144,25 @@ export class PedidoService {
         }
     }
     
-    esValidoCambioEstado(nuevoEstado, pedido){
-        const estadoActual = pedido.estado
+    esValidoCambioEstado(nuevoEstado, estadoActual){
+       
         const indiceEstadoActual = ordenEstados.indexOf(estadoActual);
         const indiceEstadoNuevo = ordenEstados.indexOf(nuevoEstado);
 
         if(indiceEstadoNuevo == indiceEstadoActual) {
             throw new YaEnEstadoError(nuevoEstado)
            }
-        if(indiceEstadoNuevo < indiceEstadoActual) {
+        if(indiceEstadoNuevo < indiceEstadoActual ||  estadoActual == estado.CANCELADO) {
              throw new CambioEstadoInvalidoError(estadoActual,nuevoEstado)
            }
         return true
         }
 
     cambioEstado(cambioEstado, idPedido) {
+        
         this.usuarioEstaAutorizado(cambioEstado.idUsuario, autorizadosAEstado[cambioEstado.estado])
         const pedido = this.consultar(idPedido)
-        this.esValidoCambioEstado(estado[cambioEstado.estado],pedido)
+        this.esValidoCambioEstado(estado[cambioEstado.estado],pedido.estado)
         pedido.actualizarEstado(estado[cambioEstado.estado],cambioEstado.idUsuario, cambioEstado.motivo)
     }
 }
-
-
-

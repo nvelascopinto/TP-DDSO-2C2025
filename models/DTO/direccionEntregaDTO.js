@@ -6,7 +6,7 @@ export class direccionEntregaDTO {
         this.departamento = departamento
         this.codigoPostal = codigoPostal
         this.ciudad = ciudad
-        this.provinica = provincia
+        this.provincia = provincia
         this.pais = pais
         this.latitud = latitud
         this.longitud = longitud

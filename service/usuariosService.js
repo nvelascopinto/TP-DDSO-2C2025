@@ -8,12 +8,16 @@ import { Usuario } from "../models/entities/usuario.js"
 import { UsuarioRepository } from "../models/repositories/usuarioRepository.js"
 
 export class UsuriosService { 
+
     constructor(usuarioRepository) {
         this.usuarioRepository = usuarioRepository
     }
+
     obtenerUsuario(id, roles) {
+
         console.log("id de obtenerUsuario",id)
         const user = this.usuarioRepository.findById(id)
+        
         if(!user) {
             throw new UsuarioInexistenteError(id)
         }
@@ -35,19 +39,19 @@ export class UsuriosService {
         }
         
         let nuevoUsuario =  new Usuario(usuarioResult.nombre, usuarioResult.email, usuarioResult.telefono, usuarioResult.tipoUsuario)
-        console.log(nuevoUsuario)
+        
         return this.usuarioRepository.crear(nuevoUsuario)
 
     }
 
     buscar(id) {
+
         const usuario = this.usuarioRepository.findById(id)
 
         if(!usuario) {
             throw new UsuarioInexistenteError(id)
         }
 
-        
         return usuario
     }
  }

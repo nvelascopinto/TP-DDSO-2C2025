@@ -17,7 +17,6 @@ export class ProductoService {
     
     crear(productoDTO) {
 
-
         const resultProducto = this.convertirDTOaProducto(productoDTO)
 
         const productoGuardado = this.productoRepository.crear(resultProducto)
@@ -30,18 +29,18 @@ export class ProductoService {
         const resultProd = productoSchema.safeParse(productoDTO)
         
        if(resultProd.error) {
-        
         throw new DatosInvalidos(resultProd.error.issues.map(i => i.message))
        }
+
        const resultProducto = resultProd.data
        const moneda = monedaValidator(productoDTO.moneda)
+
        if (!moneda) {
                 throw new DatosInvalidos("La moneda ingresada no esta dentro de las opciones ofrecidas")
         }
+
        const vendedor = this.usuarioService.obtenerUsuario(productoDTO.vendedorID, [tipoUsuario.VENDEDOR])
 
        return new Producto(vendedor, resultProducto.titulo, resultProducto.descripcion, resultProducto.categoria, resultProducto.precio, moneda, resultProducto.stock, resultProducto.fotos, resultProducto.activo)
     }
-
-
 }

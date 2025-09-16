@@ -1,6 +1,6 @@
 export class pedidoStockInsuficiente extends Error {
-  constructor(IDpedido) {
+  constructor() {
     super()
     this.name = "PedidoStockInsuficiente"
-    this.message = "Stock insuficiente para uno o mas productos del pedido: " + IDpedido
+    this.message = "Stock insuficiente para uno o mas productos del pedido: "
 }}
