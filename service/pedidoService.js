@@ -1,22 +1,22 @@
-import { pedidoRepository } from "../models/repositories/pedidoRepository.js";
+import { pedidoRepository } from "../models/repositories/pedidoRepository.js"
 import {autorizadosAEstado, estado} from "../models/entities/estadoPedido.js"
 import {ordenEstados} from "../models/entities/estadoPedido.js"
-import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js";
-import { PedidoInexistenteError } from "../errors/pedidoInexistenteError.js";
-import { pedidoStockInsuficiente } from "../errors/pedidoStockInsuficiente.js";
-import { Pedido } from "../models/entities/pedido.js";
-import { direccionEntrega } from "../models/entities/direccionEntrega.js";
-import { tipoUsuario } from "../models/entities/tipoUsuario.js";
-import { UsuarioSinPermiso } from "../errors/usuarioSinPermisos.js";
-import { itemPedido } from "../models/entities/itemPedido.js";
-import { itemSchema } from "../validadores/itemSchema.js";
-import { ProductoInexistente } from "../errors/productoInexistente.js";
-import { monedaValidator } from "../validadores/validadorMoneda.js";
-import { direccionSchema } from "../validadores/validadorDireccion.js";
-import { DatosInvalidos } from "../errors/datosInvalidos.js";
-import { CambioEstadoInvalidoError } from "../errors/cambioEstadoInvalidoError.js";
-import { YaEnEstadoError } from "../errors/yaEnEstadoError.js";
-import { HistorialInexistenteError } from "../errors/historialInexistenteError.js";
+import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js"
+import { PedidoInexistenteError } from "../errors/pedidoInexistenteError.js"
+import { pedidoStockInsuficiente } from "../errors/pedidoStockInsuficiente.js"
+import { Pedido } from "../models/entities/pedido.js"
+import { direccionEntrega } from "../models/entities/direccionEntrega.js"
+import { tipoUsuario } from "../models/entities/tipoUsuario.js"
+import { UsuarioSinPermiso } from "../errors/usuarioSinPermisos.js"
+import { itemPedido } from "../models/entities/itemPedido.js"
+import { itemSchema } from "../validadores/itemSchema.js"
+import { ProductoInexistente } from "../errors/productoInexistente.js"
+import { monedaValidator } from "../validadores/validadorMoneda.js"
+import { direccionSchema } from "../validadores/validadorDireccion.js"
+import { DatosInvalidos } from "../errors/datosInvalidos.js"
+import { CambioEstadoInvalidoError } from "../errors/cambioEstadoInvalidoError.js"
+import { YaEnEstadoError } from "../errors/yaEnEstadoError.js"
+import { HistorialInexistenteError } from "../errors/historialInexistenteError.js"
 export class PedidoService {
 
     constructor(pedidoRepository, usuarioService, productoRepository) {
@@ -159,7 +159,7 @@ export class PedidoService {
         }
 
     cambioEstado(cambioEstado, idPedido) {
-        
+
         this.usuarioEstaAutorizado(cambioEstado.idUsuario, autorizadosAEstado[cambioEstado.estado])
         const pedido = this.consultar(idPedido)
         this.esValidoCambioEstado(estado[cambioEstado.estado],pedido.estado)
