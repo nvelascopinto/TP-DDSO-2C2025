@@ -10,11 +10,6 @@ export class pedidoRepository {
         return pedido
     }
 
-    consultar(id){
-        const pedido = this.findById(id)
-        return pedido 
-    }
-
     consultarHistorial(id) {
         const pedidosUsuario = this.pedidos.filter(p => p.comprador.id === id)
         return pedidosUsuario

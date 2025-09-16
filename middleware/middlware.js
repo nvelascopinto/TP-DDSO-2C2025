@@ -2,8 +2,8 @@ import { DatosInvalidos } from "../errors/datosInvalidos.js";
 import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js";
 import { UsuarioSinPermiso } from "../errors/usuarioSinPermisos.js";
 import { PedidoInexistenteError } from "../errors/pedidoInexistenteError.js";
-import { YaEnEstadoError } from  "../errors/yaEnEstadoError.js";
-import {pedidoStockInsuficiente} from "../errors/pedidoStockInsuficiente.js"
+import { YaEnEstadoError } from "../errors/yaEnEstadoError.js";
+import { PedidoStockInsuficiente } from "../errors/pedidoStockInsuficiente.js"
 import { ProductoInexistente } from "../errors/productoInexistente.js";
 import { HistorialInexistenteError } from "../errors/historialInexistenteError.js";
 import { CambioEstadoInvalidoError } from "../errors/cambioEstadoInvalidoError.js";
@@ -22,7 +22,7 @@ export function ErrorHandler(error, req, res, next) {
                 message: error.message
             })
             return
-        case DatosInvalidos.name :
+        case DatosInvalidos.name:
             res.status(400).json({
                 message: error.message
             })
@@ -32,7 +32,7 @@ export function ErrorHandler(error, req, res, next) {
                 message: error.message
             })
             return
-        case ProductoInexistente.name : 
+        case ProductoInexistente.name:
             res.status(404).json({
                 message: error.message
             })
@@ -42,24 +42,24 @@ export function ErrorHandler(error, req, res, next) {
                 message: error.message
             })
             return
-        case pedidoStockInsuficiente.name :
+        case PedidoStockInsuficiente.name:
             res.status(409).json({
                 message: error.message
             })
             return
-        case HistorialInexistenteError.name :
-                    res.status(404).json({
-                        message: error.message
-                    })
+        case HistorialInexistenteError.name:
+            res.status(404).json({
+                message: error.message
+            })
             return
         case CambioEstadoInvalidoError.name:
-                    res.status(409).json({
-                        message: error.message
-                    })
-                    return
-        default:
-            res.status(500).json({error : "Algo salio mal en el Servidor"})
+            res.status(409).json({
+                message: error.message
+            })
             return
-        }    
-        
+        default:
+            res.status(500).json({ error: "Algo salio mal en el Servidor" })
+            return
+    }
+
 }

@@ -14,11 +14,10 @@ export class UsuriosService {
     }
 
     obtenerUsuario(id, roles) {
-
-        console.log("id de obtenerUsuario",id)
+        
         const user = this.usuarioRepository.findById(id)
         
-        if(!user) {
+        if(user == null) {
             throw new UsuarioInexistenteError(id)
         }
 

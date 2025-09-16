@@ -1,18 +1,14 @@
-import {z} from "zod"
-export class itemPedido {
-    constructor(producto, cantidad, precioUnitario){
+import { z } from "zod"
+export class ItemPedido {
+    constructor(producto, cantidad, precioUnitario) {
         this.producto = producto
         this.cantidad = cantidad
         this.precioUnitario = precioUnitario
     }
 
-    subtotal(){
+    subtotal() {
         return this.precioUnitario * this.cantidad
     }
 
 }
 
-export const itemPedidoSchema = z.object({
-        precioUnitario: z.number().nonnegative(),
-        cantidad: z.number().nonnegative() // y no 0 ?
-        })

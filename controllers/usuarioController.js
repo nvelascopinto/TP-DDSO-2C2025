@@ -1,6 +1,7 @@
 import { convertJSONtoUsuario } from "../conversores/conversoresUsuario.js"
 import {z} from "zod"
 import { usuarioSchema } from "../validadores/validadorUsuario.js"
+import { DatosInvalidos } from "../errors/datosInvalidos.js"
 
 export class UsuarioController {
 
