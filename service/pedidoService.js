@@ -166,5 +166,6 @@ export class PedidoService {
         const pedido = this.consultar(idPedido)
         this.esValidoCambioEstado(estado[cambioEstado.estado], pedido.estado)
         pedido.actualizarEstado(estado[cambioEstado.estado], cambioEstado.idUsuario, cambioEstado.motivo)
+        return pedido
     }
 }

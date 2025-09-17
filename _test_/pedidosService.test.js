@@ -54,8 +54,8 @@ describe('PedidosService', () => {
                 itemsDTO: [
                     {
                         productoID: 1,
-                        cantidad: 1,
-                        precioUnitario: 566
+                        cantidad: 2,
+                        precioUnitario: 100
                     }
                 ],
                 total: 566,
@@ -105,7 +105,7 @@ describe('PedidosService', () => {
                 -34.6037,
                 -58.3816
             );
-            const itemPed = new ItemPedido(item, 1, 566)
+            const itemPed = new ItemPedido(item, 2, 100)
             const mockPedido = new Pedido(comprador, vendedor, [itemPed], "PESO_ARG", direEntrega)
             mockPedido.id = 1
             mockProductoRepository.findById.mockReturnValue(item)
@@ -124,11 +124,108 @@ describe('PedidosService', () => {
             expect(mockProductoRepository.findById).toHaveBeenCalledTimes(1);
 
             expect(result).toEqual(mockPedido)
+            expect(result.total).toBe(200)
         })
 
+// probar que se puedba uno y no otro 
 
 
         it('deberia no crear el pedido por falta de stock', () => {
+
+            const pedidoDTO = {
+                compradorID: 2,
+                vendedorID: 1,
+                itemsDTO: [
+                    {
+                        productoID: 1,
+                        cantidad: 1,
+                        precioUnitario: 566
+                    },
+                    {
+                        productoID: 2,
+                        cantidad: 6,
+                        precioUnitario: 100
+                    }
+                ],
+                total: 566,
+                moneda: "PESO_ARG",
+
+
+                direccionEntregaDTO: {
+                    calle: "Avenida Siempre Viva",
+                    altura: 742,
+                    piso: 1,
+                    departamento: "d",
+                    codigoPostal: 1000,
+                    ciudad: "Buenos Aires",
+                    provincia: "Buenos Aires",
+                    pais: "Argentina",
+                    latitud: -34.6037,
+                    longitud: -58.3816
+                }
+            };
+
+            const vendedor = new Usuario(
+                "Juan Perez",
+                "juan.perez@email.com",
+                "+541112345678",
+                "Vendedor"
+            );
+
+            const comprador = new Usuario(
+                "Juan Perez",
+                "juan.perez@email.com",
+                "+541112345678",
+                "Comprador"
+            );
+            comprador.id = 2
+            vendedor.id = 1
+            const item1 = new Producto(vendedor, "auriculares", "Auriculares bluetooth con cancelación de ruido y 20h de batería.", "Electrónica", 15000, "PESO_ARG", 200, null, true)
+            const item2 = new Producto(vendedor, "licuadora", "licuadora de frutas", "Electrónica", 1000, "PESO_ARG", 5, null, true)
+
+            item1.id = 1
+            item1.id = 2
+            const direEntrega = new DireccionEntrega(
+                "Avenida Siempre Viva",
+                742,
+                1,
+                "d",
+                1000,
+                "Buenos Aires",
+                "Buenos Aires",
+                "Argentina",
+                -34.6037,
+                -58.3816
+            );
+            const itemPed = new ItemPedido(item1, 1, 566)
+            const itemPed2 = new ItemPedido(item2, 4, 100)
+            const mockPedido = new Pedido(comprador, vendedor, [itemPed, itemPed2], "PESO_ARG", direEntrega)
+            mockPedido.id = 1
+            mockProductoRepository.findById
+                .mockReturnValueOnce(item1)
+                .mockReturnValueOnce(item2)
+               
+            mockPedidoRepository.crear.mockReturnValue(mockPedido)
+            mockUsuarioService.obtenerUsuario
+                .mockReturnValueOnce(comprador)
+                .mockReturnValueOnce(vendedor)
+               
+            
+            expect(()=>{pedidoService.crear(pedidoDTO)}).toThrow(PedidoStockInsuficiente)
+            expect(mockPedidoRepository.crear).toHaveBeenCalledTimes(0);
+            expect(mockUsuarioService.obtenerUsuario).toHaveBeenCalledTimes(2);
+            expect(mockUsuarioService.obtenerUsuario).toHaveBeenNthCalledWith(1, 2, ['Comprador'])
+            expect(mockUsuarioService.obtenerUsuario).toHaveBeenNthCalledWith(2, 1, ['Vendedor'])
+          
+            expect(mockProductoRepository.findById).toHaveBeenNthCalledWith(1, 1);
+            expect(mockProductoRepository.findById).toHaveBeenNthCalledWith(2, 2);
+           
+            expect(mockProductoRepository.findById).toHaveBeenCalledTimes(2);
+
+
+        })
+
+        it('deberia crear un pedido pero no los dos por falta de stock por producto inactivo', () => {
 
             const pedidoDTO = {
                 compradorID: 2,
@@ -179,7 +276,7 @@ describe('PedidosService', () => {
             comprador.id = 2
             vendedor.id = 1
             const item1 = new Producto(vendedor, "auriculares", "Auriculares bluetooth con cancelación de ruido y 20h de batería.", "Electrónica", 15000, "PESO_ARG", 200, null, true)
-            const item2 = new Producto(vendedor, "licuadora", "licuadora de frutas", "Electrónica", 100, "PESO_ARG", 1, null, true)
+            const item2 = new Producto(vendedor, "licuadora", "licuadora de frutas", "Electrónica", 100, "PESO_ARG", 1, null, false)
 
             item1.id = 1
             item1.id = 2
@@ -218,8 +315,6 @@ describe('PedidosService', () => {
 
 
         })
-
-
         it('deberia no crear el pedido por no existencia del vendedor', () => {
 
             const pedidoDTO = {
@@ -851,5 +946,121 @@ describe('PedidosService', () => {
         })
     })
 
+
+    describe("cambioEstado", () => {
+             const vendedor = new Usuario(
+            "Juan Perez",
+            "juan.perez@email.com",
+            "+541112345678",
+            "Vendedor"
+        );
+
+        const comprador = new Usuario(
+            "Juan Perez",
+            "juan.perez@email.com",
+            "+541112345678",
+            "Comprador"
+        );
+        comprador.id = 2
+        vendedor.id = 1
+        const item = new Producto(vendedor, "auriculares", "Auriculares bluetooth con cancelación de ruido y 20h de batería.", "Electrónica", 15000, "PESO_ARG", 50, null, true)
+        item.id = 1
+        const direEntrega = new DireccionEntrega(
+            "Avenida Siempre Viva",
+            742,
+            1,
+            "d",
+            1000,
+            "Buenos Aires",
+            "Buenos Aires",
+            "Argentina",
+            -34.6037,
+            -58.3816
+        );
+        const itemPed = new ItemPedido(item, 1, 566)
+
+        it("deberia cambiar de estado de pendiente a enviado", () => {
+            const mockPedido = new Pedido(comprador, vendedor, [itemPed], "PESO_ARG", direEntrega)
+            mockPedido.id = 1
+
+            mockPedidoRepository.findById.mockReturnValue(mockPedido)
+            mockUsuarioService.obtenerUsuario.mockReturnValue(vendedor)
+
+            const cambioEstadoJSON = { idUsuario: 1, motivo: "enviado", estado :"ENVIADO" }
+            mockUsuarioService.obtenerUsuario.mockReturnValue(vendedor)
+            mockPedidoRepository.findById.mockReturnValue(mockPedido)
+            const result = pedidoService.cambioEstado(cambioEstadoJSON, 1)
+            expect(result.estado).toBe(estado.ENVIADO)
+            expect(result.historialCambioPedidos.length).toBe(1)
+            expect(mockUsuarioService.obtenerUsuario).toHaveBeenCalledTimes(1)
+            expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
+            expect(mockPedidoRepository.findById).toHaveBeenCalledWith(1)
+
+        }) 
+
+        it("NO deberia cambiar de estado de Enviado a Cancelado", () => {
+            const mockPedido = new Pedido(comprador, vendedor, [itemPed], "PESO_ARG", direEntrega)
+            mockPedido.id = 1
+            mockPedido.estado = estado.ENVIADO
+
+            mockPedidoRepository.findById.mockReturnValue(mockPedido)
+            mockUsuarioService.obtenerUsuario.mockReturnValue(vendedor)
+
+            const cambioEstadoJSON = { idUsuario: 1, motivo: "disgusto", estado :"CANCELADO" }
+            mockUsuarioService.obtenerUsuario.mockReturnValue(vendedor)
+            mockPedidoRepository.findById.mockReturnValue(mockPedido)
+            
+            expect(()=>{pedidoService.cambioEstado(cambioEstadoJSON, 1)}).toThrow(CambioEstadoInvalidoError)
+            
+            expect(mockUsuarioService.obtenerUsuario).toHaveBeenCalledTimes(1)
+            expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
+            expect(mockPedidoRepository.findById).toHaveBeenCalledWith(1)
+
+        }) 
+
+        it("NO deberia cambiar de estado de Cancelado a Enviado", () => {
+            const mockPedido = new Pedido(comprador, vendedor, [itemPed], "PESO_ARG", direEntrega)
+            mockPedido.id = 1
+            mockPedido.estado = estado.CANCELADO
+
+            mockPedidoRepository.findById.mockReturnValue(mockPedido)
+            mockUsuarioService.obtenerUsuario.mockReturnValue(vendedor)
+
+            const cambioEstadoJSON = { idUsuario: 1, motivo: "enviar", estado :"ENVIADO" }
+            mockUsuarioService.obtenerUsuario.mockReturnValue(vendedor)
+            mockPedidoRepository.findById.mockReturnValue(mockPedido)
+            
+            expect(()=>{pedidoService.cambioEstado(cambioEstadoJSON, 1)}).toThrow(CambioEstadoInvalidoError)
+            
+            expect(mockUsuarioService.obtenerUsuario).toHaveBeenCalledTimes(1)
+            expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
+            expect(mockPedidoRepository.findById).toHaveBeenCalledWith(1)
+
+        }) 
+
+        it("NO deberia cambiar de estado por tener usuario de la peticion inexistente", () => {
+            const mockPedido = new Pedido(comprador, vendedor, [itemPed], "PESO_ARG", direEntrega)
+            mockPedido.id = 1
+            mockPedido.estado = estado.CANCELADO
+
+            mockPedidoRepository.findById.mockReturnValue(mockPedido)
+            mockUsuarioService.obtenerUsuario.mockReturnValue(vendedor)
+
+            const cambioEstadoJSON = { idUsuario: 2, motivo: "enviar", estado :"ENVIADO" }
+            mockUsuarioService.obtenerUsuario.mockImplementationOnce(()=>{
+                throw new UsuarioInexistenteError(2)
+            })
+            
+            
+            expect(()=>{pedidoService.cambioEstado(cambioEstadoJSON, 1)}).toThrow(UsuarioInexistenteError)
+            
+            expect(mockUsuarioService.obtenerUsuario).toHaveBeenCalledTimes(1)
+            expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(0)
+            
+
+        }) 
+
+    })
+// PROBAR POR SI NO EXISTE EL PEDIDO 
 
 })
