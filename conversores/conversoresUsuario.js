@@ -1,4 +1,4 @@
-import { UsuarioDto } from "../models/DTO/usuarioDTO.js";
+import { UsuarioDto } from "../models/DTO/usuarioDTO.js"
 
 export function convertJSONtoUsuario (JSONUsuario) {
     

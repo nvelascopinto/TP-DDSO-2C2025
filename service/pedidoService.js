@@ -17,12 +17,16 @@ import { DatosInvalidos } from "../errors/datosInvalidos.js"
 import { CambioEstadoInvalidoError } from "../errors/cambioEstadoInvalidoError.js"
 import { YaEnEstadoError } from "../errors/yaEnEstadoError.js"
 import { HistorialInexistenteError } from "../errors/historialInexistenteError.js"
+import { FactoryNotification } from "../models/entities/factoryNotificacion.js"
+
+
 export class PedidoService {
 
     constructor(pedidoRepository, usuarioService, productoRepository) {
         this.pedidoRepository = pedidoRepository
         this.usuarioService = usuarioService
         this.productoRepository = productoRepository
+        this.factoryNotification = new FactoryNotification()
     }
 
     crear(pedidoDTO) {
@@ -37,6 +41,12 @@ export class PedidoService {
 
         const pedidoGuardado = this.pedidoRepository.crear(nuevoPedido)
 
+        const notificacion = this.factoryNotification.crearSegunPedido(pedidoGuardado)
+        console.log(notificacion)
+        if(notificacion != null) {
+            this.usuarioService.notificar(notificacion)
+        }
+        
         return pedidoGuardado
     }
 
@@ -86,26 +96,6 @@ export class PedidoService {
         return new ItemPedido(producto, itemDTO.cantidad, itemDTO.precioUnitario)
     }
 
-    cancelar(cambioEstadoJSON, idPedido) {
-        const pedido = this.consultar(idPedido)
-        const valido = this.usuarioEsValidoCompra(cambioEstadoJSON.idUsuario, pedido)
-
-
-        if (valido === false) {
-            throw new UsuarioSinPermiso(cambioEstadoJSON.idUsuario)
-        }
-
-        this.esValidoCambioEstado(estado.CANCELADO, pedido.estado)
-        pedido.actualizarEstado(estado.CANCELADO, cambioEstadoJSON.idUsuario, cambioEstadoJSON.motivo)
-        return pedido
-    }
-
-    marcarEnviado(idVendedor, idPedido) {
-        this.usuarioService.obtenerUsuario(idVendedor, [tipoUsuario.VENDEDOR])
-        const pedido = this.consultar(idPedido)
-        this.esValidoCambioEstado(estado.ENVIADO, pedido.estado)
-        pedido.actualizarEstado(estado.ENVIADO, idVendedor, "Envio del pedido")
-    }
     consultar(id) {
         const pedido = this.pedidoRepository.findById(id)
         if (pedido == null) {
@@ -161,11 +151,17 @@ export class PedidoService {
     }
 
     cambioEstado(cambioEstado, idPedido) {
-
+        
         this.usuarioEstaAutorizado(cambioEstado.idUsuario, autorizadosAEstado[cambioEstado.estado])
         const pedido = this.consultar(idPedido)
         this.esValidoCambioEstado(estado[cambioEstado.estado], pedido.estado)
         pedido.actualizarEstado(estado[cambioEstado.estado], cambioEstado.idUsuario, cambioEstado.motivo)
+        const notificacion = this.factoryNotification.notificarEstadoPedido(estado[cambioEstado.estado], pedido)
+
+        if(notificacion != null) {
+            this.usuarioService.notificar(notificacion)
+        }
         return pedido
     }
+
 }

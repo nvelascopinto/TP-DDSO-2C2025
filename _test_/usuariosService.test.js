@@ -1,4 +1,3 @@
-// _tests_/todosUsuarios.test.js
 import { UsuriosService } from '../service/usuariosService.js'
 import { UsuarioInexistenteError } from '../errors/usuarioInexistenteError.js'
 import { UsuarioSinPermiso } from '../errors/usuarioSinPermisos.js'
@@ -6,7 +5,6 @@ import { UsuarioDto } from '../models/DTO/usuarioDTO.js'
 import { DatosInvalidos } from '../errors/datosInvalidos.js'
 import { Usuario } from '../models/entities/usuario.js'
 
-// 1. Setup y Mocking
 const mockUsuarioRepository = {
   findById: jest.fn(),
   crear :jest.fn()

@@ -6,6 +6,10 @@ export class Usuario{
         this.telefono = telefono
         this.tipoUsuario = tipoUsuario
         this.fechaAlta = new Date()
+        this.notificaciones = []
     }
-    
+
+    agregarNotificacion(notificacion) {
+        this.notificaciones.push(notificacion)  
+    }   
 }

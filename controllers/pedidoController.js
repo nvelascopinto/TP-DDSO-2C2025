@@ -140,8 +140,6 @@ const cambioEstadoSchema = z.object({
     estado : z.string().optional(),
 })
 
-
-
 const idSchema = z.object({
     idVendedor: z.number().nonnegative()
 })

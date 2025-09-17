@@ -17,6 +17,7 @@ import { PedidoService } from "../service/pedidoService.js"
 import { estado } from "../models/entities/estadoPedido.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { CambioEstadoInvalidoError } from "../errors/cambioEstadoInvalidoError.js"
+import { Notificacion } from "../models/entities/notificacion.js"
 
 const mockPedidoRepository = {
     crear: jest.fn(),
@@ -28,7 +29,8 @@ const mockProductoRepository = {
     findById: jest.fn()
 };
 const mockUsuarioService = {
-    obtenerUsuario: jest.fn()
+    obtenerUsuario: jest.fn(),
+    notificar :jest.fn()
 };
 describe('PedidosService', () => {
     let pedidoService;
@@ -45,7 +47,7 @@ describe('PedidosService', () => {
             expect(pedidoService.usuarioService).toBe(mockUsuarioService);
         });
     })
-    describe('crearPedido', () => {
+    describe('creacion de un pedido', () => {
         it('deberia crear el pedido a partir del DTO correcto', () => {
 
             const pedidoDTO = {
@@ -630,123 +632,6 @@ describe('PedidosService', () => {
     })
 
 
-    describe('cancelarPedido', () => {
-
-        const vendedor = new Usuario(
-            "Juan Perez",
-            "juan.perez@email.com",
-            "+541112345678",
-            "Vendedor"
-        );
-
-        const comprador = new Usuario(
-            "Juan Perez",
-            "juan.perez@email.com",
-            "+541112345678",
-            "Comprador"
-        );
-        comprador.id = 2
-        vendedor.id = 1
-        const item = new Producto(vendedor, "auriculares", "Auriculares bluetooth con cancelación de ruido y 20h de batería.", "Electrónica", 15000, "PESO_ARG", 50, null, true)
-        item.id = 1
-        const direEntrega = new DireccionEntrega(
-            "Avenida Siempre Viva",
-            742,
-            1,
-            "d",
-            1000,
-            "Buenos Aires",
-            "Buenos Aires",
-            "Argentina",
-            -34.6037,
-            -58.3816
-        );
-        const itemPed = new ItemPedido(item, 1, 566)
-
-
-
-        it('deberia cancelar el pedido por ser el vendedor quien lo hace', () => {
-            const mockPedido = new Pedido(comprador, vendedor, [itemPed], "PESO_ARG", direEntrega)
-            mockPedido.id = 1
-
-            mockPedidoRepository.findById.mockReturnValue(mockPedido)
-            mockUsuarioService.obtenerUsuario.mockReturnValue(vendedor)
-
-            const cambioEstadoJSON = { idUsuario: 1, motivo: "disgusto" }
-            const result = pedidoService.cancelar(cambioEstadoJSON, 1)
-            expect(result.historialCambioPedidos.length).toBe(1)
-            expect(result.estado).toBe("Cancelado")
-            expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
-            expect(mockPedidoRepository.findById).toHaveBeenCalledWith(1)
-            expect(mockUsuarioService.obtenerUsuario).toHaveBeenCalledWith(1, ["Comprador", "Vendedor", "Admin"])
-            expect(mockUsuarioService.obtenerUsuario).toHaveBeenCalledTimes(1)
-
-        })
-
-        it('deberia cancelar el pedido por ser el admin quien lo hace', () => {
-            const mockPedido = new Pedido(comprador, vendedor, [itemPed], "PESO_ARG", direEntrega)
-            mockPedido.id = 1
-            const admin = new Usuario(
-                "Juan Perez",
-                "juan.perez@email.com",
-                "+541112345678",
-                "Admin"
-            );
-            admin.id = 3
-            mockPedidoRepository.findById.mockReturnValue(mockPedido)
-            mockUsuarioService.obtenerUsuario.mockReturnValue(admin)
-
-            const cambioEstadoJSON = { idUsuario: 3, motivo: "disgusto" }
-            const result = pedidoService.cancelar(cambioEstadoJSON, 1)
-            expect(result.historialCambioPedidos.length).toBe(1)
-            expect(result.estado).toBe("Cancelado")
-            expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
-            expect(mockPedidoRepository.findById).toHaveBeenCalledWith(1)
-            expect(mockUsuarioService.obtenerUsuario).toHaveBeenCalledWith(3, ["Comprador", "Vendedor", "Admin"])
-            expect(mockUsuarioService.obtenerUsuario).toHaveBeenCalledTimes(1)
-
-        })
-
-        it('no deberia cancelarse por no ser otro vendedor el que lo realiza ', () => {
-            const mockPedido = new Pedido(comprador, vendedor, [itemPed], "PESO_ARG", direEntrega)
-            mockPedido.id = 1
-            const otroVendedor = new Usuario(
-                "Juan Perez",
-                "juan.perez@email.com",
-                "+541112345678",
-                "Vendedor"
-            );
-            otroVendedor.id = 4
-            mockPedidoRepository.findById.mockReturnValue(mockPedido)
-            mockUsuarioService.obtenerUsuario.mockReturnValue(otroVendedor)
-
-            const cambioEstadoJSON = { idUsuario: 4, motivo: "disgusto" }
-
-            expect(() => pedidoService.cancelar(cambioEstadoJSON, 1)).toThrow(UsuarioSinPermiso)
-            expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
-            expect(mockPedidoRepository.findById).toHaveBeenCalledWith(1)
-            expect(mockUsuarioService.obtenerUsuario).toHaveBeenCalledWith(4, ["Comprador", "Vendedor", "Admin"])
-            expect(mockUsuarioService.obtenerUsuario).toHaveBeenCalledTimes(1)
-        })
-
-        it('no deberia cancelarse por no existir el usuario que hace la solicitud de cancelacion ', () => {
-            const mockPedido = new Pedido(comprador, vendedor, [itemPed], "PESO_ARG", direEntrega)
-            mockPedido.id = 1
-            mockPedidoRepository.findById.mockReturnValue(mockPedido)
-            mockUsuarioService.obtenerUsuario.mockImplementationOnce(() => {
-                throw new UsuarioInexistenteError(3)
-            })
-
-            const cambioEstadoJSON = { idUsuario: 3, motivo: "disgusto" }
-
-            expect(() => pedidoService.cancelar(cambioEstadoJSON, 1)).toThrow(UsuarioInexistenteError)
-            expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
-            expect(mockPedidoRepository.findById).toHaveBeenCalledWith(1)
-            expect(mockUsuarioService.obtenerUsuario).toHaveBeenCalledWith(3, ["Comprador", "Vendedor", "Admin"])
-            expect(mockUsuarioService.obtenerUsuario).toHaveBeenCalledTimes(1)
-        })
-    })
-
     describe('consultar', () => {
 
         const vendedor = new Usuario(
@@ -840,86 +725,6 @@ describe('PedidosService', () => {
         })
     })
 
-    describe('marcarEnviado', () => {
-
-        const vendedor = new Usuario(
-            "Juan Perez",
-            "juan.perez@email.com",
-            "+541112345678",
-            "Vendedor"
-        )
-        vendedor.id = 1
-
-        const comprador = new Usuario(
-            "Pepe Perez",
-            "pepe.perez@email.com",
-            "+541112345678",
-            "Comprador"
-        )
-        comprador.id = 2
-
-        it('debería marcar un pedido como enviado', () => {
-
-            const prod = new Producto(vendedor, "auriculares", "Auriculares bluetooth con cancelación de ruido y 20h de batería.", "Electrónica", 15000, "PESO_ARG", 50, null, true)
-            prod.id = 1
-
-            const itemPed = new ItemPedido(prod, 3, 100)
-            const direEntrega = new DireccionEntrega(
-                "Avenida Siempre Viva",
-                742,
-                1,
-                "d",
-                1000,
-                "Buenos Aires",
-                "Buenos Aires",
-                "Argentina",
-                -34.6037,
-                -58.3816
-            );
-            const mockPedido = new Pedido(comprador, vendedor, [itemPed], "PESO_ARG", direEntrega)
-            mockPedido.id = 123
-
-            mockUsuarioService.obtenerUsuario.mockReturnValue(vendedor)
-            mockPedidoRepository.findById.mockReturnValue(mockPedido)
-
-            pedidoService.marcarEnviado(1, 123)
-            expect(mockUsuarioService.obtenerUsuario).toHaveBeenCalledWith(1, [tipoUsuario.VENDEDOR])
-            expect(mockPedidoRepository.findById).toHaveBeenCalledWith(123)
-
-        })
-        it('debería tirar PedidoInexistenteError si el pedido no existe', () => {
-            mockUsuarioService.obtenerUsuario.mockReturnValue(vendedor)
-            mockPedidoRepository.findById.mockImplementationOnce(null)
-
-            expect(() => pedidoService.marcarEnviado(1, 999)).toThrow(PedidoInexistenteError)
-        })
-        it('debería tirar CambioEstadoInvalidoError si intenta enviar desde un estado no válido', () => {
-            const prod = new Producto(vendedor, "auriculares", "Auriculares bluetooth con cancelación de ruido y 20h de batería.", "Electrónica", 15000, "PESO_ARG", 50, null, true)
-            prod.id = 1
-
-            const itemPed = new ItemPedido(prod, 3, 100)
-            const direEntrega = new DireccionEntrega(
-                "Avenida Siempre Viva",
-                742,
-                1,
-                "d",
-                1000,
-                "Buenos Aires",
-                "Buenos Aires",
-                "Argentina",
-                -34.6037,
-                -58.3816
-            );
-            const mockPedido = new Pedido(comprador, vendedor, [itemPed], "PESO_ARG", direEntrega)
-            mockPedido.id = 123
-            mockPedido.estado = "Cancelado"
-            mockUsuarioService.obtenerUsuario.mockReturnValue(vendedor)
-            mockPedidoRepository.findById.mockReturnValue(mockPedido)
-
-            expect(() => pedidoService.marcarEnviado(1, 123)).toThrow(CambioEstadoInvalidoError)
-        })
-    })
-
     describe("esValidoCambioEstado", () => {
         it("es valido pasar de pendiente a confirmado ", () => {
             expect(pedidoService.esValidoCambioEstado(estado.CANCELADO, estado.PENDIENTE)).toBe(true)
@@ -948,7 +753,7 @@ describe('PedidosService', () => {
 
 
     describe("cambioEstado", () => {
-             const vendedor = new Usuario(
+            const vendedor = new Usuario(
             "Juan Perez",
             "juan.perez@email.com",
             "+541112345678",
@@ -1057,7 +862,7 @@ describe('PedidosService', () => {
 
         }) 
 
-         it("NO deberia cambiar de estado por no existir el pedido ", () => {
+        it("NO deberia cambiar de estado por no existir el pedido ", () => {
             const mockPedido = new Pedido(comprador, vendedor, [itemPed], "PESO_ARG", direEntrega)
             mockPedido.id = 1
             mockPedido.estado = estado.CANCELADO
@@ -1077,7 +882,6 @@ describe('PedidosService', () => {
 
         }) 
 
-       
 
 
     })

@@ -53,4 +53,12 @@ export class UsuriosService {
 
         return usuario
     }
+
+    notificar(notificacion) {
+
+        const destinatario = this.buscar(notificacion.usuarioDestino)
+
+        destinatario.agregarNotificacion(notificacion)
+        
+    }
  }
