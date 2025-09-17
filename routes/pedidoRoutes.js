@@ -1,6 +1,5 @@
 import {PedidoController} from "../controllers/pedidoController.js"
 import { ErrorHandler } from "../middleware/middlware.js"
-import { pedidosErrorHandler } from "../middleware/pedidoMiddleware.js"
 import express from "express"
 
 const pathPedido = "/pedidos"

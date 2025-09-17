@@ -1043,9 +1043,6 @@ describe('PedidosService', () => {
             mockPedido.id = 1
             mockPedido.estado = estado.CANCELADO
 
-            mockPedidoRepository.findById.mockReturnValue(mockPedido)
-            mockUsuarioService.obtenerUsuario.mockReturnValue(vendedor)
-
             const cambioEstadoJSON = { idUsuario: 2, motivo: "enviar", estado :"ENVIADO" }
             mockUsuarioService.obtenerUsuario.mockImplementationOnce(()=>{
                 throw new UsuarioInexistenteError(2)
@@ -1060,7 +1057,30 @@ describe('PedidosService', () => {
 
         }) 
 
+         it("NO deberia cambiar de estado por no existir el pedido ", () => {
+            const mockPedido = new Pedido(comprador, vendedor, [itemPed], "PESO_ARG", direEntrega)
+            mockPedido.id = 1
+            mockPedido.estado = estado.CANCELADO
+
+            mockPedidoRepository.findById.mockReturnValue(null)
+            mockUsuarioService.obtenerUsuario.mockReturnValue(vendedor)
+
+            const cambioEstadoJSON = { idUsuario: 1, motivo: "enviar", estado :"ENVIADO" }
+            
+            
+            
+            expect(()=>{pedidoService.cambioEstado(cambioEstadoJSON, 1)}).toThrow(PedidoInexistenteError)
+            
+            expect(mockUsuarioService.obtenerUsuario).toHaveBeenCalledTimes(1)
+            expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
+            
+
+        }) 
+
+       
+
+
     })
-// PROBAR POR SI NO EXISTE EL PEDIDO 
+
 
 })
