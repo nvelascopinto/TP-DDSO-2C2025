@@ -1,7 +1,6 @@
 import { convertJSONtoUsuario } from "../conversores/conversoresUsuario.js"
-import {z} from "zod"
-import { usuarioSchema } from "../validadores/validadorUsuario.js"
-import { DatosInvalidos } from "../errors/datosInvalidos.js"
+import { validarUsuario } from "../validadores/validadorUsuario.js"
+import { validarId } from "../validadores/validadorID.js"
 
 export class UsuarioController {
 
@@ -10,16 +9,9 @@ export class UsuarioController {
     }
 
     crearUsuario(req, res) {
-        const body = req.body
-        
-        const usuarioResult = usuarioSchema.safeParse(body)
-        
-                if (!usuarioResult.success) {
-                    throw new DatosInvalidos(usuarioResult.error.issues.map(i => i.message))
-                }
-        
-           
-        
+
+        const body = validarUsuario(req.body)
+
         const usuario = convertJSONtoUsuario(body)
         
         const nuevoUsuario = this.usuarioService.crearUsuario(usuario)
@@ -28,31 +20,21 @@ export class UsuarioController {
     }
 
     verUsuario(req, res) {
-        const resultId = idTransform.safeParse(req.params.id)
 
-        if (resultId.error) {
-            res.status(400).json(resultId.error.issues)
-            return
-        }
-
-        const id = resultId.data
+        const id = validarId(req.params.id)
 
         const usuario = this.usuarioService.buscar(id)
 
-        res.status(200).json(usuario);
+        res.status(200).json(usuario)
     }
+    
+    verHistorialUsuario(req, res) {
+        
+        const id = validarId(req.params.id)
 
+        const pedido = this.usuarioService.consultarHistorial(id)
+
+        res.status(200).json(pedido)
+    }
     
 }
-
-const idTransform = z.string().transform(((val, ctx) => {
-    const num = Number(val);
-    if (isNaN(num)) {
-        ctx.addIssue({
-            code: "INVALID_ID",
-            message: "id must be a number"
-        });
-        return z.NEVER;
-    }
-    return num;
-}))

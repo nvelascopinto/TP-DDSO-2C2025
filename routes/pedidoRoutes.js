@@ -26,14 +26,6 @@ export default function pedidosRoutes(getController) {
         }
     })
 
-    router.get(pathPedido + "/historial/:id", (req, res, next) => {
-        try {
-            getController(PedidoController).verHistorialUsuario(req, res); // cambiar nombre
-        } catch (err) {
-            next(err);
-        }
-    });
-
     router.post(pathPedido + "/:id/cambioDeEstado", (req, res, next) => {
         try {
             getController(PedidoController).cambioEstado(req, res); // cambiar nombre

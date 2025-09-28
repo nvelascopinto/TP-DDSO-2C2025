@@ -2,6 +2,8 @@ import { PedidoService } from "../service/pedidoService.js"
 import { z } from "zod"
 import {tipoUsuario} from "../models/entities/tipoUsuario.js"
 import { convertJSONtoPedido } from "../conversores/conversoresPedido.js"
+import { validarId } from "../validadores/validadorID.js"
+import { validarCambioEstado } from "../validadores/validadorCambioEstado.js"
 
 export class PedidoController {
 
@@ -18,37 +20,18 @@ export class PedidoController {
     }
 
     cancelar(req, res) {
-        const resultId = idTransform.safeParse(req.params.id)
+        const id = validarId(req.params.id)
+        const cambioEstado = validarCambioEstado(req.body)
+        const pedidoCancelado = this.pedidoService.cancelar(cambioEstado, id)
 
-        if (resultId.error) {
-            res.status(400).json(resultId.error.issues)
-            return
-        }
-
-        const id = resultId.data
-
-        const cambioEstadoBody = req.body
-        const cambioEstado = cambioEstadoSchema.safeParse(cambioEstadoBody)
-        if (cambioEstado.error) {
-            res.status(400).json(cambioEstado.error.issues)
-            return
-        }
-        const pedidoCancelado = this.pedidoService.cancelar(cambioEstado.data, id)
         res.status(200).json(pedidoCancelado)
         return
     }
 
     consultar(req, res) {
-        const resultId = idTransform.safeParse(req.params.id)
+        const id = validarId(req.params.id)
 
-        if (resultId.error) {
-            res.status(400).json(resultId.error.issues)
-            return
-        }
-
-        const id = resultId.data
-
-        const pedido = this.pedidoService.consultar(id);
+        const pedido = this.pedidoService.consultar(id)
 
         if (!pedido) {
             res.status(404).json({
@@ -61,14 +44,7 @@ export class PedidoController {
     }
 
     marcarEnviado(req, res) {
-        const resultId = idTransform.safeParse(req.params.id)
-
-        if (resultId.error) {
-            res.status(400).json(resultId.error.issues)
-            return
-        }
-
-        const id = resultId.data
+        const id = validarId(req.params.id)
         
         const envioBody = req.body
         const idVendedor = idSchema.safeParse(envioBody)
@@ -81,64 +57,16 @@ export class PedidoController {
         return
     }
 
-    verHistorialUsuario(req, res) {
-       const resultId = idTransform.safeParse(req.params.id)
-
-        if (resultId.error) {
-            res.status(400).json(resultId.error.issues)
-            return
-        }
-
-        const id = resultId.data
-
-        const pedido = this.pedidoService.consultarHistorial(id);
-
-        res.status(200).json(pedido);
-    }
-
     cambioEstado (req,res) {
-        const resultId = idTransform.safeParse(req.params.id)
+        const id = validarId(req.params.id)
+        const cambioEstado = validarCambioEstado(req.body)
+        const pedidoModificado = this.pedidoService.cambioEstado(cambioEstado, id)
 
-        if (resultId.error) {
-            res.status(400).json(resultId.error.issues)
-            return
-        }
-
-        const id = resultId.data
-
-        const cambioEstadoBody = req.body
-        const cambioEstado = cambioEstadoSchema.safeParse(cambioEstadoBody)
-        if (cambioEstado.error) {
-            res.status(400).json(cambioEstado.error.issues)
-            return
-        }
-        const pedidoModificado = this.pedidoService.cambioEstado(cambioEstado.data, id)
         res.status(200).json(pedidoModificado)
         return
     }
 
-
 }
-
-
-
-const idTransform = z.string().transform(((val, ctx) => {
-    const num = Number(val);
-    if (isNaN(num)) {
-        ctx.addIssue({
-            code: "INVALID_ID",
-            message: "id must be a number"
-        });
-        return z.NEVER;
-    }
-    return num;
-}))
-
-const cambioEstadoSchema = z.object({
-    idUsuario: z.number().nonnegative(),
-    motivo: z.string(),
-    estado : z.string().optional(),
-})
 
 const idSchema = z.object({
     idVendedor: z.number().nonnegative()

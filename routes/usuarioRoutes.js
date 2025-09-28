@@ -22,6 +22,14 @@ export default function usuariosRoutes(getController) {
     }
   });
 
+  router.get(pathUsuario + "/:id/pedidos", (req, res, next) => {
+    try {
+      getController(UsuarioController).verHistorialUsuario(req, res)
+    } catch (err) {
+      next(err)
+    }
+  });
+
   router.use(ErrorHandler);
   return router;
 }
