@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { DatosInvalidos } from "../errors/datosInvalidos.js"
 
 const cambioEstadoSchema = z.object({
   idUsuario: z.number().nonnegative(),
@@ -8,9 +9,10 @@ const cambioEstadoSchema = z.object({
 
 export function validarCambioEstado(body) {
   const cambioEstado = cambioEstadoSchema.safeParse(body)
+
   if (cambioEstado.error) {
-    res.status(400).json(cambioEstado.error.issues)
-    return
+    throw new DatosInvalidos("Datos de cambio de estado invalidos", cambioEstado.error.issues)
   }
+
   return cambioEstado.data
 }
