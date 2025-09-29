@@ -1,23 +1,23 @@
 export class PedidoRepository {
-    constructor(){
-        this.pedidos=[]
-        this.nextId = 1
-    }
+  constructor() {
+    this.pedidos = [];
+    this.nextId = 1;
+  }
 
-    crear(pedido){
-        pedido.id = this.nextId++;
-        this.pedidos.push(pedido)
-        return pedido
-    }
+  crear(pedido) {
+    pedido.id = this.nextId++;
+    this.pedidos.push(pedido);
+    return pedido;
+  }
 
-    consultarHistorial(id) {
-        const pedidosUsuario = this.pedidos.filter(p => p.comprador.id === id)
-        return pedidosUsuario
-    }
+  consultarHistorial(id) {
+    const pedidosUsuario = this.pedidos.filter((p) => p.comprador.id === id);
+    return pedidosUsuario;
+  }
 
-    // FUNCIONES AUXILIARES
+  // FUNCIONES AUXILIARES
 
-    findById(id) {
-        return this.pedidos.find(p => p.id === id) || null
-    }
+  findById(id) {
+    return this.pedidos.find((p) => p.id === id) || null;
+  }
 }

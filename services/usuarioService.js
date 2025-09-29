@@ -1,8 +1,8 @@
-import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js"
-import { UsuarioSinPermiso } from "../errors/usuarioSinPermisos.js"
-import { DatosInvalidos } from "../errors/datosInvalidos.js"
-import { tipoUsuarioValidator } from "../validadores/validadorTipoUsuario.js"
-import { Usuario } from "../models/entities/usuario.js"
+import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js";
+import { UsuarioSinPermiso } from "../errors/usuarioSinPermisos.js";
+import { DatosInvalidos } from "../errors/datosInvalidos.js";
+import { tipoUsuarioValidator } from "../validadores/validadorTipoUsuario.js";
+import { Usuario } from "../models/entities/usuario.js";
 
 export class UsuarioService {
   constructor(usuarioRepository, pedidoService) {
@@ -35,7 +35,7 @@ export class UsuarioService {
       usuarioResult.nombre,
       usuarioResult.email,
       usuarioResult.telefono,
-      usuarioResult.tipoUsuario
+      usuarioResult.tipoUsuario,
     );
 
     return this.usuarioRepository.crear(nuevoUsuario);
@@ -59,8 +59,7 @@ export class UsuarioService {
 
   // TODO: Solucionar dependencia circular entre servicios: pedidos y usuarios
   consultarHistorial(id) {
-    const historial = this.pedidoService.consultarHistorial(id)
-    return historial
+    const historial = this.pedidoService.consultarHistorial(id);
+    return historial;
   }
-  
 }

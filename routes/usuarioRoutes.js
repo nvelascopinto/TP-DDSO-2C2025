@@ -24,9 +24,9 @@ export default function usuarioRoutes(getController) {
 
   router.get(pathUsuario + "/:id/pedidos", (req, res, next) => {
     try {
-      getController(UsuarioController).verHistorialUsuario(req, res)
+      getController(UsuarioController).verHistorialUsuario(req, res);
     } catch (err) {
-      next(err)
+      next(err);
     }
   });
 

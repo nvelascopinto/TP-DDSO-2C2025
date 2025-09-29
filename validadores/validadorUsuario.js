@@ -1,5 +1,5 @@
-import { z } from "zod"
-import { DatosInvalidos } from "../errors/datosInvalidos.js"
+import { z } from "zod";
+import { DatosInvalidos } from "../errors/datosInvalidos.js";
 
 export const usuarioSchema = z.object({
   nombre: z.string().min(1, "El nombre no puede estar vacío"),

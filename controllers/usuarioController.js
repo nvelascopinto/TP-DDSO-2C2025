@@ -1,40 +1,35 @@
-import { convertJSONtoUsuario } from "../conversores/conversoresUsuario.js"
-import { validarUsuario } from "../validadores/validadorUsuario.js"
-import { validarId } from "../validadores/validadorID.js"
+import { convertJSONtoUsuario } from "../conversores/conversoresUsuario.js";
+import { validarUsuario } from "../validadores/validadorUsuario.js";
+import { validarId } from "../validadores/validadorID.js";
 
 export class UsuarioController {
+  constructor(usuarioService) {
+    this.usuarioService = usuarioService;
+  }
 
-    constructor(usuarioService) {
-        this.usuarioService = usuarioService
-    }
+  crearUsuario(req, res) {
+    const body = validarUsuario(req.body);
 
-    crearUsuario(req, res) {
+    const usuario = convertJSONtoUsuario(body);
 
-        const body = validarUsuario(req.body)
+    const nuevoUsuario = this.usuarioService.crearUsuario(usuario);
 
-        const usuario = convertJSONtoUsuario(body)
-        
-        const nuevoUsuario = this.usuarioService.crearUsuario(usuario)
+    return res.status(201).json(nuevoUsuario);
+  }
 
-        return res.status(201).json(nuevoUsuario)
-    }
+  verUsuario(req, res) {
+    const id = validarId(req.params.id);
 
-    verUsuario(req, res) {
+    const usuario = this.usuarioService.buscar(id);
 
-        const id = validarId(req.params.id)
+    res.status(200).json(usuario);
+  }
 
-        const usuario = this.usuarioService.buscar(id)
+  verHistorialUsuario(req, res) {
+    const id = validarId(req.params.id);
 
-        res.status(200).json(usuario)
-    }
-    
-    verHistorialUsuario(req, res) {
-        
-        const id = validarId(req.params.id)
+    const pedido = this.usuarioService.consultarHistorial(id);
 
-        const pedido = this.usuarioService.consultarHistorial(id)
-
-        res.status(200).json(pedido)
-    }
-    
+    res.status(200).json(pedido);
+  }
 }
