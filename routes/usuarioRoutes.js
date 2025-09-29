@@ -1,9 +1,9 @@
-import { ErrorHandler } from "../middleware/middlware.js";
 import { UsuarioController } from "../controllers/usuarioController.js";
+import { errorHandler } from "../middleware/middlware.js";
 import express from "express";
 const pathUsuario = "/usuarios";
 
-export default function usuariosRoutes(getController) {
+export default function usuarioRoutes(getController) {
   const router = express.Router();
 
   router.post(pathUsuario, (req, res, next) => {
@@ -30,6 +30,6 @@ export default function usuariosRoutes(getController) {
     }
   });
 
-  router.use(ErrorHandler);
+  router.use(errorHandler);
   return router;
 }

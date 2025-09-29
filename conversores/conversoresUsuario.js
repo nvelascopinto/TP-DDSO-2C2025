@@ -1,13 +1,10 @@
-import { UsuarioDto } from "../models/DTO/usuarioDTO.js"
+import { UsuarioDTO } from "../models/DTO/usuarioDTO.js"
 
 export function convertJSONtoUsuario (JSONUsuario) {
-    
-   
-    return new UsuarioDto(
+    return new UsuarioDTO(
                 JSONUsuario.nombre,
                 JSONUsuario.email, 
                 JSONUsuario.telefono ,
-                JSONUsuario.tipoUsuario
-                
+                JSONUsuario.tipoUsuario     
     )
 }

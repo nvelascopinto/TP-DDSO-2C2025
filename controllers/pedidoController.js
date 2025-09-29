@@ -1,5 +1,3 @@
-import { PedidoService } from "../service/pedidoService.js"
-import {tipoUsuario} from "../models/entities/tipoUsuario.js"
 import { convertJSONtoPedido } from "../conversores/conversoresPedido.js"
 import { validarId } from "../validadores/validadorID.js"
 import { validarCambioEstado } from "../validadores/validadorCambioEstado.js"

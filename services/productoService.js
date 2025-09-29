@@ -1,12 +1,8 @@
-import { ProductoRepository } from "../models/repositories/productoRepository.js"
-import { UsuriosService } from "./usuariosService.js"
 import { productoSchema } from "../validadores/validadorProducto.js"
-import express from "express"
 import { monedaValidator } from "../validadores/validadorMoneda.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { Producto } from "../models/entities/producto.js"
 import { DatosInvalidos } from "../errors/datosInvalidos.js"
-import { keyof } from "zod"
 
 export class ProductoService {
 

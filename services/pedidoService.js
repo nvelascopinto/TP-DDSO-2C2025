@@ -1,4 +1,3 @@
-import { pedidoRepository } from "../models/repositories/pedidoRepository.js"
 import { autorizadosAEstado, estado } from "../models/entities/estadoPedido.js"
 import { ordenEstados } from "../models/entities/estadoPedido.js"
 import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js"
@@ -7,7 +6,6 @@ import { PedidoStockInsuficiente } from "../errors/pedidoStockInsuficiente.js"
 import { Pedido } from "../models/entities/pedido.js"
 import { DireccionEntrega } from "../models/entities/direccionEntrega.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
-import { UsuarioSinPermiso } from "../errors/usuarioSinPermisos.js"
 import { ItemPedido } from "../models/entities/itemPedido.js"
 import { itemSchema } from "../validadores/itemSchema.js"
 import { ProductoInexistente } from "../errors/productoInexistente.js"
@@ -18,7 +16,6 @@ import { CambioEstadoInvalidoError } from "../errors/cambioEstadoInvalidoError.j
 import { YaEnEstadoError } from "../errors/yaEnEstadoError.js"
 import { HistorialInexistenteError } from "../errors/historialInexistenteError.js"
 import { FactoryNotification } from "../models/entities/factoryNotificacion.js"
-
 
 export class PedidoService {
 
@@ -111,8 +108,7 @@ export class PedidoService {
         return (pedido.comprador.id == usuario.id || pedido.vendedor.id == usuario.id || usuario.tipoUsuario === "Admin")
     }
     usuarioEsValido(id) {
-        const usuario = this.usuarioService.obtenerUsuario(id, [tipoUsuario.COMPRADOR, tipoUsuario.VENDEDOR, tipoUsuario.ADMIN])
-
+        this.usuarioService.obtenerUsuario(id, [tipoUsuario.COMPRADOR, tipoUsuario.VENDEDOR, tipoUsuario.ADMIN])
         return true
     }
 
@@ -163,5 +159,4 @@ export class PedidoService {
         }
         return pedido
     }
-
 }

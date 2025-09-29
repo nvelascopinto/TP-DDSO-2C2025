@@ -1,4 +1,3 @@
-import { ProductoService } from "../service/productoService.js"
 import { convertJSONtoProducto } from "../conversores/conversoresProducto.js"
 
 export class ProductoController {

@@ -7,7 +7,8 @@ import { PedidoStockInsuficiente } from "../errors/pedidoStockInsuficiente.js"
 import { ProductoInexistente } from "../errors/productoInexistente.js";
 import { HistorialInexistenteError } from "../errors/historialInexistenteError.js";
 import { CambioEstadoInvalidoError } from "../errors/cambioEstadoInvalidoError.js";
-export function ErrorHandler(error, req, res, next) {
+
+export function errorHandler(error, _req, res, _next) {
 
     console.log(error.message);
     switch (error.name) {

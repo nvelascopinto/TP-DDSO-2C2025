@@ -1,10 +1,10 @@
-import {PedidoController} from "../controllers/pedidoController.js"
-import { ErrorHandler } from "../middleware/middlware.js"
+import { PedidoController } from "../controllers/pedidoController.js"
+import { errorHandler } from "../middleware/middlware.js"
 import express from "express"
 
 const pathPedido = "/pedidos"
 
-export default function pedidosRoutes(getController) {
+export default function pedidoRoutes(getController) {
     const router = express.Router()
 
     
@@ -34,6 +34,6 @@ export default function pedidosRoutes(getController) {
         }
     });
 
-    router.use(ErrorHandler)
+    router.use(errorHandler)
     return router
 }

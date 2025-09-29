@@ -1,10 +1,4 @@
-import { Producto } from "../models/entities/producto.js"
-import { Moneda } from "../models/entities/moneda.js"
-
-import { tipoUsuario } from "../models/entities/tipoUsuario.js"
-
 import {z} from "zod"
-
 
 export const productoSchema = z.object({
   categoria : z.string(),

@@ -6,12 +6,12 @@ import { Server } from "./server.js"
 import routes from "./routes/routes.js"
 import { HealthController } from "./controllers/healthController.js"
 import { PedidoController } from "./controllers/pedidoController.js"
-import { PedidoService } from "./service/pedidoService.js"
-import { pedidoRepository } from "./models/repositories/pedidoRepository.js" // cambiar a mayuscula
+import { PedidoService } from "./services/pedidoService.js"
+import { PedidoRepository } from "./models/repositories/pedidoRepository.js" 
 import { ProductoController } from "./controllers/productoController.js"
-import { ProductoService } from "./service/productoService.js"
+import { ProductoService } from "./services/productoService.js"
 import { ProductoRepository } from "./models/repositories/productoRepository.js"
-import { UsuriosService } from "./service/usuariosService.js"
+import { UsuarioService } from "./services/usuarioService.js"
 import { UsuarioRepository } from "./models/repositories/usuarioRepository.js"
 import { UsuarioController } from "./controllers/usuarioController.js"
 
@@ -27,14 +27,14 @@ const server = new Server(app, port)
 
 const healthController = new HealthController()
 
-const productoRepo = new ProductoRepository()
-const pedidoRepo = new pedidoRepository()
+const productoRepository = new ProductoRepository()
+const pedidoRepository = new PedidoRepository()
 const usuarioRepository = new UsuarioRepository()
-const usuarioService = new UsuriosService(usuarioRepository)
-const pedidoService = new PedidoService(pedidoRepo,usuarioService,productoRepo)
+const usuarioService = new UsuarioService(usuarioRepository)
+const pedidoService = new PedidoService(pedidoRepository, usuarioService, productoRepository)
 const pedidoController = new PedidoController(pedidoService)
 const usuarioController = new UsuarioController(usuarioService)
-const productoService = new ProductoService(productoRepo, usuarioService)
+const productoService = new ProductoService(productoRepository, usuarioService)
 const productoController = new ProductoController(productoService) 
 
 server.setController(HealthController, healthController)

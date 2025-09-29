@@ -1,4 +1,4 @@
-export class UsuarioDto {
+export class UsuarioDTO {
     constructor(nombre, email, telefono, tipoUsuario){
         this.nombre = nombre
         this.email = email

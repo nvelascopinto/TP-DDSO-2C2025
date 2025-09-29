@@ -1,7 +1,7 @@
 import { DatosInvalidos } from "../errors/datosInvalidos"
 import { ProductoDTO } from "../models/DTO/productoDTO"
 import { Producto } from "../models/entities/producto"
-import { ProductoService } from "../service/productoService"
+import { ProductoService } from "../services/productoService"
 import { Usuario } from "../models/entities/usuario"
 import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError"
 

@@ -1,11 +1,10 @@
-import {ProductoController} from "../controllers/productoController.js"
+import { ProductoController } from "../controllers/productoController.js"
+import { errorHandler } from "../middleware/middlware.js"
 import express from "express"
-
-import { ErrorHandler } from "../middleware/middlware.js"
 
 const pathProducto = "/productos"
 
-export default function ProductosRoutes(getController) {
+export default function productoRoutes(getController) {
     const router = express.Router()
 
     router.post(pathProducto, (req, res, next) => {
@@ -16,6 +15,6 @@ export default function ProductosRoutes(getController) {
             next(err)
         }
     })
-    router.use(ErrorHandler)
+    router.use(errorHandler)
     return router
 }

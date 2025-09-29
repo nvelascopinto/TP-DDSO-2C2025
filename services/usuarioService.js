@@ -1,14 +1,10 @@
-import { tipoUsuario } from "../models/entities/tipoUsuario.js";
-import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js";
-import { UsuarioSinPermiso } from "../errors/usuarioSinPermisos.js";
-import { usuarioSchema } from "../validadores/validadorUsuario.js";
-import { DatosInvalidos } from "../errors/datosInvalidos.js";
-import { tipoUsuarioValidator } from "../validadores/validadorTipoUsuario.js";
-import { Usuario } from "../models/entities/usuario.js";
-import { UsuarioRepository } from "../models/repositories/usuarioRepository.js";
-import { PedidoService } from "./pedidoService.js";
+import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js"
+import { UsuarioSinPermiso } from "../errors/usuarioSinPermisos.js"
+import { DatosInvalidos } from "../errors/datosInvalidos.js"
+import { tipoUsuarioValidator } from "../validadores/validadorTipoUsuario.js"
+import { Usuario } from "../models/entities/usuario.js"
 
-export class UsuriosService {
+export class UsuarioService {
   constructor(usuarioRepository, pedidoService) {
     this.usuarioRepository = usuarioRepository;
     this.pedidoService = pedidoService;
