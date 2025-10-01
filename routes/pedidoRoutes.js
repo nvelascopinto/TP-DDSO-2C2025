@@ -1,36 +1,22 @@
-import { PedidoController } from "../controllers/pedidoController.js";
-import { errorHandler } from "../middleware/middlware.js";
-import express from "express";
+import { Router } from "express"
+import PedidoController from "../controllers/pedidoController.js";
 
-const pathPedido = "/pedidos";
+const pedidoRouter = Router();
 
-export default function pedidoRoutes(getController) {
-  const router = express.Router();
+pedidoRouter.get('/:id', (req, res, next) => {
+      PedidoController.consultar(req, res);
 
-  router.get(pathPedido + "/:id", (req, res, next) => {
-    try {
-      getController(PedidoController).consultar(req, res);
-    } catch (err) {
-      next(err);
-    }
+});
+
+pedidoRouter.post('', (req, res, next) => {
+
+      PedidoController.crear(req, res);
+
+});
+
+pedidoRouter.post('/:id/cambioDeEstado', (req, res, next) => {
+
+      PedidoController.cambioEstado(req, res); // cambiar nombre
   });
 
-  router.post(pathPedido, (req, res, next) => {
-    try {
-      getController(PedidoController).crear(req, res);
-    } catch (err) {
-      next(err);
-    }
-  });
-
-  router.post(pathPedido + "/:id/cambioDeEstado", (req, res, next) => {
-    try {
-      getController(PedidoController).cambioEstado(req, res); // cambiar nombre
-    } catch (err) {
-      next(err);
-    }
-  });
-
-  router.use(errorHandler);
-  return router;
-}
+export default pedidoRouter

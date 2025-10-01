@@ -1,3 +1,7 @@
+import PedidoRepository from "../models/repositories/pedidoRepository.js";
+import UsuarioService from "./usuarioService.js";
+import ProductoService from "./productoService.js";
+import NotificacionService from "./notificacionService.js";
 import { autorizadosAEstado, estado } from "../models/entities/estadoPedido.js";
 import { ordenEstados } from "../models/entities/estadoPedido.js";
 import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js";
@@ -15,14 +19,13 @@ import { DatosInvalidos } from "../errors/datosInvalidos.js";
 import { CambioEstadoInvalidoError } from "../errors/cambioEstadoInvalidoError.js";
 import { YaEnEstadoError } from "../errors/yaEnEstadoError.js";
 import { HistorialInexistenteError } from "../errors/historialInexistenteError.js";
-import { FactoryNotification } from "../models/entities/factoryNotificacion.js";
 
-export class PedidoService {
-  constructor(pedidoRepository, usuarioService, productoRepository) {
+class PedidoService {
+  constructor(pedidoRepository, usuarioService, productoService, notificacionService) {
     this.pedidoRepository = pedidoRepository;
     this.usuarioService = usuarioService;
-    this.productoRepository = productoRepository;
-    this.factoryNotification = new FactoryNotification();
+    this.productoService = productoService;
+    this.notificacionService = notificacionService
   }
 
   crear(pedidoDTO) {
@@ -35,13 +38,7 @@ export class PedidoService {
     }
 
     const pedidoGuardado = this.pedidoRepository.crear(nuevoPedido);
-
-    const notificacion =
-      this.factoryNotification.crearSegunPedido(pedidoGuardado);
-    console.log(notificacion);
-    if (notificacion != null) {
-      this.usuarioService.notificar(notificacion);
-    }
+      this.notificacionService.crearSegunPedido(pedidoGuardado);
 
     return pedidoGuardado;
   }
@@ -101,7 +98,7 @@ export class PedidoService {
     if (!itemResult.success) {
       throw new DatosInvalidos(itemResult.error.issues[0].message);
     }
-    const producto = this.productoRepository.findById(itemDTO.productoID);
+    const producto = this.productoService.obtenerProducto(itemDTO.productoID);
     if (!producto) {
       throw new ProductoInexistente(itemDTO.productoID);
     }
@@ -185,14 +182,13 @@ export class PedidoService {
       cambioEstado.idUsuario,
       cambioEstado.motivo,
     );
-    const notificacion = this.factoryNotification.notificarEstadoPedido(
+    this.notificacionService.crearSegunEstadoPedido(
       estado[cambioEstado.estado],
       pedido,
     );
 
-    if (notificacion != null) {
-      this.usuarioService.notificar(notificacion);
-    }
     return pedido;
   }
 }
+
+export default new PedidoService(PedidoRepository, UsuarioService, ProductoService, NotificacionService)

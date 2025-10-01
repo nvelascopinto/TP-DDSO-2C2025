@@ -1,13 +1,18 @@
+import UsuarioRepository from "../models/repositories/usuarioRepository.js";
+import PedidoRepository from "../models/repositories/pedidoRepository.js";
+// import PedidoService from "./pedidoService.js";
 import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js";
 import { UsuarioSinPermiso } from "../errors/usuarioSinPermisos.js";
 import { DatosInvalidos } from "../errors/datosInvalidos.js";
 import { tipoUsuarioValidator } from "../validadores/validadorTipoUsuario.js";
 import { Usuario } from "../models/entities/usuario.js";
+import pedidoRepository from "../models/repositories/pedidoRepository.js";
 
-export class UsuarioService {
-  constructor(usuarioRepository, pedidoService) {
+class UsuarioService {
+  constructor(usuarioRepository, pedidoRepository ) {
     this.usuarioRepository = usuarioRepository;
-    this.pedidoService = pedidoService;
+    this.pedidoRepository = pedidoRepository
+    //this.pedidoService = pedidoService;
   }
 
   obtenerUsuario(id, roles) {
@@ -51,15 +56,11 @@ export class UsuarioService {
     return usuario;
   }
 
-  notificar(notificacion) {
-    const destinatario = this.buscar(notificacion.usuarioDestino);
-
-    destinatario.agregarNotificacion(notificacion);
-  }
-
   // TODO: Solucionar dependencia circular entre servicios: pedidos y usuarios
   consultarHistorial(id) {
-    const historial = this.pedidoService.consultarHistorial(id);
+    const historial = this.pedidoRepository.consultarHistorial(id);
     return historial;
   }
 }
+
+export default new UsuarioService(UsuarioRepository, PedidoRepository)

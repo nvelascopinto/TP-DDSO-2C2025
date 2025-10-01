@@ -1,8 +1,9 @@
+import UsuarioService from "../services/usuarioService.js";
 import { convertJSONtoUsuario } from "../conversores/conversoresUsuario.js";
 import { validarUsuario } from "../validadores/validadorUsuario.js";
 import { validarId } from "../validadores/validadorID.js";
 
-export class UsuarioController {
+class UsuarioController {
   constructor(usuarioService) {
     this.usuarioService = usuarioService;
   }
@@ -33,3 +34,5 @@ export class UsuarioController {
     res.status(200).json(pedido);
   }
 }
+
+export default new UsuarioController(UsuarioService)

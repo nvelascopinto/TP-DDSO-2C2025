@@ -1,6 +1,6 @@
 export class Notificacion {
   constructor(usuarioDestino, mensaje) {
-    // falta id
+    this.id = null
     this.usuarioDestino = usuarioDestino;
     this.mensaje = mensaje;
     this.fechaAlta = new Date();

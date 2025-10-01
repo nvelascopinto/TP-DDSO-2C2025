@@ -1,11 +1,11 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node --watch index.js",
+    "start": "node server.js",
+    "dev": "node --watch server.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint .",

@@ -1,14 +1,8 @@
-import { HealthController } from "../controllers/healthController.js";
+import { Router } from "express";
+import HealthController from "../controllers/healthController.js";
 
-import express from "express";
+const healthRouter = Router();
 
-const pathHealth = "/health-check";
+healthRouter.get('/health-check', HealthController.health);
 
-export default function healthRoutes(getController) {
-  const router = express.Router();
-
-  router.get(pathHealth, (req, res) => {
-    getController(HealthController).health(req, res);
-  });
-  return router;
-}
+export default healthRouter;

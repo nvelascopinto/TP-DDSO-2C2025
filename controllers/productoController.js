@@ -1,6 +1,7 @@
+import ProductoService from "../services/productoService.js";
 import { convertJSONtoProducto } from "../conversores/conversoresProducto.js";
 
-export class ProductoController {
+class ProductoController {
   constructor(productoService) {
     this.productoService = productoService;
   }
@@ -13,3 +14,5 @@ export class ProductoController {
     return res.status(201).json(nuevoProducto);
   }
 }
+
+export default new ProductoController(ProductoService)

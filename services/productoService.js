@@ -1,10 +1,12 @@
+import ProductoRepository from "../models/repositories/productoRepository.js";
+import UsuarioService from "./usuarioService.js";
 import { productoSchema } from "../validadores/validadorProducto.js";
 import { monedaValidator } from "../validadores/validadorMoneda.js";
 import { tipoUsuario } from "../models/entities/tipoUsuario.js";
 import { Producto } from "../models/entities/producto.js";
 import { DatosInvalidos } from "../errors/datosInvalidos.js";
 
-export class ProductoService {
+class ProductoService {
   constructor(productoRepository, usuarioService) {
     this.productoRepository = productoRepository;
     this.usuarioService = usuarioService;
@@ -51,4 +53,10 @@ export class ProductoService {
       resultProducto.activo,
     );
   }
+
+  obtenerProducto(id) {
+    return this.productoRepository.findByID(id)
+  }
 }
+
+export default new ProductoService(ProductoRepository, UsuarioService)

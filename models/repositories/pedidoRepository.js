@@ -1,4 +1,4 @@
-export class PedidoRepository {
+class PedidoRepository {
   constructor() {
     this.pedidos = [];
     this.nextId = 1;
@@ -21,3 +21,5 @@ export class PedidoRepository {
     return this.pedidos.find((p) => p.id === id) || null;
   }
 }
+
+export default new PedidoRepository()

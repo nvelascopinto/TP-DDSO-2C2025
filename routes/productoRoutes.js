@@ -1,19 +1,11 @@
-import { ProductoController } from "../controllers/productoController.js";
-import { errorHandler } from "../middleware/middlware.js";
-import express from "express";
+import { Router } from "express";
+import ProductoController from "../controllers/productoController.js";
 
-const pathProducto = "/productos";
+  const productoRouter = Router();
 
-export default function productoRoutes(getController) {
-  const router = express.Router();
+  productoRouter.post('/', (req, res, next) => {
+      ProductoController.crear(req, res);
 
-  router.post(pathProducto, (req, res, next) => {
-    try {
-      getController(ProductoController).crear(req, res);
-    } catch (err) {
-      next(err);
-    }
   });
-  router.use(errorHandler);
-  return router;
-}
+   
+export default productoRouter;

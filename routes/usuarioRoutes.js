@@ -1,35 +1,24 @@
-import { UsuarioController } from "../controllers/usuarioController.js";
-import { errorHandler } from "../middleware/middlware.js";
-import express from "express";
-const pathUsuario = "/usuarios";
+import { Router } from "express";
+import UsuarioController from "../controllers/usuarioController.js";
 
-export default function usuarioRoutes(getController) {
-  const router = express.Router();
+const usuarioRouter = Router();
 
-  router.post(pathUsuario, (req, res, next) => {
-    try {
-      getController(UsuarioController).crearUsuario(req, res);
-    } catch (err) {
-      next(err);
-    }
+  usuarioRouter.post('/', (req, res, next) => {
+
+      UsuarioController.crearUsuario(req, res);
+
   });
 
-  router.get(pathUsuario + "/:id", (req, res, next) => {
-    try {
-      getController(UsuarioController).verUsuario(req, res);
-    } catch (err) {
-      next(err);
-    }
+  usuarioRouter.get('/:id', (req, res, next) => {
+
+      UsuarioController.verUsuario(req, res);
+
   });
 
-  router.get(pathUsuario + "/:id/pedidos", (req, res, next) => {
-    try {
-      getController(UsuarioController).verHistorialUsuario(req, res);
-    } catch (err) {
-      next(err);
-    }
+  usuarioRouter.get('/:id/pedidos', (req, res, next) => {
+
+      UsuarioController.verHistorialUsuario(req, res);
+
   });
 
-  router.use(errorHandler);
-  return router;
-}
+export default usuarioRouter;

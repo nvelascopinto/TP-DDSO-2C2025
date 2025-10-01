@@ -1,8 +1,9 @@
+import PedidoService from "../services/pedidoService.js";
 import { convertJSONtoPedido } from "../conversores/conversoresPedido.js";
 import { validarId } from "../validadores/validadorID.js";
 import { validarCambioEstado } from "../validadores/validadorCambioEstado.js";
 
-export class PedidoController {
+class PedidoController {
   constructor(pedidoService) {
     this.pedidoService = pedidoService;
   }
@@ -54,3 +55,5 @@ export class PedidoController {
     return;
   }
 }
+
+export default new PedidoController(PedidoService)

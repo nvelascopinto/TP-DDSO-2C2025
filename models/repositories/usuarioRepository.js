@@ -1,4 +1,4 @@
-export class UsuarioRepository {
+class UsuarioRepository {
   constructor() {
     this.usuarios = [];
     this.nextId = 1;
@@ -14,3 +14,5 @@ export class UsuarioRepository {
     return this.usuarios.find((u) => u.id === id) || null;
   }
 }
+
+export default new UsuarioRepository()

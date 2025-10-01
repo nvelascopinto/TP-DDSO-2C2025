@@ -1,4 +1,4 @@
-export class ProductoRepository {
+class ProductoRepository {
   constructor() {
     this.productos = [];
     this.nextId = 1;
@@ -24,3 +24,5 @@ export class ProductoRepository {
     return this.productos.find((p) => p.id === id) || null;
   }
 }
+
+export default new ProductoRepository()
