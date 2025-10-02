@@ -1,10 +1,10 @@
 import UsuarioRepository from "../models/repositories/usuarioRepository.js"
 import PedidoRepository from "../models/repositories/pedidoRepository.js"
 // import PedidoService from "./pedidoService.js";
-import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js"
-import { UsuarioSinPermiso } from "../errors/usuarioSinPermisos.js"
-import { DatosInvalidos } from "../errors/datosInvalidos.js"
-import { tipoUsuarioValidator } from "../validadores/validadorTipoUsuario.js"
+import UsuarioInexistenteError from "../errors/usuarioInexistenteError.js"
+import UsuarioSinPermisoError from "../errors/usuarioSinPermisosError.js"
+import DatosInvalidosError from "../errors/datosInvalidosError.js"
+import { tipoUsuarioValidator } from "../validators/validadorTipoUsuario.js"
 import { Usuario } from "../models/entities/usuario.js"
 import pedidoRepository from "../models/repositories/pedidoRepository.js"
 
@@ -23,7 +23,7 @@ class UsuarioService {
     }
 
     if (!roles.includes(user.tipoUsuario)) {
-      throw new UsuarioSinPermiso(id)
+      throw new UsuarioSinPermisoError(id)
     }
 
     return user
@@ -33,7 +33,7 @@ class UsuarioService {
     const tipoUser = tipoUsuarioValidator(usuarioResult.tipoUsuario)
 
     if (tipoUser == null) {
-      throw new DatosInvalidos("El tipo de usuario no es valido")
+      throw new DatosInvalidosError("El tipo de usuario no es valido")
     }
 
     let nuevoUsuario = new Usuario(

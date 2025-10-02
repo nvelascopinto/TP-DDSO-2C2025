@@ -1,7 +1,11 @@
-export class UsuarioInexistenteError extends Error {
+import AppError from "./appError.js"
+
+class UsuarioInexistenteError extends AppError {
   constructor(usuarioID) {
-    super()
-    this.name = "UsuarioInexistenteError"
-    this.message = "No existe el usuario con el id enviado. ID : " + usuarioID
+    super(`No existe un usuario con el ID enviado`, 401, "UsuarioInexistenteError", {
+      usuarioID,
+    })
   }
 }
+
+export default UsuarioInexistenteError

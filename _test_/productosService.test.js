@@ -1,4 +1,4 @@
-import { DatosInvalidos } from "../errors/datosInvalidos"
+import { DatosInvalidos } from "../errors/datosInvalidosError"
 import { ProductoDTO } from "../models/DTO/productoDTO"
 import { Producto } from "../models/entities/producto"
 import { ProductoService } from "../services/productoService"

@@ -9,6 +9,7 @@ class ProductoController {
   crear(req, res) {
     const body = req.body
     const producto = convertJSONtoProducto(body)
+
     const nuevoProducto = this.productoService.crear(producto)
 
     return res.status(201).json(nuevoProducto)

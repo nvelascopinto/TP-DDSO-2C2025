@@ -1,7 +1,7 @@
 import PedidoService from "../services/pedidoService.js"
 import { convertJSONtoPedido } from "../conversores/conversoresPedido.js"
-import { validarId } from "../validadores/validadorID.js"
-import { validarCambioEstado } from "../validadores/validadorCambioEstado.js"
+import idValidator from "../validators/idValidator.js"
+import cambioEstadoPedidoValidator from "../validators/cambioEstadoPedidoValidator.js"
 
 class PedidoController {
   constructor(pedidoService) {
@@ -11,45 +11,45 @@ class PedidoController {
   crear(req, res) {
     const body = req.body
     const pedido = convertJSONtoPedido(body)
+
     const nuevoPedido = this.pedidoService.crear(pedido)
 
     return res.status(201).json(nuevoPedido)
   }
 
   cancelar(req, res) {
-    const id = validarId(req.params.id)
-    const cambioEstado = validarCambioEstado(req.body)
+    const id = idValidator.parse(req.params.id)
+    const cambioEstado = cambioEstadoPedidoValidator.parse(req.body)
+
     const pedidoCancelado = this.pedidoService.cancelar(cambioEstado, id)
 
-    res.status(200).json(pedidoCancelado)
-    return
+    return res.status(200).json(pedidoCancelado)
   }
 
   consultar(req, res) {
-    const id = validarId(req.params.id)
+    const id = idValidator.parse(req.params.id)
 
     const pedido = this.pedidoService.consultar(id)
 
-    res.status(200).json(pedido)
+    return res.status(200).json(pedido)
   }
 
   marcarEnviado(req, res) {
-    const id = validarId(req.params.id)
-    const idVendedor = validarId(req.body)
+    const id = idValidator.parse(req.params.id)
+    const idVendedor = idValidator.parse(req.body)
 
     const pedidoEnviado = this.pedidoService.marcarEnviado(idVendedor.data.idVendedor, id)
 
-    res.status(200).json(pedidoEnviado)
-    return
+    return res.status(200).json(pedidoEnviado)
   }
 
   cambioEstado(req, res) {
-    const id = validarId(req.params.id)
-    const cambioEstado = validarCambioEstado(req.body)
+    const id = idValidator.parse(req.params.id)
+    const cambioEstado = cambioEstadoPedidoValidator.parse(req.body)
+
     const pedidoModificado = this.pedidoService.cambioEstado(cambioEstado, id)
 
-    res.status(200).json(pedidoModificado)
-    return
+    return res.status(200).json(pedidoModificado)
   }
 }
 

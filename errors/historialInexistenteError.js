@@ -1,7 +1,14 @@
-export class HistorialInexistenteError extends Error {
+import AppError from "./appError.js"
+
+class HistorialInexistenteError extends AppError {
   constructor(IDUsuario) {
-    super()
-    this.name = "HistorialInexistenteError"
-    this.message = "No existe historial de pedidos para el usuario: " + IDUsuario
+    super(
+      "No existe un historial de pedidos para ese usuario",
+      404,
+      "HistorialInexistente",
+      { IDUsuario },
+    )
   }
 }
+
+export default HistorialInexistenteError

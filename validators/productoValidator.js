@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const productoSchema = z.object({
+const productoValidator = z.object({
   categoria: z.string(),
   titulo: z.string().min(1, "El titulo no puede estar vacío"),
   descripcion: z.string(),
@@ -8,3 +8,5 @@ export const productoSchema = z.object({
   stock: z.number().positive("Stock debe ser un numero mayor a 0"),
   activo: z.boolean(),
 })
+
+export default productoValidator

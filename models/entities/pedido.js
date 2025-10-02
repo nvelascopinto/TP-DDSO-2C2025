@@ -1,6 +1,6 @@
 import { estado } from "./estadoPedido.js"
 import { CambioEstadoPedido } from "./cambioEstadoPedido.js"
-import { YaEnEstadoError } from "../../errors/yaEnEstadoError.js"
+import YaEnEstadoError from "../../errors/yaEnEstadoError.js"
 export class Pedido {
   constructor(comprador, vendedor, items, moneda, direccionEntrega) {
     this.id = null // inciialmente se pone en null hasta que es guardado en el Repo

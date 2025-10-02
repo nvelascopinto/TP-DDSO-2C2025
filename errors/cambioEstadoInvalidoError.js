@@ -1,8 +1,12 @@
-export class CambioEstadoInvalidoError extends Error {
+import AppError from "./appError.js"
+
+class CambioEstadoInvalidoError extends AppError {
   constructor(estadoActual, nuevoEstado) {
-    super()
-    this.name = "CambioEstadoInvalidoError"
-    this.message =
-      "El pedido no puede pasar del estado " + estadoActual + " al estado " + nuevoEstado
+    super("El pedido no puede pasar a ese estado", 409, "CambioEstadoInvalidoError", {
+      estadoActual,
+      nuevoEstado,
+    })
   }
 }
+
+export default CambioEstadoInvalidoError

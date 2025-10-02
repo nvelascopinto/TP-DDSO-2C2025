@@ -1,10 +1,10 @@
 import ProductoRepository from "../models/repositories/productoRepository.js"
 import UsuarioService from "./usuarioService.js"
-import { productoSchema } from "../validadores/validadorProducto.js"
-import { monedaValidator } from "../validadores/validadorMoneda.js"
+import productoValidator from "../validators/productoValidator.js"
+import { monedaValidator } from "../validators/validadorMoneda.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { Producto } from "../models/entities/producto.js"
-import { DatosInvalidos } from "../errors/datosInvalidos.js"
+import DatosInvalidosError from "../errors/datosInvalidosError.js"
 
 class ProductoService {
   constructor(productoRepository, usuarioService) {
@@ -21,17 +21,17 @@ class ProductoService {
   }
 
   convertirDTOaProducto(productoDTO) {
-    const resultProd = productoSchema.safeParse(productoDTO)
+    const resultProd = productoValidator.safeParse(productoDTO)
 
     if (resultProd.error) {
-      throw new DatosInvalidos(resultProd.error.issues.map((i) => i.message))
+      throw new DatosInvalidosError(resultProd.error.issues.map((i) => i.message))
     }
 
     const resultProducto = resultProd.data
     const moneda = monedaValidator(productoDTO.moneda)
 
     if (!moneda) {
-      throw new DatosInvalidos(
+      throw new DatosInvalidosError(
         "La moneda ingresada no esta dentro de las opciones ofrecidas",
       )
     }
@@ -54,7 +54,7 @@ class ProductoService {
   }
 
   obtenerProducto(id) {
-    return this.productoRepository.findByID(id)
+    return this.productoRepository.findById(id)
   }
 }
 

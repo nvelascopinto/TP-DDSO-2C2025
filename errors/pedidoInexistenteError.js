@@ -1,7 +1,9 @@
-export class PedidoInexistenteError extends Error {
+import AppError from "./appError.js"
+
+class PedidoInexistenteError extends AppError {
   constructor(IDpedido) {
-    super()
-    this.name = "PedidoInexistenteError"
-    this.message = "No existe el pedido con ID : " + IDpedido
+    super(`No existe un pedido con ese ID`, 404, "PedidoInexistenteError", { IDpedido })
   }
 }
+
+export default PedidoInexistenteError

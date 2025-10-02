@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const itemSchema = z.object({
+const itemPedidoValidator = z.object({
   cantidad: z.number().nonnegative().min(1, {
     message: "La cantidad debe ser, entara, positiva y como minimo 1",
   }),
@@ -8,3 +8,5 @@ export const itemSchema = z.object({
     .number()
     .nonnegative({ message: "El precio debe ser un numero positivo" }),
 })
+
+export default itemPedidoValidator

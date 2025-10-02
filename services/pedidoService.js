@@ -4,22 +4,21 @@ import ProductoService from "./productoService.js"
 import NotificacionService from "./notificacionService.js"
 import { autorizadosAEstado, estado } from "../models/entities/estadoPedido.js"
 import { ordenEstados } from "../models/entities/estadoPedido.js"
-import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js"
-import { PedidoInexistenteError } from "../errors/pedidoInexistenteError.js"
-import { PedidoStockInsuficiente } from "../errors/pedidoStockInsuficiente.js"
 import { Pedido } from "../models/entities/pedido.js"
 import { DireccionEntrega } from "../models/entities/direccionEntrega.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { ItemPedido } from "../models/entities/itemPedido.js"
-import { itemSchema } from "../validadores/itemSchema.js"
-import { ProductoInexistente } from "../errors/productoInexistente.js"
-import { monedaValidator } from "../validadores/validadorMoneda.js"
-import { direccionSchema } from "../validadores/validadorDireccion.js"
-import { DatosInvalidos } from "../errors/datosInvalidos.js"
-import { CambioEstadoInvalidoError } from "../errors/cambioEstadoInvalidoError.js"
-import { YaEnEstadoError } from "../errors/yaEnEstadoError.js"
-import { HistorialInexistenteError } from "../errors/historialInexistenteError.js"
-
+import itemPedidoValidator from "../validators/itemPedidoValidator.js"
+import { monedaValidator } from "../validators/validadorMoneda.js"
+import direccionEntregaValidator from "../validators/direccionEntregaValidator.js"
+import DatosInvalidosError from "../errors/datosInvalidosError.js"
+import UsuarioInexistenteError from "../errors/usuarioInexistenteError.js"
+import PedidoInexistenteError from "../errors/pedidoInexistenteError.js"
+import PedidoStockInsuficienteError from "../errors/pedidoStockInsuficienteError.js"
+import ProductoInexistenteError from "../errors/productoInexistenteError.js"
+import CambioEstadoInvalidoError from "../errors/cambioEstadoInvalidoError.js"
+import YaEnEstadoError from "../errors/yaEnEstadoError.js"
+import HistorialInexistenteError from "../errors/historialInexistenteError.js"
 class PedidoService {
   constructor(pedidoRepository, usuarioService, productoService, notificacionService) {
     this.pedidoRepository = pedidoRepository
@@ -34,7 +33,7 @@ class PedidoService {
     const stockValido = nuevoPedido.validarStock()
 
     if (stockValido === false) {
-      throw new PedidoStockInsuficiente()
+      throw new PedidoStockInsuficienteError()
     }
 
     const pedidoGuardado = this.pedidoRepository.crear(nuevoPedido)
@@ -55,13 +54,13 @@ class PedidoService {
       return it
     })
     if (!items.every((item) => item.producto.vendedor.id === vendedor.id)) {
-      throw new DatosInvalidos(
+      throw new DatosInvalidosError(
         "Los productos del pedido deben ser todos del mismo vendedor",
       )
     }
     const moneda = monedaValidator(pedidoDTO.moneda)
     if (!moneda) {
-      throw new DatosInvalidos(
+      throw new DatosInvalidosError(
         "La moneda ingresada no esta dentro de las opciones ofrecidas",
       )
     }
@@ -72,10 +71,10 @@ class PedidoService {
   }
 
   convertirADireccion(direDTO) {
-    const direRe = direccionSchema.safeParse(direDTO)
+    const direRe = direccionEntregaValidator.safeParse(direDTO)
 
     if (!direRe.success) {
-      throw new DatosInvalidos(direRe.error.issues[0].message)
+      throw new DatosInvalidosError(direRe.error.issues[0].message)
     }
     const direResult = direDTO
     return new DireccionEntrega(
@@ -93,13 +92,13 @@ class PedidoService {
   }
 
   convertirAItem(itemDTO) {
-    const itemResult = itemSchema.safeParse(itemDTO)
+    const itemResult = itemPedidoValidator.safeParse(itemDTO)
     if (!itemResult.success) {
-      throw new DatosInvalidos(itemResult.error.issues[0].message)
+      throw new DatosInvalidosError(itemResult.error.issues[0].message)
     }
     const producto = this.productoService.obtenerProducto(itemDTO.productoID)
     if (!producto) {
-      throw new ProductoInexistente(itemDTO.productoID)
+      throw new ProductoInexistenteError(itemDTO.productoID)
     }
     return new ItemPedido(producto, itemDTO.cantidad, itemDTO.precioUnitario)
   }
