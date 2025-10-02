@@ -1,11 +1,10 @@
-import { Router } from "express";
-import ProductoController from "../controllers/productoController.js";
+import { Router } from "express"
+import ProductoController from "../controllers/productoController.js"
 
-  const productoRouter = Router();
+const productoRouter = Router()
 
-  productoRouter.post('/', (req, res, next) => {
-      ProductoController.crear(req, res);
+productoRouter.post("/", (req, res, next) => {
+  ProductoController.crear(req, res)
+})
 
-  });
-   
-export default productoRouter;
+export default productoRouter

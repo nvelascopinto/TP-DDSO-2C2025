@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { tipoUsuario } from "./tipoUsuario.js";
+import { z } from "zod"
+import { tipoUsuario } from "./tipoUsuario.js"
 
 export class Producto {
   constructor(
@@ -13,28 +13,28 @@ export class Producto {
     fotos,
     activo,
   ) {
-    this.id = null;
-    this.vendedor = vendedor;
-    this.titulo = titulo;
-    this.descripcion = descripcion;
-    this.categoria = categoria;
-    this.precio = precio;
-    this.moneda = moneda;
-    this.stock = stock;
-    this.fotos = fotos;
-    this.activo = activo;
+    this.id = null
+    this.vendedor = vendedor
+    this.titulo = titulo
+    this.descripcion = descripcion
+    this.categoria = categoria
+    this.precio = precio
+    this.moneda = moneda
+    this.stock = stock
+    this.fotos = fotos
+    this.activo = activo
   }
 
   estaDisponible(cantidad) {
-    return this.stock >= cantidad && this.activo;
+    return this.stock >= cantidad && this.activo
   }
 
   reducirStock(cantidad) {
-    this.stock -= cantidad;
+    this.stock -= cantidad
   }
 
   aumentarStock(cantidad) {
-    this.stock += cantidad;
+    this.stock += cantidad
   }
 
   mostrarProducto() {
@@ -55,7 +55,7 @@ export class Producto {
       this.stock +
       "/n FOTOS: " +
       this.fotos
-    );
+    )
   }
 }
 
@@ -70,4 +70,4 @@ export const productoSchema = z
   })
   .refine((obj) => obj.vendedor.tipoUsuario === tipoUsuario.VENDEDOR, {
     message: "El producto solo puede ser asignado a un usuario VENDEDOR",
-  });
+  })

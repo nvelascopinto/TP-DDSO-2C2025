@@ -1,6 +1,6 @@
 class HealthController {
   health(_req, res) {
-    return res.status(200).json("Health-check confirmado");
+    return res.status(200).json("Health-check confirmado")
   }
 }
 

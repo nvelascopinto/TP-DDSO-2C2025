@@ -1,10 +1,9 @@
-import NotificacionService from "../services/notificacionService.js";
+import NotificacionService from "../services/notificacionService.js"
 
 class notificacionController {
-    constructor(notificacionService) {
-        this.notificacionService = notificacionService;
-      }
-
+  constructor(notificacionService) {
+    this.notificacionService = notificacionService
+  }
 }
 
 export default new notificacionController(NotificacionService)

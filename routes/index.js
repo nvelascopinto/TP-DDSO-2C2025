@@ -1,16 +1,22 @@
 import express from "express"
-import healthRouter from "./healthRoutes.js";
-import pedidoRouter from "./pedidoRoutes.js";
-import productoRouter from "./productoRoutes.js";
-import usuarioRouter from "./usuarioRoutes.js";
-import notificacionRouter from "./notificacionRoutes.js";
+import healthRouter from "./healthRoutes.js"
+import pedidoRouter from "./pedidoRoutes.js"
+import productoRouter from "./productoRoutes.js"
+import usuarioRouter from "./usuarioRoutes.js"
+import notificacionRouter from "./notificacionRoutes.js"
+import { errorHandler } from "../middleware/errorHandler.js"
 
-const router = express.Router();
+const router = express.Router()
+
+router.use(express.json())
+router.use(express.urlencoded({ extended: true }))
 
 router.use(healthRouter)
-router.use('/pedidos', pedidoRouter)
-router.use('/productos', productoRouter)
-router.use('/usuarios', usuarioRouter)
-router.use('/notificaciones', notificacionRouter)
+router.use("/pedidos", pedidoRouter)
+router.use("/productos", productoRouter)
+router.use("/usuarios", usuarioRouter)
+router.use("/notificaciones", notificacionRouter)
 
-export default router;
+router.use(errorHandler)
+
+export default router

@@ -1,4 +1,4 @@
-import { ProductoDTO } from "../models/DTO/productoDTO.js";
+import { ProductoDTO } from "../models/DTO/productoDTO.js"
 
 export function convertJSONtoProducto(JSONProducto) {
   return new ProductoDTO(
@@ -11,5 +11,5 @@ export function convertJSONtoProducto(JSONProducto) {
     JSONProducto.stock,
     JSONProducto.fotos,
     JSONProducto.activo,
-  );
+  )
 }

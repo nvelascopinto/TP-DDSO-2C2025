@@ -1,84 +1,83 @@
-import PedidoRepository from "../models/repositories/pedidoRepository.js";
-import UsuarioService from "./usuarioService.js";
-import ProductoService from "./productoService.js";
-import NotificacionService from "./notificacionService.js";
-import { autorizadosAEstado, estado } from "../models/entities/estadoPedido.js";
-import { ordenEstados } from "../models/entities/estadoPedido.js";
-import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js";
-import { PedidoInexistenteError } from "../errors/pedidoInexistenteError.js";
-import { PedidoStockInsuficiente } from "../errors/pedidoStockInsuficiente.js";
-import { Pedido } from "../models/entities/pedido.js";
-import { DireccionEntrega } from "../models/entities/direccionEntrega.js";
-import { tipoUsuario } from "../models/entities/tipoUsuario.js";
-import { ItemPedido } from "../models/entities/itemPedido.js";
-import { itemSchema } from "../validadores/itemSchema.js";
-import { ProductoInexistente } from "../errors/productoInexistente.js";
-import { monedaValidator } from "../validadores/validadorMoneda.js";
-import { direccionSchema } from "../validadores/validadorDireccion.js";
-import { DatosInvalidos } from "../errors/datosInvalidos.js";
-import { CambioEstadoInvalidoError } from "../errors/cambioEstadoInvalidoError.js";
-import { YaEnEstadoError } from "../errors/yaEnEstadoError.js";
-import { HistorialInexistenteError } from "../errors/historialInexistenteError.js";
+import PedidoRepository from "../models/repositories/pedidoRepository.js"
+import UsuarioService from "./usuarioService.js"
+import ProductoService from "./productoService.js"
+import NotificacionService from "./notificacionService.js"
+import { autorizadosAEstado, estado } from "../models/entities/estadoPedido.js"
+import { ordenEstados } from "../models/entities/estadoPedido.js"
+import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js"
+import { PedidoInexistenteError } from "../errors/pedidoInexistenteError.js"
+import { PedidoStockInsuficiente } from "../errors/pedidoStockInsuficiente.js"
+import { Pedido } from "../models/entities/pedido.js"
+import { DireccionEntrega } from "../models/entities/direccionEntrega.js"
+import { tipoUsuario } from "../models/entities/tipoUsuario.js"
+import { ItemPedido } from "../models/entities/itemPedido.js"
+import { itemSchema } from "../validadores/itemSchema.js"
+import { ProductoInexistente } from "../errors/productoInexistente.js"
+import { monedaValidator } from "../validadores/validadorMoneda.js"
+import { direccionSchema } from "../validadores/validadorDireccion.js"
+import { DatosInvalidos } from "../errors/datosInvalidos.js"
+import { CambioEstadoInvalidoError } from "../errors/cambioEstadoInvalidoError.js"
+import { YaEnEstadoError } from "../errors/yaEnEstadoError.js"
+import { HistorialInexistenteError } from "../errors/historialInexistenteError.js"
 
 class PedidoService {
   constructor(pedidoRepository, usuarioService, productoService, notificacionService) {
-    this.pedidoRepository = pedidoRepository;
-    this.usuarioService = usuarioService;
-    this.productoService = productoService;
+    this.pedidoRepository = pedidoRepository
+    this.usuarioService = usuarioService
+    this.productoService = productoService
     this.notificacionService = notificacionService
   }
 
   crear(pedidoDTO) {
-    const nuevoPedido = this.convertirAPedido(pedidoDTO);
+    const nuevoPedido = this.convertirAPedido(pedidoDTO)
 
-    const stockValido = nuevoPedido.validarStock();
+    const stockValido = nuevoPedido.validarStock()
 
     if (stockValido === false) {
-      throw new PedidoStockInsuficiente();
+      throw new PedidoStockInsuficiente()
     }
 
-    const pedidoGuardado = this.pedidoRepository.crear(nuevoPedido);
-      this.notificacionService.crearSegunPedido(pedidoGuardado);
+    const pedidoGuardado = this.pedidoRepository.crear(nuevoPedido)
+    this.notificacionService.crearSegunPedido(pedidoGuardado)
 
-    return pedidoGuardado;
+    return pedidoGuardado
   }
 
   convertirAPedido(pedidoDTO) {
-    const comprador = this.usuarioService.obtenerUsuario(
-      pedidoDTO.compradorID,
-      [tipoUsuario.COMPRADOR],
-    );
+    const comprador = this.usuarioService.obtenerUsuario(pedidoDTO.compradorID, [
+      tipoUsuario.COMPRADOR,
+    ])
     const vendedor = this.usuarioService.obtenerUsuario(pedidoDTO.vendedorID, [
       tipoUsuario.VENDEDOR,
-    ]);
+    ])
     const items = pedidoDTO.itemsDTO.map((item) => {
-      const it = this.convertirAItem(item);
-      return it;
-    });
+      const it = this.convertirAItem(item)
+      return it
+    })
     if (!items.every((item) => item.producto.vendedor.id === vendedor.id)) {
       throw new DatosInvalidos(
         "Los productos del pedido deben ser todos del mismo vendedor",
-      );
+      )
     }
-    const moneda = monedaValidator(pedidoDTO.moneda);
+    const moneda = monedaValidator(pedidoDTO.moneda)
     if (!moneda) {
       throw new DatosInvalidos(
         "La moneda ingresada no esta dentro de las opciones ofrecidas",
-      );
+      )
     }
 
-    const direEntrega = this.convertirADireccion(pedidoDTO.direccionEntregaDTO);
+    const direEntrega = this.convertirADireccion(pedidoDTO.direccionEntregaDTO)
 
-    return new Pedido(comprador, vendedor, items, moneda, direEntrega);
+    return new Pedido(comprador, vendedor, items, moneda, direEntrega)
   }
 
   convertirADireccion(direDTO) {
-    const direRe = direccionSchema.safeParse(direDTO);
+    const direRe = direccionSchema.safeParse(direDTO)
 
     if (!direRe.success) {
-      throw new DatosInvalidos(direRe.error.issues[0].message);
+      throw new DatosInvalidos(direRe.error.issues[0].message)
     }
-    const direResult = direDTO;
+    const direResult = direDTO
     return new DireccionEntrega(
       direResult.calle,
       direResult.altura,
@@ -90,28 +89,28 @@ class PedidoService {
       direResult.pais,
       direResult.latitud,
       direResult.longitud,
-    );
+    )
   }
 
   convertirAItem(itemDTO) {
-    const itemResult = itemSchema.safeParse(itemDTO);
+    const itemResult = itemSchema.safeParse(itemDTO)
     if (!itemResult.success) {
-      throw new DatosInvalidos(itemResult.error.issues[0].message);
+      throw new DatosInvalidos(itemResult.error.issues[0].message)
     }
-    const producto = this.productoService.obtenerProducto(itemDTO.productoID);
+    const producto = this.productoService.obtenerProducto(itemDTO.productoID)
     if (!producto) {
-      throw new ProductoInexistente(itemDTO.productoID);
+      throw new ProductoInexistente(itemDTO.productoID)
     }
-    return new ItemPedido(producto, itemDTO.cantidad, itemDTO.precioUnitario);
+    return new ItemPedido(producto, itemDTO.cantidad, itemDTO.precioUnitario)
   }
 
   consultar(id) {
-    const pedido = this.pedidoRepository.findById(id);
+    const pedido = this.pedidoRepository.findById(id)
     if (pedido == null) {
-      throw new PedidoInexistenteError(id);
+      throw new PedidoInexistenteError(id)
     }
 
-    return pedido;
+    return pedido
   }
 
   usuarioEsValidoCompra(id, pedido) {
@@ -119,76 +118,75 @@ class PedidoService {
       tipoUsuario.COMPRADOR,
       tipoUsuario.VENDEDOR,
       tipoUsuario.ADMIN,
-    ]);
+    ])
 
     return (
       pedido.comprador.id == usuario.id ||
       pedido.vendedor.id == usuario.id ||
       usuario.tipoUsuario === "Admin"
-    );
+    )
   }
   usuarioEsValido(id) {
     this.usuarioService.obtenerUsuario(id, [
       tipoUsuario.COMPRADOR,
       tipoUsuario.VENDEDOR,
       tipoUsuario.ADMIN,
-    ]);
-    return true;
+    ])
+    return true
   }
 
   usuarioEstaAutorizado(id, roles) {
-    const usuario = this.usuarioService.obtenerUsuario(id, roles);
+    const usuario = this.usuarioService.obtenerUsuario(id, roles)
     if (usuario == null) {
-      throw new UsuarioInexistenteError(id);
+      throw new UsuarioInexistenteError(id)
     }
-    return true;
+    return true
   }
 
   consultarHistorial(id) {
     if (this.usuarioEsValido(id)) {
-      const historialPedidos = this.pedidoRepository.consultarHistorial(id);
+      const historialPedidos = this.pedidoRepository.consultarHistorial(id)
       if (historialPedidos.length == 0) {
-        throw new HistorialInexistenteError(id);
+        throw new HistorialInexistenteError(id)
       }
-      return historialPedidos;
+      return historialPedidos
     }
   }
 
   esValidoCambioEstado(nuevoEstado, estadoActual) {
-    const indiceEstadoActual = ordenEstados.indexOf(estadoActual);
-    const indiceEstadoNuevo = ordenEstados.indexOf(nuevoEstado);
+    const indiceEstadoActual = ordenEstados.indexOf(estadoActual)
+    const indiceEstadoNuevo = ordenEstados.indexOf(nuevoEstado)
 
     if (indiceEstadoNuevo == indiceEstadoActual) {
-      throw new YaEnEstadoError(nuevoEstado);
+      throw new YaEnEstadoError(nuevoEstado)
     }
-    if (
-      indiceEstadoNuevo < indiceEstadoActual ||
-      estadoActual == estado.CANCELADO
-    ) {
-      throw new CambioEstadoInvalidoError(estadoActual, nuevoEstado);
+    if (indiceEstadoNuevo < indiceEstadoActual || estadoActual == estado.CANCELADO) {
+      throw new CambioEstadoInvalidoError(estadoActual, nuevoEstado)
     }
-    return true;
+    return true
   }
 
   cambioEstado(cambioEstado, idPedido) {
     this.usuarioEstaAutorizado(
       cambioEstado.idUsuario,
       autorizadosAEstado[cambioEstado.estado],
-    );
-    const pedido = this.consultar(idPedido);
-    this.esValidoCambioEstado(estado[cambioEstado.estado], pedido.estado);
+    )
+    const pedido = this.consultar(idPedido)
+    this.esValidoCambioEstado(estado[cambioEstado.estado], pedido.estado)
     pedido.actualizarEstado(
       estado[cambioEstado.estado],
       cambioEstado.idUsuario,
       cambioEstado.motivo,
-    );
-    this.notificacionService.crearSegunEstadoPedido(
-      estado[cambioEstado.estado],
-      pedido,
-    );
+    )
+    this.notificacionService.crearSegunEstadoPedido(estado[cambioEstado.estado], pedido)
 
-    return pedido;
+    return pedido
   }
 }
 
-export default new PedidoService(PedidoRepository, UsuarioService, ProductoService, NotificacionService)
+export default new PedidoService(
+  PedidoRepository,
+  UsuarioService,
+  ProductoService,
+  NotificacionService,
+)

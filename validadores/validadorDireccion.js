@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod"
 
 export const direccionSchema = z.object({
   calle: z.string(),
@@ -11,4 +11,4 @@ export const direccionSchema = z.object({
   pais: z.string(),
   latitud: z.number(),
   longitud: z.number(),
-});
+})

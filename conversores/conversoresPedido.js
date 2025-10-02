@@ -1,6 +1,6 @@
-import { convertJSONtoItems } from "./conversorItems.js";
-import { PedidoDTO } from "../models/DTO/pedidosDTO.js";
-import { DireccionEntregaDTO } from "../models/DTO/direccionEntregaDTO.js";
+import { convertJSONtoItems } from "./conversorItems.js"
+import { PedidoDTO } from "../models/DTO/pedidosDTO.js"
+import { DireccionEntregaDTO } from "../models/DTO/direccionEntregaDTO.js"
 
 export function convertJSONtoPedido(nuevoPedidoJSON) {
   return new PedidoDTO(
@@ -9,7 +9,7 @@ export function convertJSONtoPedido(nuevoPedidoJSON) {
     convertJSONtoItems(nuevoPedidoJSON.items),
     nuevoPedidoJSON.moneda,
     convertJSONtoDireccionEntrega(nuevoPedidoJSON.direccionEntrega),
-  );
+  )
 }
 
 export function convertJSONtoDireccionEntrega(direccionJSON) {
@@ -24,5 +24,5 @@ export function convertJSONtoDireccionEntrega(direccionJSON) {
     direccionJSON.pais,
     direccionJSON.latitud,
     direccionJSON.longitud,
-  );
+  )
 }
