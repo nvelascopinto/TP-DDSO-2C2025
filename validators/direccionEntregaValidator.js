@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-const direccionEntregaValidator = z.object({
+export const direccionEntregaValidator = z.object({
   calle: z.string(),
   altura: z.number(),
   piso: z.number().nullable(),
@@ -12,5 +12,3 @@ const direccionEntregaValidator = z.object({
   latitud: z.number(),
   longitud: z.number(),
 })
-
-export default direccionEntregaValidator

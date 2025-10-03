@@ -1,6 +1,8 @@
 import { z } from "zod"
+import DatosInvalidosError from "../errors/datosInvalidosError.js"
 
-const itemPedidoValidator = z.object({
+export const itemPedidoValidator = z.object({
+  producto: z.number().nonnegative(),
   cantidad: z.number().nonnegative().min(1, {
     message: "La cantidad debe ser, entara, positiva y como minimo 1",
   }),
@@ -9,4 +11,10 @@ const itemPedidoValidator = z.object({
     .nonnegative({ message: "El precio debe ser un numero positivo" }),
 })
 
-export default itemPedidoValidator
+export function validarItemsConVendedor(items, vendedorID) {
+  if (!items.every((item) => item.producto.vendedor.id === vendedorID)) {
+    throw new DatosInvalidosError(
+      "Los productos del pedido deben ser todos del mismo vendedor",
+    )
+  }
+}

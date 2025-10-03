@@ -1,7 +1,7 @@
 import UsuarioService from "../services/usuarioService.js"
 import { convertJSONtoUsuario } from "../conversores/conversoresUsuario.js"
-import usuarioValidator from "../validators/usuarioValidator.js"
-import idValidator from "../validators/idValidator.js"
+import {usuarioValidator} from "../validators/usuarioValidator.js"
+import {idValidator } from "../validators/idValidator.js"
 
 class UsuarioController {
   constructor(usuarioService) {

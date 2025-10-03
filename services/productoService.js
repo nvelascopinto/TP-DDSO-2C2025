@@ -1,10 +1,11 @@
 import ProductoRepository from "../models/repositories/productoRepository.js"
 import UsuarioService from "./usuarioService.js"
-import productoValidator from "../validators/productoValidator.js"
-import { monedaValidator } from "../validators/monedaValidator.js"
+import { productoValidator } from "../validators/productoValidator.js"
+import { validarMoneda } from "../validators/monedaValidator.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { Producto } from "../models/entities/producto.js"
 import DatosInvalidosError from "../errors/datosInvalidosError.js"
+import { validarExistenciaDeProducto } from "../validators/productoValidator.js"
 
 class ProductoService {
   constructor(productoRepository, usuarioService) {
@@ -17,6 +18,8 @@ class ProductoService {
 
     const productoGuardado = this.productoRepository.crear(resultProducto)
 
+    console.log(this.productoRepository.productos)
+
     return productoGuardado
   }
 
@@ -28,13 +31,7 @@ class ProductoService {
     }
 
     const resultProducto = resultProd.data
-    const moneda = monedaValidator(productoDTO.moneda)
-
-    if (!moneda) {
-      throw new DatosInvalidosError(
-        "La moneda ingresada no esta dentro de las opciones ofrecidas",
-      )
-    }
+    validarMoneda(productoDTO.moneda)
 
     const vendedor = this.usuarioService.obtenerUsuario(productoDTO.vendedorID, [
       tipoUsuario.VENDEDOR,
@@ -46,7 +43,7 @@ class ProductoService {
       resultProducto.descripcion,
       resultProducto.categoria,
       resultProducto.precio,
-      moneda,
+      productoDTO.moneda,
       resultProducto.stock,
       resultProducto.fotos,
       resultProducto.activo,
@@ -54,7 +51,12 @@ class ProductoService {
   }
 
   obtenerProducto(id) {
-    return this.productoRepository.findById(id)
+    console.log("Buscando producto con id:", id)
+    const producto = this.productoRepository.findById(id)
+    console.log("Producto encontrado:", producto)
+    validarExistenciaDeProducto(producto, id)
+
+    return producto
   }
 
   obtenerTodosDeVendedor(vendedor) {

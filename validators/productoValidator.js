@@ -1,6 +1,7 @@
 import { z } from "zod"
+import ProductoInexistenteError from "../errors/productoInexistenteError.js"
 
-const productoValidator = z.object({
+export const productoValidator = z.object({
   categoria: z.string(),
   titulo: z.string().min(1, "El titulo no puede estar vacío"),
   descripcion: z.string(),
@@ -9,4 +10,8 @@ const productoValidator = z.object({
   activo: z.boolean(),
 })
 
-export default productoValidator
+export function validarExistenciaDeProducto(producto, id) {
+  if(!producto) {
+      throw new ProductoInexistenteError(id)
+    }
+}

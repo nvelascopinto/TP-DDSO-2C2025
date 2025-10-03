@@ -7,6 +7,3 @@ export function tipoUsuarioValidator(tipoUser) {
   return tipoUser
 }
 
-// function getKeyByValue(enumObj, value) {
-//   return Object.keys(enumObj).find((key) => enumObj[key] === value)
-// }

@@ -1,6 +1,6 @@
 import NotificacionService from "../services/notificacionService.js"
 import { notificacionValidator } from "../validators/notificacionValidator.js"
-import idValidator from "../validators/idValidator.js"
+import { idValidator } from "../validators/idValidator.js"
 
 class notificacionController {
   constructor(notificacionService) {

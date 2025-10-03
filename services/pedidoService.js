@@ -8,14 +8,10 @@ import { Pedido } from "../models/entities/pedido.js"
 import { DireccionEntrega } from "../models/entities/direccionEntrega.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { ItemPedido } from "../models/entities/itemPedido.js"
-import itemPedidoValidator from "../validators/itemPedidoValidator.js"
-import { monedaValidator } from "../validators/monedaValidator.js"
-import direccionEntregaValidator from "../validators/direccionEntregaValidator.js"
-import DatosInvalidosError from "../errors/datosInvalidosError.js"
+import { validarMoneda } from "../validators/monedaValidator.js"
+import { validarItemsConVendedor } from "../validators/itemPedidoValidator.js"
 import UsuarioInexistenteError from "../errors/usuarioInexistenteError.js"
 import PedidoInexistenteError from "../errors/pedidoInexistenteError.js"
-import PedidoStockInsuficienteError from "../errors/pedidoStockInsuficienteError.js"
-import ProductoInexistenteError from "../errors/productoInexistenteError.js"
 import CambioEstadoInvalidoError from "../errors/cambioEstadoInvalidoError.js"
 import YaEnEstadoError from "../errors/yaEnEstadoError.js"
 import HistorialInexistenteError from "../errors/historialInexistenteError.js"
@@ -28,13 +24,9 @@ class PedidoService {
   }
 
   crear(pedidoDTO) {
-    const nuevoPedido = this.convertirAPedido(pedidoDTO)
+    const nuevoPedido = this.convertirAPedido(pedidoDTO) // Lo convierto a una entidad de mi negocio
 
-    const stockValido = nuevoPedido.validarStock()
-
-    if (stockValido === false) {
-      throw new PedidoStockInsuficienteError()
-    }
+    nuevoPedido.validarStock()
 
     const pedidoGuardado = this.pedidoRepository.crear(nuevoPedido)
     this.notificacionService.crearSegunPedido(pedidoGuardado)
@@ -43,64 +35,33 @@ class PedidoService {
   }
 
   convertirAPedido(pedidoDTO) {
-    const comprador = this.usuarioService.obtenerUsuario(pedidoDTO.compradorID, [
-      tipoUsuario.COMPRADOR,
-    ])
-    const vendedor = this.usuarioService.obtenerUsuario(pedidoDTO.vendedorID, [
-      tipoUsuario.VENDEDOR,
-    ])
-    const items = pedidoDTO.itemsDTO.map((item) => {
-      const it = this.convertirAItem(item)
-      return it
+    const comprador = this.usuarioService.obtenerUsuario(pedidoDTO.compradorID, [tipoUsuario.COMPRADOR,])
+
+    const vendedor = this.usuarioService.obtenerUsuario(pedidoDTO.vendedorID, [tipoUsuario.VENDEDOR,])
+
+    const items = pedidoDTO.itemsDTO.map(itemDTO => {
+      console.log("ItemDTO.productoID:", itemDTO.productoID)
+      const producto = this.productoService.obtenerProducto(itemDTO.productoID)
+      return new ItemPedido(producto, itemDTO.cantidad, itemDTO.precioUnitario)
     })
-    if (!items.every((item) => item.producto.vendedor.id === vendedor.id)) {
-      throw new DatosInvalidosError(
-        "Los productos del pedido deben ser todos del mismo vendedor",
-      )
-    }
-    const moneda = monedaValidator(pedidoDTO.moneda)
-    if (!moneda) {
-      throw new DatosInvalidosError(
-        "La moneda ingresada no esta dentro de las opciones ofrecidas",
-      )
-    }
 
-    const direEntrega = this.convertirADireccion(pedidoDTO.direccionEntregaDTO)
-
-    return new Pedido(comprador, vendedor, items, moneda, direEntrega)
-  }
-
-  convertirADireccion(direDTO) {
-    const direRe = direccionEntregaValidator.safeParse(direDTO)
-
-    if (!direRe.success) {
-      throw new DatosInvalidosError(direRe.error.issues[0].message)
-    }
-    const direResult = direDTO
-    return new DireccionEntrega(
-      direResult.calle,
-      direResult.altura,
-      direResult.piso,
-      direResult.departamento,
-      direResult.codigoPostal,
-      direResult.ciudad,
-      direResult.provincia,
-      direResult.pais,
-      direResult.latitud,
-      direResult.longitud,
+    const direEntrega = new DireccionEntrega(
+      pedidoDTO.direccionEntregaDTO.calle,
+      pedidoDTO.direccionEntregaDTO.altura,
+      pedidoDTO.direccionEntregaDTO.piso,
+      pedidoDTO.direccionEntregaDTO.departamento,
+      pedidoDTO.direccionEntregaDTO.codigoPostal,
+      pedidoDTO.direccionEntregaDTO.ciudad,
+      pedidoDTO.direccionEntregaDTO.provincia,
+      pedidoDTO.direccionEntregaDTO.pais,
+      pedidoDTO.direccionEntregaDTO.latitud,
+      pedidoDTO.direccionEntregaDTO.longitud,
     )
-  }
 
-  convertirAItem(itemDTO) {
-    const itemResult = itemPedidoValidator.safeParse(itemDTO)
-    if (!itemResult.success) {
-      throw new DatosInvalidosError(itemResult.error.issues[0].message)
-    }
-    const producto = this.productoService.obtenerProducto(itemDTO.productoID)
-    if (!producto) {
-      throw new ProductoInexistenteError(itemDTO.productoID)
-    }
-    return new ItemPedido(producto, itemDTO.cantidad, itemDTO.precioUnitario)
+    validarItemsConVendedor(items, vendedor.id)
+    validarMoneda(pedidoDTO.moneda)
+
+    return new Pedido(comprador, vendedor, items, pedidoDTO.moneda, direEntrega)
   }
 
   consultar(id) {

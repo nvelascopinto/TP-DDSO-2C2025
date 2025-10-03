@@ -1,6 +1,7 @@
 import { estado } from "./estadoPedido.js"
 import { CambioEstadoPedido } from "./cambioEstadoPedido.js"
 import YaEnEstadoError from "../../errors/yaEnEstadoError.js"
+import PedidoStockInsuficienteError from "../../errors/pedidoStockInsuficienteError.js"
 export class Pedido {
   constructor(comprador, vendedor, items, moneda, direccionEntrega) {
     //validate()
@@ -31,7 +32,11 @@ export class Pedido {
   }
 
   validarStock() {
-    return this.items.every((item) => item.producto.estaDisponible(item.cantidad))
+    if (!this.items.every((item) => item.producto.estaDisponible(item.cantidad))) {
+      throw new PedidoStockInsuficienteError()
+    }
+
+    return true
   }
 
   mostrarItems() {

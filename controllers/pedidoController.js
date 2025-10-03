@@ -1,7 +1,8 @@
 import PedidoService from "../services/pedidoService.js"
 import { convertJSONtoPedido } from "../conversores/conversoresPedido.js"
-import idValidator from "../validators/idValidator.js"
-import cambioEstadoPedidoValidator from "../validators/cambioEstadoPedidoValidator.js"
+import { pedidoValidator } from "../validators/pedidoValidator.js"
+import {idValidator} from "../validators/idValidator.js"
+import {cambioEstadoPedidoValidator} from "../validators/cambioEstadoPedidoValidator.js"
 
 class PedidoController {
   constructor(pedidoService) {
@@ -9,8 +10,10 @@ class PedidoController {
   }
 
   crear(req, res) {
-    const body = req.body
-    const pedido = convertJSONtoPedido(body)
+    const body = pedidoValidator.parse(req.body)
+
+    const pedido = convertJSONtoPedido(body) // Convierte a DTO para pasarselo al service
+    console.log("ItemsDTO convertidos:", pedido.itemsDTO)
 
     const nuevoPedido = this.pedidoService.crear(pedido)
 

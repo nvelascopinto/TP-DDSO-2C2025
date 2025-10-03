@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-const idValidator = z.string().transform((val, ctx) => {
+export const idValidator = z.string().transform((val, ctx) => {
   const num = Number(val)
   if (isNaN(num) || num < 0) {
     ctx.addIssue({
@@ -12,4 +12,3 @@ const idValidator = z.string().transform((val, ctx) => {
   return num
 })
 
-export default idValidator
