@@ -11,9 +11,7 @@ class PedidoController {
 
   crear(req, res) {
     const body = pedidoValidator.parse(req.body)
-
-    const pedido = convertJSONtoPedido(body) // Convierte a DTO para pasarselo al service
-    console.log("ItemsDTO convertidos:", pedido.itemsDTO)
+    const pedido = convertJSONtoPedido(body)
 
     const nuevoPedido = this.pedidoService.crear(pedido)
 

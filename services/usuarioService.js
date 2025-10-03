@@ -1,11 +1,8 @@
 import UsuarioRepository from "../models/repositories/usuarioRepository.js"
 import PedidoRepository from "../models/repositories/pedidoRepository.js"
 // import PedidoService from "./pedidoService.js";
-import UsuarioInexistenteError from "../errors/usuarioInexistenteError.js"
-import UsuarioSinPermisoError from "../errors/usuarioSinPermisoError.js"
-import DatosInvalidosError from "../errors/datosInvalidosError.js"
-import { tipoUsuarioValidator } from "../validators/tipoUsuarioValidator.js"
 import { Usuario } from "../models/entities/usuario.js"
+import { validarExistenciaDeUsuario } from "../validators/usuarioValidator.js"
 
 class UsuarioService {
   constructor(usuarioRepository, pedidoRepository) {
@@ -14,28 +11,19 @@ class UsuarioService {
     //this.pedidoService = pedidoService;
   }
 
+  /************************** "VALIDAR" UN USUARIO **************************/
   obtenerUsuario(id, roles) {
     const user = this.usuarioRepository.findById(id)
+    validarExistenciaDeUsuario(user, id)
 
-    if (user == null) {
-      throw new UsuarioInexistenteError(id)
-    }
-
-    if (!roles.includes(user.tipoUsuario)) {
-      throw new UsuarioSinPermisoError(id)
-    }
+    user.validarRol(roles)
 
     return user
   }
 
+  /************************** CREAR UN USUARIO **************************/
   crearUsuario(usuarioResult) {
-    const tipoUser = tipoUsuarioValidator(usuarioResult.tipoUsuario)
-
-    if (tipoUser == null) {
-      throw new DatosInvalidosError("El tipo de usuario no es valido")
-    }
-
-    let nuevoUsuario = new Usuario(
+    const nuevoUsuario = new Usuario(
       usuarioResult.nombre,
       usuarioResult.email,
       usuarioResult.telefono,
@@ -45,15 +33,15 @@ class UsuarioService {
     return this.usuarioRepository.crear(nuevoUsuario)
   }
 
+  /************************** CONSULTAR UN USUARIO **************************/
   buscar(id) {
     const usuario = this.usuarioRepository.findById(id)
-
-    if (!usuario) {
-      throw new UsuarioInexistenteError(id)
-    }
+    validarExistenciaDeUsuario(usuario, id)
 
     return usuario
   }
+
+  /************************** CONSULTAR EL HISTORIAL DE UN USUARIO **************************/
 
   // TODO: Solucionar dependencia circular entre servicios: pedidos y usuarios
   consultarHistorial(id) {

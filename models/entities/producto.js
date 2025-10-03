@@ -1,5 +1,5 @@
-import { z } from "zod"
-import { tipoUsuario } from "./tipoUsuario.js"
+import { Moneda } from "./moneda.js"
+import DatosInvalidosError from "../../errors/datosInvalidosError.js"
 
 export class Producto {
   constructor(
@@ -23,6 +23,8 @@ export class Producto {
     this.stock = stock
     this.fotos = fotos
     this.activo = activo
+
+    this.validarMoneda()
   }
 
   estaDisponible(cantidad) {
@@ -57,17 +59,12 @@ export class Producto {
       this.fotos
     )
   }
-}
 
-// mover cuando tenga su controller o a una carpeta schema
-export const productoSchema = z
-  .object({
-    stock: z.number().nonnegative(),
-    precio: z.number().nonnegative(),
-    vendedor: z.object({
-      tipoUsuario: z.enum(Object.values(tipoUsuario)),
-    }),
-  })
-  .refine((obj) => obj.vendedor.tipoUsuario === tipoUsuario.VENDEDOR, {
-    message: "El producto solo puede ser asignado a un usuario VENDEDOR",
-  })
+  validarMoneda() {
+    if (!Object.values(Moneda).includes(this.moneda)) {
+      throw new DatosInvalidosError(
+        "La moneda ingresada no esta dentro de las opciones ofrecidas",
+      )
+    }
+  }
+}

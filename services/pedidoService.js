@@ -3,18 +3,15 @@ import UsuarioService from "./usuarioService.js"
 import ProductoService from "./productoService.js"
 import NotificacionService from "./notificacionService.js"
 import { autorizadosAEstado, estado } from "../models/entities/estadoPedido.js"
-import { ordenEstados } from "../models/entities/estadoPedido.js"
 import { Pedido } from "../models/entities/pedido.js"
 import { DireccionEntrega } from "../models/entities/direccionEntrega.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { ItemPedido } from "../models/entities/itemPedido.js"
-import { validarMoneda } from "../validators/monedaValidator.js"
-import { validarItemsConVendedor } from "../validators/itemPedidoValidator.js"
-import UsuarioInexistenteError from "../errors/usuarioInexistenteError.js"
-import PedidoInexistenteError from "../errors/pedidoInexistenteError.js"
-import CambioEstadoInvalidoError from "../errors/cambioEstadoInvalidoError.js"
-import YaEnEstadoError from "../errors/yaEnEstadoError.js"
-import HistorialInexistenteError from "../errors/historialInexistenteError.js"
+import {
+  validarExistenciaDePedido,
+  validarExistenciaDeHistorial,
+} from "../validators/pedidoValidator.js"
+
 class PedidoService {
   constructor(pedidoRepository, usuarioService, productoService, notificacionService) {
     this.pedidoRepository = pedidoRepository
@@ -23,8 +20,9 @@ class PedidoService {
     this.notificacionService = notificacionService
   }
 
+  /************************** CREAR UN PEDIDO **************************/
   crear(pedidoDTO) {
-    const nuevoPedido = this.convertirAPedido(pedidoDTO) // Lo convierto a una entidad de mi negocio
+    const nuevoPedido = this.convertirAPedido(pedidoDTO)
 
     nuevoPedido.validarStock()
 
@@ -44,7 +42,6 @@ class PedidoService {
     ])
 
     const items = pedidoDTO.itemsDTO.map((itemDTO) => {
-      console.log("ItemDTO.productoID:", itemDTO.productoID)
       const producto = this.productoService.obtenerProducto(itemDTO.productoID)
       return new ItemPedido(producto, itemDTO.cantidad, itemDTO.precioUnitario)
     })
@@ -62,17 +59,55 @@ class PedidoService {
       pedidoDTO.direccionEntregaDTO.longitud,
     )
 
-    validarItemsConVendedor(items, vendedor.id)
-    validarMoneda(pedidoDTO.moneda)
-
     return new Pedido(comprador, vendedor, items, pedidoDTO.moneda, direEntrega)
   }
 
+  /************************** CONSULTAR UN PEDIDO **************************/
   consultar(id) {
     const pedido = this.pedidoRepository.findById(id)
-    if (pedido == null) {
-      throw new PedidoInexistenteError(id)
+    validarExistenciaDePedido(pedido, id)
+
+    return pedido
+  }
+
+  /************************** CONSULTAR EL HISTORIAL DE UN USUARIO **************************/
+  consultarHistorial(id) {
+    if (this.usuarioEsValido(id)) {
+      const historialPedidos = this.pedidoRepository.consultarHistorial(id)
+      validarExistenciaDeHistorial(historialPedidos, id)
+
+      return historialPedidos
     }
+  }
+
+  usuarioEsValido(id) {
+    this.usuarioService.obtenerUsuario(id, [
+      tipoUsuario.COMPRADOR,
+      tipoUsuario.VENDEDOR,
+      tipoUsuario.ADMIN,
+    ])
+    return true
+  }
+
+  /************************** CAMBIAR EL ESTADO DE UN PEDIDO **************************/
+  cambioEstado(cambioEstado, idPedido) {
+    this.usuarioEstaAutorizado(
+      cambioEstado.idUsuario,
+      autorizadosAEstado[cambioEstado.estado],
+    )
+
+    const pedido = this.consultar(idPedido)
+
+    pedido.actualizarEstado(
+      estado[cambioEstado.estado],
+      cambioEstado.idUsuario,
+      cambioEstado.motivo,
+    )
+
+    // FALTA PERSISTIR EL CAMBIO EN LA BASE DE DATOS
+    // this.pedidoRepository.actualizar()
+
+    this.notificacionService.crearSegunEstadoPedido(estado[cambioEstado.estado], pedido)
 
     return pedido
   }
@@ -90,61 +125,10 @@ class PedidoService {
       usuario.tipoUsuario === "Admin"
     )
   }
-  usuarioEsValido(id) {
-    this.usuarioService.obtenerUsuario(id, [
-      tipoUsuario.COMPRADOR,
-      tipoUsuario.VENDEDOR,
-      tipoUsuario.ADMIN,
-    ])
-    return true
-  }
 
   usuarioEstaAutorizado(id, roles) {
-    const usuario = this.usuarioService.obtenerUsuario(id, roles)
-    if (usuario == null) {
-      throw new UsuarioInexistenteError(id)
-    }
+    this.usuarioService.obtenerUsuario(id, roles)
     return true
-  }
-
-  consultarHistorial(id) {
-    if (this.usuarioEsValido(id)) {
-      const historialPedidos = this.pedidoRepository.consultarHistorial(id)
-      if (historialPedidos.length == 0) {
-        throw new HistorialInexistenteError(id)
-      }
-      return historialPedidos
-    }
-  }
-
-  esValidoCambioEstado(nuevoEstado, estadoActual) {
-    const indiceEstadoActual = ordenEstados.indexOf(estadoActual)
-    const indiceEstadoNuevo = ordenEstados.indexOf(nuevoEstado)
-
-    if (indiceEstadoNuevo == indiceEstadoActual) {
-      throw new YaEnEstadoError(nuevoEstado)
-    }
-    if (indiceEstadoNuevo < indiceEstadoActual || estadoActual == estado.CANCELADO) {
-      throw new CambioEstadoInvalidoError(estadoActual, nuevoEstado)
-    }
-    return true
-  }
-
-  cambioEstado(cambioEstado, idPedido) {
-    this.usuarioEstaAutorizado(
-      cambioEstado.idUsuario,
-      autorizadosAEstado[cambioEstado.estado],
-    )
-    const pedido = this.consultar(idPedido)
-    this.esValidoCambioEstado(estado[cambioEstado.estado], pedido.estado)
-    pedido.actualizarEstado(
-      estado[cambioEstado.estado],
-      cambioEstado.idUsuario,
-      cambioEstado.motivo,
-    )
-    this.notificacionService.crearSegunEstadoPedido(estado[cambioEstado.estado], pedido)
-
-    return pedido
   }
 }
 

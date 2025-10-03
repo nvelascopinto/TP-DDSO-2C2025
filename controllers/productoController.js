@@ -1,5 +1,6 @@
 import ProductoService from "../services/productoService.js"
 import { convertJSONtoProducto } from "../conversores/conversoresProducto.js"
+import { productoValidator } from "../validators/productoValidator.js"
 
 class ProductoController {
   constructor(productoService) {
@@ -7,7 +8,7 @@ class ProductoController {
   }
 
   crear(req, res) {
-    const body = req.body
+    const body = productoValidator.parse(req.body)
     const producto = convertJSONtoProducto(body)
 
     const nuevoProducto = this.productoService.crear(producto)
