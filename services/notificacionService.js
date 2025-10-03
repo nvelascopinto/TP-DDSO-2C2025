@@ -45,7 +45,7 @@ class notificacionService {
     return this.notificacionRepository.getNotificacionesNoLeidas(idUsuario)
   }
 
-  getNotificacion(idNotificacion){
+  getNotificacion(idNotificacion) {
     return this.notificacionRepository.getById(idNotificacion)
   }
 }

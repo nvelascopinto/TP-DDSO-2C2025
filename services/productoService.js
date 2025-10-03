@@ -1,7 +1,7 @@
 import ProductoRepository from "../models/repositories/productoRepository.js"
 import UsuarioService from "./usuarioService.js"
 import productoValidator from "../validators/productoValidator.js"
-import { monedaValidator } from "../validators/validadorMoneda.js"
+import { monedaValidator } from "../validators/monedaValidator.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { Producto } from "../models/entities/producto.js"
 import DatosInvalidosError from "../errors/datosInvalidosError.js"
@@ -57,7 +57,7 @@ class ProductoService {
     return this.productoRepository.findById(id)
   }
 
-  obtenerTodosDeVendedor(vendedor){
+  obtenerTodosDeVendedor(vendedor) {
     return this.productoRepository.obtenerTodosDeVendedor(vendedor)
   }
 }

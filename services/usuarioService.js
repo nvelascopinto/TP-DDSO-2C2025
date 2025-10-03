@@ -2,11 +2,10 @@ import UsuarioRepository from "../models/repositories/usuarioRepository.js"
 import PedidoRepository from "../models/repositories/pedidoRepository.js"
 // import PedidoService from "./pedidoService.js";
 import UsuarioInexistenteError from "../errors/usuarioInexistenteError.js"
-import UsuarioSinPermisoError from "../errors/usuarioSinPermisosError.js"
+import UsuarioSinPermisoError from "../errors/usuarioSinPermisoError.js"
 import DatosInvalidosError from "../errors/datosInvalidosError.js"
-import { tipoUsuarioValidator } from "../validators/validadorTipoUsuario.js"
+import { tipoUsuarioValidator } from "../validators/tipoUsuarioValidator.js"
 import { Usuario } from "../models/entities/usuario.js"
-import pedidoRepository from "../models/repositories/pedidoRepository.js"
 
 class UsuarioService {
   constructor(usuarioRepository, pedidoRepository) {

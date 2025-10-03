@@ -9,7 +9,7 @@ import { DireccionEntrega } from "../models/entities/direccionEntrega.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { ItemPedido } from "../models/entities/itemPedido.js"
 import itemPedidoValidator from "../validators/itemPedidoValidator.js"
-import { monedaValidator } from "../validators/validadorMoneda.js"
+import { monedaValidator } from "../validators/monedaValidator.js"
 import direccionEntregaValidator from "../validators/direccionEntregaValidator.js"
 import DatosInvalidosError from "../errors/datosInvalidosError.js"
 import UsuarioInexistenteError from "../errors/usuarioInexistenteError.js"
@@ -70,7 +70,7 @@ class PedidoService {
     return new Pedido(comprador, vendedor, items, moneda, direEntrega)
   }
 
-  convertirADireccion(direDTO) {  
+  convertirADireccion(direDTO) {
     const direRe = direccionEntregaValidator.safeParse(direDTO)
 
     if (!direRe.success) {

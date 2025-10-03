@@ -10,6 +10,6 @@ export class Notificacion {
 
   marcarComoleida() {
     this.leida = true
-    this.fechaLeida = newDate()
+    this.fechaLeida = new Date()
   }
 }

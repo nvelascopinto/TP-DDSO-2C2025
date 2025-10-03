@@ -13,19 +13,19 @@ class notificacionRepository {
   getNotificacionesLeidas(idUsuario) {
     return this.notificaciones.filter(
       (notificacion) =>
-        notificacion.idUsuario === parseInt(idUsuario) && notificacion.leida
+        notificacion.idUsuario === parseInt(idUsuario) && notificacion.leida,
     )
   }
 
   getNotificacionesNoLeidas(idUsuario) {
     return this.notificaciones.filter(
       (notificacion) =>
-        notificacion.idUsuario === parseInt(idUsuario) && !notificacion.leida
+        notificacion.idUsuario === parseInt(idUsuario) && !notificacion.leida,
     )
   }
 
-  getById(idNotificacion){
-    return this.notificaciones.find((notif) => notif.id === id) || null
+  getById(idNotificacion) {
+    return this.notificaciones.find((notif) => notif.id === idNotificacion) || null
   }
 }
 

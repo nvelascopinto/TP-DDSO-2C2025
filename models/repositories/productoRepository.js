@@ -24,7 +24,7 @@ class ProductoRepository {
     return this.productos.find((p) => p.id === id) || null
   }
 
-  obtenerTodosDeVendedor(idVendedor){
+  obtenerTodosDeVendedor(idVendedor) {
     return this.productos.find((p) => p.vendedor === idVendedor) || null
   }
 }
