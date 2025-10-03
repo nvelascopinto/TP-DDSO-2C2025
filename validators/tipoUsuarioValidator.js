@@ -6,4 +6,3 @@ export function tipoUsuarioValidator(tipoUser) {
   }
   return tipoUser
 }
-

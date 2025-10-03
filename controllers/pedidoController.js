@@ -1,8 +1,8 @@
 import PedidoService from "../services/pedidoService.js"
 import { convertJSONtoPedido } from "../conversores/conversoresPedido.js"
 import { pedidoValidator } from "../validators/pedidoValidator.js"
-import {idValidator} from "../validators/idValidator.js"
-import {cambioEstadoPedidoValidator} from "../validators/cambioEstadoPedidoValidator.js"
+import { idValidator } from "../validators/idValidator.js"
+import { cambioEstadoPedidoValidator } from "../validators/cambioEstadoPedidoValidator.js"
 
 class PedidoController {
   constructor(pedidoService) {

@@ -11,7 +11,7 @@ export const productoValidator = z.object({
 })
 
 export function validarExistenciaDeProducto(producto, id) {
-  if(!producto) {
-      throw new ProductoInexistenteError(id)
-    }
+  if (!producto) {
+    throw new ProductoInexistenteError(id)
+  }
 }

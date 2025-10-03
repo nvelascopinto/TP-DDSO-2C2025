@@ -35,11 +35,15 @@ class PedidoService {
   }
 
   convertirAPedido(pedidoDTO) {
-    const comprador = this.usuarioService.obtenerUsuario(pedidoDTO.compradorID, [tipoUsuario.COMPRADOR,])
+    const comprador = this.usuarioService.obtenerUsuario(pedidoDTO.compradorID, [
+      tipoUsuario.COMPRADOR,
+    ])
 
-    const vendedor = this.usuarioService.obtenerUsuario(pedidoDTO.vendedorID, [tipoUsuario.VENDEDOR,])
+    const vendedor = this.usuarioService.obtenerUsuario(pedidoDTO.vendedorID, [
+      tipoUsuario.VENDEDOR,
+    ])
 
-    const items = pedidoDTO.itemsDTO.map(itemDTO => {
+    const items = pedidoDTO.itemsDTO.map((itemDTO) => {
       console.log("ItemDTO.productoID:", itemDTO.productoID)
       const producto = this.productoService.obtenerProducto(itemDTO.productoID)
       return new ItemPedido(producto, itemDTO.cantidad, itemDTO.precioUnitario)
