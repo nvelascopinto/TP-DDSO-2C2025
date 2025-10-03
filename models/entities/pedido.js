@@ -3,6 +3,7 @@ import { CambioEstadoPedido } from "./cambioEstadoPedido.js"
 import YaEnEstadoError from "../../errors/yaEnEstadoError.js"
 export class Pedido {
   constructor(comprador, vendedor, items, moneda, direccionEntrega) {
+    //validate()
     this.id = null // inciialmente se pone en null hasta que es guardado en el Repo
     this.comprador = comprador // se debe chequear si es comprador ?
     this.vendedor = vendedor

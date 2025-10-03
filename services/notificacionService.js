@@ -36,6 +36,18 @@ class notificacionService {
     this.notificacionRepository.crear(notificacion)
     return notificacion
   }
+
+  getNotificacionesLeidas(idUsuario) {
+    return this.notificacionRepository.getNotificacionesLeidas(idUsuario)
+  }
+
+  getNotificacionesNoLeidas(idUsuario) {
+    return this.notificacionRepository.getNotificacionesNoLeidas(idUsuario)
+  }
+
+  getNotificacion(idNotificacion){
+    return this.notificacionRepository.getById(idNotificacion)
+  }
 }
 
 export default new notificacionService(NotificacionRepository)

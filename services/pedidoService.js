@@ -70,7 +70,7 @@ class PedidoService {
     return new Pedido(comprador, vendedor, items, moneda, direEntrega)
   }
 
-  convertirADireccion(direDTO) {
+  convertirADireccion(direDTO) {  
     const direRe = direccionEntregaValidator.safeParse(direDTO)
 
     if (!direRe.success) {

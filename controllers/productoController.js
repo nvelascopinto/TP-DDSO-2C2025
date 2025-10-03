@@ -14,6 +14,11 @@ class ProductoController {
 
     return res.status(201).json(nuevoProducto)
   }
+
+  deEsteVendedor(req,res){
+    const idVendedor = req.vendedor.id//chequear como es q lo trae el middleware
+    this.ProductoService.obtenerTodosDeVendedor(idVendedor)
+  }
 }
 
 export default new ProductoController(ProductoService)

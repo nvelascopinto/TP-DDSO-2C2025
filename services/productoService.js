@@ -56,6 +56,10 @@ class ProductoService {
   obtenerProducto(id) {
     return this.productoRepository.findById(id)
   }
+
+  obtenerTodosDeVendedor(vendedor){
+    return this.productoRepository.obtenerTodosDeVendedor(vendedor)
+  }
 }
 
 export default new ProductoService(ProductoRepository, UsuarioService)
