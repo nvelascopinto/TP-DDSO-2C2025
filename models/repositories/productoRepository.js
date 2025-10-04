@@ -1,31 +1,24 @@
+import { ProductoModel } from "../schemas/productoSchema.js"
 class ProductoRepository {
   constructor() {
-    this.productos = []
-    this.nextId = 1
+    this.model = ProductoModel
   }
 
   crear(producto) {
-    producto.id = this.nextId++
-    this.productos.push(producto)
-    return producto
+    const productoNuevo = new this.model(producto)
+    return productoNuevo.save()
   }
 
   actualizar(id, productoModificado) {
-    const indice = this.productos.findIndex((p) => p.id === id)
-    if (indice === -1) return null
-    const nuevoProducto = {
-      ...this.productos[indice],
-      ...productoModificado,
-    }
-    this.productos[indice] = nuevoProducto
-    return nuevoProducto
+    
+    return this.model.findByIdAndUpdate(id, productoModificado)
   }
   findById(id) {
-    return this.productos.find((p) => p.id === id) || null
+    return this.model.findById(id)
   }
 
   obtenerTodosDeVendedor(idVendedor) {
-    return this.productos.find((p) => p.vendedor === idVendedor) || null
+    return this.model.find({vendedor : idVendedor})
   }
 }
 

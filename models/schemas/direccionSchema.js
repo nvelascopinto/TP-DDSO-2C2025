@@ -48,4 +48,4 @@
 
     usuarioSchema.loadClass(DireccionEntrega)
 
-    export const PedidoModel = mongoose.model('Direccion', direccionSchema)
+    export const DireccionModel = mongoose.model('Direccion', direccionSchema)

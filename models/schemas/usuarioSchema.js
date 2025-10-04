@@ -2,7 +2,6 @@
     import { Usuario } from '../entities/usuario.js'
     const usuarioSchema = new mongoose.Schema({
         _id: {
-            
             type: String,
             required: true 
         },

@@ -1,31 +1,25 @@
+import { NotificacionModel } from "../schemas/notificacionSchema.js"
+
 class notificacionRepository {
   constructor() {
-    this.notificaciones = []
-    this.nextId = 1
+    this.model = NotificacionModel
   }
 
   crear(notificacion) {
-    notificacion.id = this.nextId++
-    this.notificaciones.push(notificacion)
-    return notificacion
+    const nuevaNotificacion = new this.model(notificacion)
+    return nuevaNotificacion
   }
 
   getNotificacionesLeidas(idUsuario) {
-    return this.notificaciones.filter(
-      (notificacion) =>
-        notificacion.idUsuario === parseInt(idUsuario) && notificacion.leida,
-    )
+    return this.model.find({usuarioDestino : idUsuario, leida : true})
   }
 
   getNotificacionesNoLeidas(idUsuario) {
-    return this.notificaciones.filter(
-      (notificacion) =>
-        notificacion.idUsuario === parseInt(idUsuario) && !notificacion.leida,
-    )
+    return tthis.model.find({usuarioDestino : idUsuario, leida : false})
   }
 
   getById(idNotificacion) {
-    return this.notificaciones.find((notif) => notif.id === idNotificacion) || null
+    return this.model.findById(idNotificacion)
   }
 }
 

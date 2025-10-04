@@ -39,14 +39,14 @@ class ProductoService {
 
   /************************** CONSULTAR UN PRODUCTO **************************/
   obtenerProducto(id) {
-    const producto = this.productoRepository.findById(id)
-    validarExistenciaDeProducto(producto, id)
+   
+    //validarExistenciaDeProducto(producto, id)
 
-    return producto
+    return this.productoRepository.findById(id).then((producto)=> producto)
   }
 
   obtenerTodosDeVendedor(vendedor) {
-    return this.productoRepository.obtenerTodosDeVendedor(vendedor)
+    return this.productoRepository.obtenerTodosDeVendedor(vendedor).then((prodVendedor) => prodVendedor)
   }
 }
 

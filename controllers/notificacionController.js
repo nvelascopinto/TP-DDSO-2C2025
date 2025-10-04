@@ -15,20 +15,22 @@ class notificacionController {
     notificacionValidator(usuario, notificacion)
     notificacion.marcarComoLeida()
     return res.status(200).json(notificacion)
-  }
+  }//corregir esto debe ir en el service la logica 
 
   getLeidas(req, res) {
     const idUsuario = req.params.idUsuario
-    const notificacionesLeidas =
-      this.notificacionService.getNotificacionesLeidas(idUsuario)
-    return res.json(notificacionesLeidas)
+    
+    return this.notificacionService.getNotificacionesLeidas(idUsuario).then((notificacionesLeidas)=> {
+           res.status(200).json(notificacionesLeidas)
+    }) 
   }
 
   getNoLeidas(req, res) {
     const idUsuario = req.params.idUsuario
-    const notificacionesNoLeidas =
-      this.notificacionService.getNotificacionesNoLeidas(idUsuario)
-    return res.json(notificacionesNoLeidas)
+    return this.notificacionService.getNotificacionesNoLeidas(idUsuario).then((notificacionesNoLeidas) => {
+        res.status(200).json(notificacionesNoLeidas)
+      })
+   
   }
 }
 

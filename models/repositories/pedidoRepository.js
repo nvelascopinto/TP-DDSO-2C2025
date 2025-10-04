@@ -1,24 +1,21 @@
+import { PedidoModel } from "../schemas/pedidoSchema.js"
 class PedidoRepository {
   constructor() {
-    this.pedidos = []
-    this.nextId = 1
+    this.model = new PedidoModel
   }
 
   crear(pedido) {
-    pedido.id = this.nextId++
-    this.pedidos.push(pedido)
-    return pedido
+    const nuevoPedido = new this.model(pedido)
+    return nuevoPedido.save()
   }
 
   consultarHistorial(id) {
-    const pedidosUsuario = this.pedidos.filter((p) => p.comprador.id === id)
-    return pedidosUsuario
+    const historial = this.model.find({comprador : id})
+    return historial
   }
 
-  // FUNCIONES AUXILIARES
-
   findById(id) {
-    return this.pedidos.find((p) => p.id === id) || null
+    return this.model.findById(id)
   }
 }
 

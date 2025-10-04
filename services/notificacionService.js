@@ -8,24 +8,23 @@ class notificacionService {
   }
 
   crearSegunPedido(pedido) {
-    const mensaje = "NUEVO PEDIDO REALIZADO: /n ID: " + pedido.id
+    const mensaje = "ID NUEVO PEDIDO REALIZADO: " + pedido.id
 
     const notificacion = new Notificacion(pedido.vendedor.id, mensaje)
-    this.notificacionRepository.crear(notificacion)
-
-    return notificacion
+    return this.notificacionRepository.crear(notificacion)
+              . then((notifGuardada) => notifGuardada)
   }
 
   crearSegunEstadoPedido(estadoActual, pedido) {
+    const destinatario = null
     if (estadoActual == estado.CANCELADO) {
-      const destinatario = pedido.vendedor
-      return this.notificarEstadoPedido(estadoActual, destinatario.id, pedido.id)
+      destinatario = pedido.vendedor
     } else if (estadoActual == estado.ENVIADO) {
-      const destinatario = pedido.comprador
-      return this.notificarEstadoPedido(estadoActual, destinatario.id, pedido.id)
+      destinatario = pedido.comprador
     } else {
-      return null
+      return destinatario
     }
+    return this.notificarEstadoPedido(estadoActual, destinatario.id, pedido.id).then((nuevaNotificacion) => nuevaNotificacion)
   }
 
   notificarEstadoPedido(estado, destinatario, idPedido) {
@@ -33,20 +32,22 @@ class notificacionService {
       destinatario,
       "El pedido " + idPedido + " cambio a estado " + estado,
     )
-    this.notificacionRepository.crear(notificacion)
-    return notificacion
+    
+    return this.notificacionRepository.crear(notificacion).then((nuevaNotificacion) => nuevaNotificacion)
   }
 
   getNotificacionesLeidas(idUsuario) {
-    return this.notificacionRepository.getNotificacionesLeidas(idUsuario)
+    return this.notificacionRepository.getNotificacionesLeidas(idUsuario).then((notificacionesLeidas) => notificacionesLeidas)
   }
+  
 
   getNotificacionesNoLeidas(idUsuario) {
-    return this.notificacionRepository.getNotificacionesNoLeidas(idUsuario)
+    return this.notificacionRepository.getNotificacionesNoLeidas(idUsuario).then((notificacionesNoLeidas) => notificacionesLeidas)
   }
 
+
   getNotificacion(idNotificacion) {
-    return this.notificacionRepository.getById(idNotificacion)
+    return this.notificacionRepository.getById(idNotificacion).then((notificacion) => notificacion)
   }
 }
 

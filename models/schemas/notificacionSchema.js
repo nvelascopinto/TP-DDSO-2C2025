@@ -29,4 +29,4 @@
 
     usuarioSchema.loadClass(Notificacion)
 
-    export const PedidoModel = mongoose.model('Notificacion', notificacionSchema)
+    export const NotificacionModel = mongoose.model('Notificacion', notificacionSchema)

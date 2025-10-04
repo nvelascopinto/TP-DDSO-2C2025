@@ -2,7 +2,7 @@ import { Router } from "express"
 import NotificacionController from "../controllers/notificacionController.js"
 
 const notificacionRouter = Router()
-
+// ver si debe ir el .catch(next)????????????????????????????
 notificacionRouter.patch("/:id", (req, res) => {
   NotificacionController.marcarComoLeida(req, res)
 })

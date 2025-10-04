@@ -23,4 +23,4 @@
 
     usuarioSchema.loadClass(ItemPedido)
 
-    export const ProductoModel = mongoose.model('Item', itemSchema)
+    export const ItemModel = mongoose.model('Item', itemSchema)

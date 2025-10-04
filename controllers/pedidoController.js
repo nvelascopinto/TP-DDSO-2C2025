@@ -12,45 +12,41 @@ class PedidoController {
   crear(req, res) {
     const body = pedidoValidator.parse(req.body)
     const pedido = convertJSONtoPedido(body)
-
-    const nuevoPedido = this.pedidoService.crear(pedido)
-
-    return res.status(201).json(nuevoPedido)
+    return this.pedidoService.crear(pedido).then((nuevoPedido) => {
+      res.status(201).json(nuevoPedido)
+    })
   }
 
-  cancelar(req, res) {
-    const id = idValidator.parse(req.params.id)
-    const cambioEstado = cambioEstadoPedidoValidator.parse(req.body)
+  // cancelar(req, res) {
+  //   const id = idValidator.parse(req.params.id)
+  //   const cambioEstado = cambioEstadoPedidoValidator.parse(req.body)
 
-    const pedidoCancelado = this.pedidoService.cancelar(cambioEstado, id)
+  //   const pedidoCancelado = this.pedidoService.cancelar(cambioEstado, id)
 
-    return res.status(200).json(pedidoCancelado)
-  }
+  //   return res.status(200).json(pedidoCancelado)
+  // }
 
   consultar(req, res) {
     const id = idValidator.parse(req.params.id)
-
-    const pedido = this.pedidoService.consultar(id)
-
-    return res.status(200).json(pedido)
+    return this.pedidoService.consultar(id).then((pedido) => { 
+      res.status(200).json(pedido)
+    })
   }
 
-  marcarEnviado(req, res) {
-    const id = idValidator.parse(req.params.id)
-    const idVendedor = idValidator.parse(req.body)
+  // marcarEnviado(req, res) {
+  //   const id = idValidator.parse(req.params.id)
+  //   const idVendedor = idValidator.parse(req.body)
 
-    const pedidoEnviado = this.pedidoService.marcarEnviado(idVendedor.data.idVendedor, id)
+  //   const pedidoEnviado = this.pedidoService.marcarEnviado(idVendedor.data.idVendedor, id)
 
-    return res.status(200).json(pedidoEnviado)
-  }
+  //   return res.status(200).json(pedidoEnviado)
+  // }
 
   cambioEstado(req, res) {
     const id = idValidator.parse(req.params.id)
     const cambioEstado = cambioEstadoPedidoValidator.parse(req.body)
 
-    const pedidoModificado = this.pedidoService.cambioEstado(cambioEstado, id)
-
-    return res.status(200).json(pedidoModificado)
+    return this.pedidoService.cambioEstado(cambioEstado, id).then((mensaje) => res.status(200).json(mensaje) )
   }
 }
 

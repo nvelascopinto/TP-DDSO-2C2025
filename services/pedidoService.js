@@ -26,10 +26,11 @@ class PedidoService {
 
     nuevoPedido.validarStock()
 
-    const pedidoGuardado = this.pedidoRepository.crear(nuevoPedido)
-    this.notificacionService.crearSegunPedido(pedidoGuardado)
-
-    return pedidoGuardado
+    return this.pedidoRepository.crear(nuevoPedido).then((pedido)=>{
+      this.notificacionService.crearSegunPedido(pedido)
+      return pedido
+    })
+    
   }
 
   convertirAPedido(pedidoDTO) {
@@ -60,12 +61,12 @@ class PedidoService {
     )
 
     return new Pedido(comprador, vendedor, items, pedidoDTO.moneda, direEntrega)
-  }
+  }//VER MANEJO DE PROMISES 
 
   /************************** CONSULTAR UN PEDIDO **************************/
   consultar(id) {
-    const pedido = this.pedidoRepository.findById(id)
-    validarExistenciaDePedido(pedido, id)
+    const pedido = this.pedidoRepository.findById(id).then((pedidoBuscado) => pedidoBuscado)
+    //validarExistenciaDePedido(pedido, id) ==> no tira error mongo????
 
     return pedido
   }
@@ -73,8 +74,8 @@ class PedidoService {
   /************************** CONSULTAR EL HISTORIAL DE UN USUARIO **************************/
   consultarHistorial(id) {
    // if (this.usuarioEsValido(id)) {
-      const historialPedidos = this.pedidoRepository.consultarHistorial(id)
-      validarExistenciaDeHistorial(historialPedidos, id)
+      const historialPedidos = this.pedidoRepository.consultarHistorial(id).then((historial) => historial)
+      //validarExistenciaDeHistorial(historialPedidos, id) ==> no tira ya el error mongo????
 
       return historialPedidos
     //}
@@ -88,7 +89,7 @@ class PedidoService {
     ])
     return true
   }
-
+//A PARTIR DE ACA FALTA MANEJO DE PROMISES 
   /************************** CAMBIAR EL ESTADO DE UN PEDIDO **************************/
   cambioEstado(cambioEstado, idPedido) {
     this.usuarioEstaAutorizado(
@@ -109,7 +110,7 @@ class PedidoService {
 
     this.notificacionService.crearSegunEstadoPedido(estado[cambioEstado.estado], pedido)
 
-    return pedido
+    return "Pedido " + pedido._id + " cambio a estado " + pedido.estado
   }
 
   usuarioEsValidoCompra(id, pedido) {
