@@ -1,0 +1,51 @@
+    import mongoose, { Collection } from 'mongoose'
+    import { DireccionEntrega } from '../entities/direccionEntrega'    
+    const direccionSchema = new mongoose.Schema({
+        calle : { 
+            type :String,
+            required : true
+        },
+        altura: { 
+            type :Number,
+            required : true
+        },
+        piso: { 
+            type :Number,
+            required : false,
+            min : 0
+        },
+        departamento: { 
+            type :String,
+            required : false
+        },
+        codigoPostal: { 
+            type :Number,
+            required : true
+        },
+        ciudad: { 
+            type :String,
+            required : true
+        },
+        provincia: { 
+            type :String,
+            required : true
+        },
+        pais: { 
+            type :String,
+            required : true
+        },
+        latitud: { 
+            type :Number
+        },
+        longitud: { 
+            type :Number
+        }
+
+    },{
+        timestamps : true,
+        collection : 'direcciones'
+    })  
+
+    usuarioSchema.loadClass(DireccionEntrega)
+
+    export const PedidoModel = mongoose.model('Direccion', direccionSchema)

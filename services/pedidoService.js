@@ -72,12 +72,12 @@ class PedidoService {
 
   /************************** CONSULTAR EL HISTORIAL DE UN USUARIO **************************/
   consultarHistorial(id) {
-    if (this.usuarioEsValido(id)) {
+   // if (this.usuarioEsValido(id)) {
       const historialPedidos = this.pedidoRepository.consultarHistorial(id)
       validarExistenciaDeHistorial(historialPedidos, id)
 
       return historialPedidos
-    }
+    //}
   }
 
   usuarioEsValido(id) {

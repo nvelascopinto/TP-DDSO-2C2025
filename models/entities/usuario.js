@@ -9,7 +9,7 @@ export class Usuario {
     this.email = email
     this.telefono = telefono
     this.tipoUsuario = tipoUsuario
-    this.fechaAlta = new Date()
+    this.fechaAlta = new Date() // ver si debe ir con el tmespam true en la base
 
     this.validarTipoUsuario()
   }

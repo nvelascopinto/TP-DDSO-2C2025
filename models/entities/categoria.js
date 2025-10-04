@@ -3,3 +3,4 @@ export class Categoria {
     this.nombre = nombre
   }
 }
+//es un string , esta bien 
