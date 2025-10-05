@@ -7,8 +7,8 @@ productoRouter.post("/", (req, res) => {
   return ProductoController.crear(req, res)
 })
 
-productoRouter.get("/:idusuario", (req, res) => {
-  return ProductoController.deEsteVendedor(req, res) //cambiar nombre >:/
+productoRouter.get("/vendedor/:idvendedor", (req, res) => {
+  return ProductoController.listarPorVendedor(req, res)
 })
 
 export default productoRouter

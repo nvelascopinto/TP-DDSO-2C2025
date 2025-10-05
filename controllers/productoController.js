@@ -11,16 +11,14 @@ class ProductoController {
     const body = productoValidator.parse(req.body)
     const producto = toProductoDTO(body)
 
-    return this.productoService.crear(producto)
-    .then((nuevoProducto) => {
+    return this.productoService.crear(producto).then((nuevoProducto) => {
       res.status(201).json(nuevoProducto)
     })
   }
 
-  deEsteVendedor(req, res) {
+  listarPorVendedor(req, res) {
     const idVendedor = req.vendedor.id //chequear como es q lo trae el middleware
-    return this.productoService.obtenerTodosDeVendedor(idVendedor)
-    .then((productos) => {
+    return this.productoService.obtenerTodosDeVendedor(idVendedor).then((productos) => {
       res.status(200).json(productos)
     })
   }
