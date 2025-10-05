@@ -3,16 +3,13 @@ import { Notificacion } from "../models/entities/notificacion.js"
 import { estado } from "../models/entities/estadoPedido.js"
 
 class notificacionService {
-  constructor(notificacionRepository) {
-    this.notificacionRepository = notificacionRepository
-  }
 
   crearSegunPedido(pedido) {
     const mensaje = "ID NUEVO PEDIDO REALIZADO: " + pedido.id
 
     const notificacion = new Notificacion(pedido.vendedor.id, mensaje)
     // Solo retorno la promise porque no me interesa devolver la notificacion creada
-    return this.notificacionRepository.crear(notificacion) 
+    return NotificacionRepository.crear(notificacion) 
   }
 
   crearSegunEstadoPedido(estadoActual, pedido) {
@@ -30,21 +27,21 @@ class notificacionService {
   notificarEstadoPedido(estado, destinatario, idPedido) {
     const notificacion = new Notificacion(destinatario, "El pedido " + idPedido + " cambio a estado " + estado,)
 
-    return this.notificacionRepository.crear(notificacion)
+    return NotificacionRepository.crear(notificacion)
   }
 
   getNotificacionesLeidas(idUsuario) {
-    return this.notificacionRepository.getNotificacionesLeidas(idUsuario)
+    return NotificacionRepository.getNotificacionesLeidas(idUsuario)
       .then((notificacionesLeidas) => notificacionesLeidas)
   }
 
   getNotificacionesNoLeidas(idUsuario) {
-    return this.notificacionRepository.getNotificacionesNoLeidas(idUsuario)
+    return NotificacionRepository.getNotificacionesNoLeidas(idUsuario)
       .then((notificacionesNoLeidas) => notificacionesNoLeidas)
   }
 
   getNotificacion(idNotificacion) {
-    return this.notificacionRepository.getById(idNotificacion)
+    return NotificacionRepository.getById(idNotificacion)
       .then((notificacion) => notificacion)
   }
 }

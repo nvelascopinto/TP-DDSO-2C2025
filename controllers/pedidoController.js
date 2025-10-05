@@ -5,15 +5,12 @@ import { idValidator } from "../validators/idValidator.js"
 import { cambioEstadoPedidoValidator } from "../validators/cambioEstadoPedidoValidator.js"
 
 class PedidoController {
-  constructor(pedidoService) {
-    this.pedidoService = pedidoService
-  }
 
   crear(req, res) {
     const body = pedidoValidator.parse(req.body)
     const pedido = toPedidoDTO(body)
 
-    return this.pedidoService.crear(pedido).then((nuevoPedido) => {
+    return PedidoService.crear(pedido).then((nuevoPedido) => {
       res.status(201).json(nuevoPedido)
     })
   }
@@ -30,7 +27,7 @@ class PedidoController {
   consultar(req, res) {
     const id = idValidator.parse(req.params.id)
 
-    return this.pedidoService.consultar(id).then((pedido) => {
+    return PedidoService.consultar(id).then((pedido) => {
       res.status(200).json(pedido)
     })
   }
@@ -48,7 +45,7 @@ class PedidoController {
     const id = idValidator.parse(req.params.id)
     const cambioEstado = cambioEstadoPedidoValidator.parse(req.body)
 
-    return this.pedidoService.cambioEstado(cambioEstado, id)
+    return PedidoService.cambioEstado(cambioEstado, id)
       .then((mensaje) => res.status(200).json(mensaje))
   }
 }

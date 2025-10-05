@@ -3,22 +3,19 @@ import { toProductoDTO } from "../converters/productoConverter.js"
 import { productoValidator } from "../validators/productoValidator.js"
 
 class ProductoController {
-  constructor(productoService) {
-    this.productoService = productoService
-  }
-
+  
   crear(req, res) {
     const body = productoValidator.parse(req.body)
     const producto = toProductoDTO(body)
 
-    return this.productoService.crear(producto).then((nuevoProducto) => {
+    return ProductoService.crear(producto).then((nuevoProducto) => {
       res.status(201).json(nuevoProducto)
     })
   }
 
   listarPorVendedor(req, res) {
     const idVendedor = req.vendedor.id //chequear como es q lo trae el middleware
-    return this.productoService.obtenerTodosDeVendedor(idVendedor).then((productos) => {
+    return ProductoService.obtenerTodosDeVendedor(idVendedor).then((productos) => {
       res.status(200).json(productos)
     })
   }

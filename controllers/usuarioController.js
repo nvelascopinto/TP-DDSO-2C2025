@@ -4,15 +4,12 @@ import { usuarioValidator } from "../validators/usuarioValidator.js"
 import { idValidator } from "../validators/idValidator.js"
 
 class UsuarioController {
-  constructor(usuarioService) {
-    this.usuarioService = usuarioService
-  }
 
   crearUsuario(req, res) {
     const body = usuarioValidator.parse(req.body)
     const usuario = toUsuarioDTO(body)
 
-    return this.usuarioService.crearUsuario(usuario)
+    return UsuarioService.crearUsuario(usuario)
     .then((nuevoUsuario) => {
       return res.status(201).json(nuevoUsuario)
     })
@@ -21,7 +18,7 @@ class UsuarioController {
   verUsuario(req, res) {
     const id = idValidator.parse(req.params.id)
 
-    return this.usuarioService.buscar(id) 
+    return UsuarioService.buscar(id) 
     .then((usuario) => {
       res.status(200).json(usuario)
     })
@@ -30,7 +27,7 @@ class UsuarioController {
   verHistorialUsuario(req, res) {
     const id = idValidator.parse(req.params.id)
 
-    return this.usuarioService.consultarHistorial(id)
+    return UsuarioService.consultarHistorial(id)
     .then((pedidos) => {
       res.status(200).json(pedidos)
     })

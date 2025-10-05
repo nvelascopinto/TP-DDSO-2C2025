@@ -6,14 +6,10 @@ import { validarExistenciaDeUsuario } from "../validators/usuarioValidator.js"
 import { fromUsuarioDTO } from "../converters/usuarioConverter.js"
 
 class UsuarioService {
-  constructor(usuarioRepository, pedidoService) {
-    this.usuarioRepository = usuarioRepository
-    this.pedidoService = pedidoService
-  }
 
   /************************** "VALIDAR" UN USUARIO **************************/
   obtenerUsuario(id, roles) {
-    return this.usuarioRepository.findById(id)
+    return UsuarioRepository.findById(id)
     .then((usuario) => {
       usuario.validarRol(roles)
       return usuario
@@ -25,13 +21,13 @@ class UsuarioService {
   crearUsuario(usuarioDTO) {
     const usuario = fromUsuarioDTO(usuarioDTO) 
 
-    return this.usuarioRepository.crear(usuario)
+    return UsuarioRepository.crear(usuario)
     .then((usuarioCreado) => usuarioCreado)
   }
 
   /************************** CONSULTAR UN USUARIO **************************/
   buscar(id) {
-    return this.usuarioRepository.findById(id)
+    return UsuarioRepository.findById(id)
       .then((usuarioBuscado) => usuarioBuscado)
     //validarExistenciaDeUsuario(usuario, id)
   }
@@ -41,7 +37,7 @@ class UsuarioService {
   // TODO: Solucionar dependencia circular entre servicios: pedidos y usuarios
   consultarHistorial(id) {
     // CAMBIAR A PEDIDO SERVICE DESPUES DE SOLUCIONAR LO DE AUTORIZACION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    return this.pedidoRepository.consultarHistorial(id) 
+    return PedidoRepository.consultarHistorial(id) 
     .then((historial) => historial)
   }
 }
