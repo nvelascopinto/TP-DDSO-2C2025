@@ -4,7 +4,7 @@ import { Notificacion } from "../entities/notificacion.js"
 const notificacionSchema = new mongoose.Schema(
   {
     usuarioDestino: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Usuario",
       required: true,
     },
@@ -25,7 +25,7 @@ const notificacionSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true,
+    //timestamps: true,
     collection: "notificaciones",
   },
 )

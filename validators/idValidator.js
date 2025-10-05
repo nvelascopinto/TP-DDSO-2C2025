@@ -12,13 +12,14 @@ import { z } from "zod"
 //   return num
 // })
 
-export const idValidator = z.string().transform((val, ctx) => {
-  if (!/^[a-f\d]{24}$/i.test(val)) {
-    ctx.addIssue({
-      code: "INVALID_ID",
-      message: "id must be a valid MongoDB ObjectId",
-    });
-    return z.NEVER;
-  }
-  return val;
-});
+export const idValidator = z.string()
+// .transform((val, ctx) => {
+//   if (!/^[a-f\d]{24}$/i.test(val)) {
+//     ctx.addIssue({
+//       code: "INVALID_ID",
+//       message: "id must be a valid MongoDB ObjectId",
+//     });
+//     return z.NEVER;
+//   }
+//   return val;
+// });

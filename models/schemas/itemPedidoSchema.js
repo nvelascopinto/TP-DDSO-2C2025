@@ -20,7 +20,7 @@ const itemPedidoSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true,
+    //timestamps: true,
     collection: "items",
   },
 )

@@ -14,7 +14,9 @@ class notificacionService {
 
   crearSegunEstadoPedido(estadoActual, pedido) {
     let destinatario = null
-    if (estadoActual == estado.CANCELADO) {
+    if(estadoActual == estado.CONFIRMADO) {
+      distinatario = pedido.comprador
+    } else if (estadoActual == estado.CANCELADO) {
       destinatario = pedido.vendedor
     } else if (estadoActual == estado.ENVIADO) {
       destinatario = pedido.comprador

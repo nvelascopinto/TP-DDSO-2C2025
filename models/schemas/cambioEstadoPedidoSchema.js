@@ -24,7 +24,7 @@ export const cambioEstadoPedidoSchema = new mongoose.Schema({
     required: true,
   },
   usuario: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: "Usuario",
     required: true,
   },

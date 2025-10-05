@@ -1,4 +1,5 @@
 import { ZodError } from "zod"
+import { MongooseError } from "mongoose"
 import AppError from "../errors/appError.js"
 
 export function errorHandler(error, _req, res, _next) {
@@ -16,7 +17,14 @@ export function errorHandler(error, _req, res, _next) {
       message: error.message,
       details: error.details,
     })
-  } else {
+   } else if (error instanceof MongooseError) {
+    return res.status(500).json({
+      name: "DatabaseError",  
+      message: "Error en la base de datos",
+      details: error.message,
+    })
+  }
+  else {
     return res.status(500).json({
       name: "ServerError",
       message: "Algo salio mal en el Servidor",

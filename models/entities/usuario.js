@@ -3,8 +3,8 @@ import DatosInvalidosError from "../../errors/datosInvalidosError.js"
 import UsuarioSinPermisoError from "../../errors/usuarioSinPermisoError.js"
 
 export class Usuario {
-  constructor(nombre, email, telefono, tipoUsuario) {
-    this.id = null
+  constructor(username, nombre, email, telefono, tipoUsuario) {
+    this.username = username
     this.nombre = nombre
     this.email = email
     this.telefono = telefono

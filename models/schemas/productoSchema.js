@@ -4,7 +4,7 @@ import { Producto } from "../entities/producto.js"
 const productoSchema = new mongoose.Schema(
   {
     vendedor: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Usuario",
       required: true,
     },
@@ -41,7 +41,7 @@ const productoSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true,
+    //timestamps: true,
     collection: "productos",
   },
 )

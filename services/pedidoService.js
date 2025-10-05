@@ -88,6 +88,11 @@ class PedidoService {
       else {return false}
     })
   }
+
+  cantidadVentasProducto(producto){
+    this.pedidoRepository.cantidadVentasProducto(producto)
+  }
+
 }
 
 export default new PedidoService(

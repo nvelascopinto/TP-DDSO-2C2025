@@ -5,12 +5,12 @@ import { cambioEstadoPedidoSchema } from "./cambioEstadoPedidoSchema.js"
 const pedidoSchema = new mongoose.Schema(
   {
     comprador: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Usuario",
-      required: true,
+      required: true
     },
     vendedor: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Usuario",
       required: true,
     },
@@ -55,7 +55,7 @@ const pedidoSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true,
+    //timestamps: true,
     collection: "pedidos",
   },
 )

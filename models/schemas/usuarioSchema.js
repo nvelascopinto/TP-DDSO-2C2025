@@ -3,10 +3,15 @@ import { Usuario } from "../entities/usuario.js"
 
 const usuarioSchema = new mongoose.Schema(
   {
-    // _id: {
-    //   type: String,
-    //   required: true,
-    // },
+    // USERNAME 
+    _id: {
+      type : String
+    },
+    username: {
+      type: String,
+      required: true,
+      unique : true
+    },
     nombre: {
       type: String,
       required: true,
@@ -30,10 +35,16 @@ const usuarioSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true,
     collection: "usuarios",
   },
 )
+
+usuarioSchema.pre('save', function(next) {
+  if (!this._id) {
+    this._id = this.username;
+  }
+  next();
+});
 
 usuarioSchema.loadClass(Usuario)
 

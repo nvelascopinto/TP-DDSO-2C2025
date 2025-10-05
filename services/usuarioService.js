@@ -9,6 +9,7 @@ class UsuarioService {
 
   /************************** "VALIDAR" UN USUARIO **************************/
   obtenerUsuario(id, roles) {
+    console.log(id)
     return UsuarioRepository.findById(id)
     .then((usuario) => {
       usuario.validarRol(roles)
