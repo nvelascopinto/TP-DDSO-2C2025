@@ -19,7 +19,7 @@ export class Pedido {
     this.fechaCreacion = new Date()
     this.historialCambioPedidos = []
 
-    this.validarItemsConVendedor
+    // this.validarItemsConVendedor
     this.validarMoneda
   }
 

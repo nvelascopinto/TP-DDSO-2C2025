@@ -8,11 +8,11 @@ notificacionRouter.patch("/:id", (req, res) => {
 })
 
 notificacionRouter.get("/:idusuario/leidas", (req, res) => {
-  NotificacionController.getLeidas(req, res)
+  return NotificacionController.getLeidas(req, res)
 })
 
 notificacionRouter.get("/:idusuario/noleidas", (req, res) => {
-  NotificacionController.getNoLeidas(req, res)
+  return NotificacionController.getNoLeidas(req, res)
 })
 
 export default notificacionRouter

@@ -7,15 +7,15 @@ class notificacionRepository {
 
   crear(notificacion) {
     const nuevaNotificacion = new this.model(notificacion)
-    return nuevaNotificacion
+    return nuevaNotificacion.save()
   }
 
   getNotificacionesLeidas(idUsuario) {
-    return this.model.find({usuarioDestino : idUsuario, leida : true})
+    return this.model.find({ usuarioDestino: idUsuario, leida: true })
   }
 
   getNotificacionesNoLeidas(idUsuario) {
-    return tthis.model.find({usuarioDestino : idUsuario, leida : false})
+    return this.model.find({ usuarioDestino: idUsuario, leida: false })
   }
 
   getById(idNotificacion) {

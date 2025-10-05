@@ -2,7 +2,7 @@ import { z } from "zod"
 import ProductoInexistenteError from "../errors/productoInexistenteError.js"
 
 export const productoValidator = z.object({
-  vendedor: z.number().nonnegative(),
+  vendedor: z.string(),
   categoria: z.string(),
   titulo: z.string().min(1, "El titulo no puede estar vacío"),
   descripcion: z.string(),

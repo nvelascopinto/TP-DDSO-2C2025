@@ -1,5 +1,5 @@
 import ProductoService from "../services/productoService.js"
-import { convertJSONtoProducto } from "../conversores/conversoresProducto.js"
+import { toProductoDTO } from "../converters/productoConverter.js"
 import { productoValidator } from "../validators/productoValidator.js"
 
 class ProductoController {
@@ -9,16 +9,20 @@ class ProductoController {
 
   crear(req, res) {
     const body = productoValidator.parse(req.body)
-    const producto = convertJSONtoProducto(body)
+    const producto = toProductoDTO(body)
 
-    const nuevoProducto = this.productoService.crear(producto)
-
-    return res.status(201).json(nuevoProducto)
+    return this.productoService.crear(producto)
+    .then((nuevoProducto) => {
+      res.status(201).json(nuevoProducto)
+    })
   }
 
   deEsteVendedor(req, res) {
     const idVendedor = req.vendedor.id //chequear como es q lo trae el middleware
-    this.productoService.obtenerTodosDeVendedor(idVendedor)
+    return this.productoService.obtenerTodosDeVendedor(idVendedor)
+    .then((productos) => {
+      res.status(200).json(productos)
+    })
   }
 }
 

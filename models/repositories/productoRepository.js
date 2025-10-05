@@ -10,15 +10,15 @@ class ProductoRepository {
   }
 
   actualizar(id, productoModificado) {
-    
     return this.model.findByIdAndUpdate(id, productoModificado)
   }
+  
   findById(id) {
-    return this.model.findById(id)
+    return this.model.findById(id).populate("vendedor")
   }
 
   obtenerTodosDeVendedor(idVendedor) {
-    return this.model.find({vendedor : idVendedor})
+    return this.model.find({ vendedor: idVendedor })
   }
 }
 

@@ -1,9 +1,9 @@
-import { DatosInvalidos } from "../errors/datosInvalidosError"
-import { ProductoDTO } from "../models/DTO/productoDTO"
-import { Producto } from "../models/entities/producto"
-import { ProductoService } from "../services/productoService"
-import { Usuario } from "../models/entities/usuario"
-import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError"
+import { DatosInvalidos } from "../errors/datosInvalidosError.js"
+import { ProductoDTO } from "../models/DTO/productoDTO.js"
+import { Producto } from "../models/entities/producto.js"
+import { ProductoService } from "../services/productoService.js"
+import { Usuario } from "../models/entities/usuario.js"
+import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js"
 
 const mockProductoRepository = {
   findById: jest.fn(),

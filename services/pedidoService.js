@@ -2,11 +2,9 @@ import PedidoRepository from "../models/repositories/pedidoRepository.js"
 import UsuarioService from "./usuarioService.js"
 import ProductoService from "./productoService.js"
 import NotificacionService from "./notificacionService.js"
+import { fromPedidoDTO } from "../converters/pedidoConverter.js"
 import { autorizadosAEstado, estado } from "../models/entities/estadoPedido.js"
-import { Pedido } from "../models/entities/pedido.js"
-import { DireccionEntrega } from "../models/entities/direccionEntrega.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
-import { ItemPedido } from "../models/entities/itemPedido.js"
 import {
   validarExistenciaDePedido,
   validarExistenciaDeHistorial,
@@ -22,114 +20,79 @@ class PedidoService {
 
   /************************** CREAR UN PEDIDO **************************/
   crear(pedidoDTO) {
-    const nuevoPedido = this.convertirAPedido(pedidoDTO)
-
-    nuevoPedido.validarStock()
-
-    return this.pedidoRepository.crear(nuevoPedido).then((pedido)=>{
-      this.notificacionService.crearSegunPedido(pedido)
-      return pedido
-    })
+    const nuevoPedido = fromPedidoDTO(pedidoDTO)
     
-  }
-
-  convertirAPedido(pedidoDTO) {
-    const comprador = this.usuarioService.obtenerUsuario(pedidoDTO.compradorID, [
-      tipoUsuario.COMPRADOR,
-    ])
-
-    const vendedor = this.usuarioService.obtenerUsuario(pedidoDTO.vendedorID, [
-      tipoUsuario.VENDEDOR,
-    ])
-
-    const items = pedidoDTO.itemsDTO.map((itemDTO) => {
-      const producto = this.productoService.obtenerProducto(itemDTO.productoID)
-      return new ItemPedido(producto, itemDTO.cantidad, itemDTO.precioUnitario)
-    })
-
-    const direEntrega = new DireccionEntrega(
-      pedidoDTO.direccionEntregaDTO.calle,
-      pedidoDTO.direccionEntregaDTO.altura,
-      pedidoDTO.direccionEntregaDTO.piso,
-      pedidoDTO.direccionEntregaDTO.departamento,
-      pedidoDTO.direccionEntregaDTO.codigoPostal,
-      pedidoDTO.direccionEntregaDTO.ciudad,
-      pedidoDTO.direccionEntregaDTO.provincia,
-      pedidoDTO.direccionEntregaDTO.pais,
-      pedidoDTO.direccionEntregaDTO.latitud,
-      pedidoDTO.direccionEntregaDTO.longitud,
-    )
-
-    return new Pedido(comprador, vendedor, items, pedidoDTO.moneda, direEntrega)
-  }//VER MANEJO DE PROMISES 
+    return this.usuarioService.obtenerUsuario(pedidoDTO.compradorID, [tipoUsuario.COMPRADOR, ])
+      .then((usuarioComprador) => { // Esto es lo que devuelve la promise
+        nuevoPedido.comprador = usuarioComprador
+        // Asi encadeno la siguiente promise
+        return this.usuarioService.obtenerUsuario(pedidoDTO.vendedorID, [tipoUsuario.VENDEDOR, ])
+      }) 
+      .then((usuarioVendedor) => { // Eso es lo que devuelve la promise anterior
+        nuevoPedido.vendedor = usuarioVendedor 
+        // Uso el map solo para formar un array de promises y asi poder pasar a la siguiente promise 
+        return Promise.all(pedidoDTO.itemsDTO.map(item => 
+          this.productoService.obtenerProducto(item.productoID)));
+      })
+      .then((productos) => {
+        // Le asigno a cada producto del ItemPedido su respectivo Producto, respetando el orden
+        nuevoPedido.items.forEach((item, i) => {item.producto = productos[i]}) 
+        nuevoPedido.validarStock()
+        nuevoPedido.validarItemsConVendedor()
+        return this.pedidoRepository.crear(nuevoPedido)
+      })
+      .then((pedidoGuardado) => {
+        return this.notificacionService.crearSegunPedido(pedidoGuardado)
+        .then (() => pedidoGuardado) // Devuelvo el pedido que me llego de la otra promise
+      })
+}
 
   /************************** CONSULTAR UN PEDIDO **************************/
   consultar(id) {
-    const pedido = this.pedidoRepository.findById(id).then((pedidoBuscado) => pedidoBuscado)
+    return this.pedidoRepository.findById(id)
+      .then((pedidoBuscado) => pedidoBuscado)
     //validarExistenciaDePedido(pedido, id) ==> no tira error mongo????
-
-    return pedido
   }
 
   /************************** CONSULTAR EL HISTORIAL DE UN USUARIO **************************/
   consultarHistorial(id) {
-   // if (this.usuarioEsValido(id)) {
-      const historialPedidos = this.pedidoRepository.consultarHistorial(id).then((historial) => historial)
-      //validarExistenciaDeHistorial(historialPedidos, id) ==> no tira ya el error mongo????
-
-      return historialPedidos
+    // if (this.usuarioEstaAutorizado(id, [tipoUsuario.COMPRADOR,tipoUsuario.VENDEDOR,tipoUsuario.ADMIN,])) {
+    return this.pedidoRepository.consultarHistorial(id)
+      .then((historial) => historial)
+    //validarExistenciaDeHistorial(historialPedidos, id) ==> no tira ya el error mongo????
     //}
   }
 
-  usuarioEsValido(id) {
-    this.usuarioService.obtenerUsuario(id, [
-      tipoUsuario.COMPRADOR,
-      tipoUsuario.VENDEDOR,
-      tipoUsuario.ADMIN,
-    ])
-    return true
-  }
-//A PARTIR DE ACA FALTA MANEJO DE PROMISES 
   /************************** CAMBIAR EL ESTADO DE UN PEDIDO **************************/
   cambioEstado(cambioEstado, idPedido) {
-    this.usuarioEstaAutorizado(
+    return this.usuarioEstaAutorizado(
       cambioEstado.idUsuario,
       autorizadosAEstado[cambioEstado.estado],
     )
+    .then(() => {
+      return this.consultar(idPedido)
+    })
+    .then((pedido) => {
+      pedido.actualizarEstado(
+        estado[cambioEstado.estado],
+        cambioEstado.idUsuario,
+        cambioEstado.motivo,
+      )
 
-    const pedido = this.consultar(idPedido)
-
-    pedido.actualizarEstado(
-      estado[cambioEstado.estado],
-      cambioEstado.idUsuario,
-      cambioEstado.motivo,
-    )
-
-    // FALTA PERSISTIR EL CAMBIO EN LA BASE DE DATOS
-    // this.pedidoRepository.actualizar()
-
-    this.notificacionService.crearSegunEstadoPedido(estado[cambioEstado.estado], pedido)
-
-    return "Pedido " + pedido._id + " cambio a estado " + pedido.estado
-  }
-
-  usuarioEsValidoCompra(id, pedido) {
-    const usuario = this.usuarioService.obtenerUsuario(id, [
-      tipoUsuario.COMPRADOR,
-      tipoUsuario.VENDEDOR,
-      tipoUsuario.ADMIN,
-    ])
-
-    return (
-      pedido.comprador.id == usuario.id ||
-      pedido.vendedor.id == usuario.id ||
-      usuario.tipoUsuario === "Admin"
-    )
+      return this.pedidoRepository.actualizar(pedido)
+    })
+    .then((pedidoActualizado) => {
+      return this.notificacionService.crearSegunEstadoPedido(estado[cambioEstado.estado], pedidoActualizado)
+      .then( () => "Pedido " + pedidoActualizado.id + " cambio a estado " + pedidoActualizado.estado)
+    })
   }
 
   usuarioEstaAutorizado(id, roles) {
-    this.usuarioService.obtenerUsuario(id, roles)
-    return true
+    return this.usuarioService.obtenerUsuario(id, roles)
+    .then((usuario) => {
+      if(usuario) {return true}
+      else {return false}
+    })
   }
 }
 

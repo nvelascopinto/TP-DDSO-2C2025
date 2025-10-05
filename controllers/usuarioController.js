@@ -1,5 +1,5 @@
 import UsuarioService from "../services/usuarioService.js"
-import { convertJSONtoUsuario } from "../conversores/conversoresUsuario.js"
+import { toUsuarioDTO } from "../converters/usuarioConverter.js"
 import { usuarioValidator } from "../validators/usuarioValidator.js"
 import { idValidator } from "../validators/idValidator.js"
 
@@ -10,27 +10,30 @@ class UsuarioController {
 
   crearUsuario(req, res) {
     const body = usuarioValidator.parse(req.body)
-    const usuario = convertJSONtoUsuario(body)
+    const usuario = toUsuarioDTO(body)
 
-    const nuevoUsuario = this.usuarioService.crearUsuario(usuario)
-
-    return res.status(201).json(nuevoUsuario)
+    return this.usuarioService.crearUsuario(usuario)
+    .then((nuevoUsuario) => {
+      return res.status(201).json(nuevoUsuario)
+    })
   }
 
   verUsuario(req, res) {
     const id = idValidator.parse(req.params.id)
 
-    const usuario = this.usuarioService.buscar(id)
-
-    return res.status(200).json(usuario)
+    return this.usuarioService.buscar(id) 
+    .then((usuario) => {
+      res.status(200).json(usuario)
+    })
   }
 
   verHistorialUsuario(req, res) {
     const id = idValidator.parse(req.params.id)
 
-    const pedido = this.usuarioService.consultarHistorial(id)
-
-    return res.status(200).json(pedido)
+    return this.usuarioService.consultarHistorial(id)
+    .then((pedidos) => {
+      res.status(200).json(pedidos)
+    })
   }
 }
 

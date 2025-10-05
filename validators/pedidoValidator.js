@@ -5,8 +5,8 @@ import PedidoInexistenteError from "../errors/pedidoInexistenteError.js"
 import HistorialInexistenteError from "../errors/historialInexistenteError.js"
 
 export const pedidoValidator = z.object({
-  comprador: z.number().nonnegative(),
-  vendedor: z.number().nonnegative(),
+  comprador: z.string(),
+  vendedor: z.string(),
   items: z.array(itemPedidoValidator).min(1),
   moneda: z.string(),
   direccionEntrega: direccionEntregaValidator,

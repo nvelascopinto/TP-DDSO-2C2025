@@ -1,12 +1,13 @@
 import js from "@eslint/js"
 import globals from "globals"
+import importPlugin from "eslint-plugin-import";
 import { defineConfig } from "eslint/config"
 
 export default defineConfig([
   {
     files: ["**/*.{js,mjs,cjs,jsx}"],
     ignores: ["node_modules/**"],
-    plugins: { js },
+    plugins: { js, import: importPlugin },
     extends: ["js/recommended"],
     languageOptions: { globals: globals.node },
     rules: {
@@ -16,6 +17,13 @@ export default defineConfig([
           argsIgnorePattern: "^_",
           varsIgnorePattern: "^_",
           caughtErrorsIgnorePattern: "^_",
+        },
+      ],
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          js: "always",
         },
       ],
     },
