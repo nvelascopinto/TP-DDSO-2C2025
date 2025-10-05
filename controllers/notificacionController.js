@@ -6,13 +6,10 @@ class notificacionController {
 
   marcarComoLeida(req, res) {
     const idNotificacion = idValidator.parse(req.params.id)
-
-    return NotificacionService.getNotificacion(idNotificacion)
-    .then((notificacion) => {
-      const usuario = req.usuario //chequear segun como lo pase middleware
-      notificacionValidator(usuario, notificacion) //corregir esto debe ir en el service la logica
-      notificacion.marcarComoLeida()
-      res.status(200).json(notificacion)
+    const usuario = req.usuario // ver como lo trae el middleware
+    return NotificacionService.marcarComoLeida(idNotificacion, usuario)
+    .then(() => {
+      res.status(200).json("La notificacion fue leida")
     })
   } 
 
@@ -32,6 +29,8 @@ class notificacionController {
         res.status(200).json(notificacionesNoLeidas)
       })
   }
+
+  
 }
 
 export default new notificacionController(NotificacionService)

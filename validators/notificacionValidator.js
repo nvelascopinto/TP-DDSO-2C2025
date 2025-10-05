@@ -2,8 +2,8 @@ import UsuarioSinPermisoError from "../errors/usuarioSinPermisoError.js"
 
 export function notificacionValidator(usuario, notificacion) {
   const destinatario = notificacion.destinatario()
-  const idDestinatario = destinatario.id()
-  const idUsuario = usuario.id()
+  const idDestinatario = destinatario._id
+  const idUsuario = usuario._id
   if (idUsuario === idDestinatario) {
     return notificacion
   }

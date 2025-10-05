@@ -46,6 +46,14 @@ class notificacionService {
     return NotificacionRepository.getById(idNotificacion)
       .then((notificacion) => notificacion)
   }
+
+  marcarComoLeida(idNotificacion, usuario) {
+      NotificacionRepository.getById(idNotificacion).then((notificacion) => {
+          notificacionValidator(usuario, notificacion) 
+          notificacion.marcarComoLeida()
+      }) 
+  }
+
 }
 
 export default new notificacionService(NotificacionRepository)
