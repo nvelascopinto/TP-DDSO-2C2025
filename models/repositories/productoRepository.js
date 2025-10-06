@@ -18,7 +18,7 @@ class ProductoRepository {
   }
 
   obtenerTodosDeVendedor(idVendedor, filtros = {}, pagina, limite) {
-    const query = this.mapFilter(filtros) 
+    const query = this.mapFilter(filtros,idVendedor) 
     const desplazamiento = pagina && limite ? (pagina - 1) * limite : 0
 
     const vendedoresFiltrados = this.model.find(query).skip(desplazamiento).limit(limite)
@@ -26,7 +26,7 @@ class ProductoRepository {
     return vendedoresFiltrados
   }
 
-  mapFilter(filters)
+  mapFilter(filtros,idVendedor)
   {
     const query = { vendedor: idVendedor }
     const { nombre, categoria, descripcion, minPrecio, maxPrecio, pagina, limite } = filtros

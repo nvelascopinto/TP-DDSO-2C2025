@@ -7,12 +7,16 @@ import { cambioEstadoPedidoValidator } from "../validators/cambioEstadoPedidoVal
 class PedidoController {
 
   crear(req, res) {
-    const body = pedidoValidator.parse(req.body)
-    const pedido = toPedidoDTO(body)
-
-    return PedidoService.crear(pedido).then((nuevoPedido) => {
-      res.status(201).json(nuevoPedido)
-    })
+    return Promise.resolve().then(() => { 
+        const body = pedidoValidator.parse(req.body)
+        const pedido = toPedidoDTO(body)
+        const comprador = req.comprador
+        const vendedor = req.vendedor
+        PedidoService.crear(pedido, vendedor, comprador).then((nuevoPedido) => {
+          res.status(201).json(nuevoPedido)
+        })
+  })
+   
   }
 
   // cancelar(req, res) {
@@ -25,11 +29,12 @@ class PedidoController {
   // }
 
   consultar(req, res) {
-    const id = idValidator.parse(req.params.id)
-
-    return PedidoService.consultar(id).then((pedido) => {
+    return Promise.resolve().then(()=> {
+      const id = idValidator.parse(req.params.id)
+      return PedidoService.consultar(id)
+    }).then((pedido) => {
       res.status(200).json(pedido)
-    })
+       })
   }
 
   // marcarEnviado(req, res) {
@@ -42,11 +47,13 @@ class PedidoController {
   // }
 
   cambioEstado(req, res) {
-    const id = idValidator.parse(req.params.id)
-    const cambioEstado = cambioEstadoPedidoValidator.parse(req.body)
-
-    return PedidoService.cambioEstado(cambioEstado, id)
+    return Promise.resolve().then(()=> {
+      const id = idValidator.parse(req.params.id)
+      const cambioEstado = cambioEstadoPedidoValidator.parse(req.body)
+      cambioEstado.usuario = req.usuario
+      return PedidoService.cambioEstado(cambioEstado, id)})
       .then((mensaje) => res.status(200).json(mensaje))
+  
   }
 }
 

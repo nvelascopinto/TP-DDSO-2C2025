@@ -3,18 +3,17 @@ import UsuarioService from "./usuarioService.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { validarExistenciaDeProducto } from "../validators/productoValidator.js"
 import { fromProductoDTO } from "../converters/productoConverter.js"
+import { rolesValidator } from "../validators/usuarioValidator.js"
 
 class ProductoService {
   /************************** CREAR UN PRODUCTO **************************/
-  crear(productoDTO) {
-    const producto = fromProductoDTO(productoDTO)
-    console.log(productoDTO)
-    return UsuarioService.obtenerUsuario(productoDTO.vendedorID, [tipoUsuario.VENDEDOR])
-    .then((usuarioVendedor) => {
-      producto.vendedor = usuarioVendedor
+  crear(productoDTO, vendedor) {
+    return Promise.resolve().then(()=>{
+        const producto = fromProductoDTO(productoDTO)
+        rolesValidator(vendedor, [tipoUsuario.VENDEDOR])
+    
       return ProductoRepository.crear(producto)
-    })
-    .then((productoGuardado) => productoGuardado)
+    }).then((productoGuardado) => productoGuardado)
   }
 
   /************************** CONSULTAR UN PRODUCTO **************************/
@@ -26,8 +25,10 @@ class ProductoService {
 
   /************************** CONSULTAR TODOS LOS PRODUCTOS DE UN VENDEDOR **************************/
 obtenerTodosDeVendedor(vendedor,filtros, pagina, limite) {
-    return ProductoRepository.obtenerTodosDeVendedor(vendedor,filtros, pagina, limite)
-      .then((prodVendedor) => prodVendedor)
+  return Promise.resolve().then(()=> {
+      rolesValidator(vendedor,[tipoUsuario.VENDEDOR])
+      return ProductoRepository.obtenerTodosDeVendedor(vendedor._id,filtros, pagina, limite)
+  }).then((prodVendedor) => prodVendedor)
   }
 
 /*ordenarPorPrecio(productos, tipoOrdenamiento){

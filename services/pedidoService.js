@@ -9,26 +9,21 @@ import {
   validarExistenciaDePedido,
   validarExistenciaDeHistorial,
 } from "../validators/pedidoValidator.js"
-
+import { rolesValidator } from "../validators/usuarioValidator.js"
 class PedidoService {
 
   /************************** CREAR UN PEDIDO **************************/
-  crear(pedidoDTO) {
+  crear(pedidoDTO, vendedor, comprador) {
     const nuevoPedido = fromPedidoDTO(pedidoDTO)
-    
-    return UsuarioService.obtenerUsuario(pedidoDTO.compradorID, [tipoUsuario.COMPRADOR, ])
-      .then((usuarioComprador) => { // Esto es lo que devuelve la promise
-        nuevoPedido.comprador = usuarioComprador
-        // Asi encadeno la siguiente promise
-        return UsuarioService.obtenerUsuario(pedidoDTO.vendedorID, [tipoUsuario.VENDEDOR, ])
-      }) 
-      .then((usuarioVendedor) => { // Eso es lo que devuelve la promise anterior
-        nuevoPedido.vendedor = usuarioVendedor 
-        // Uso el map solo para formar un array de promises y asi poder pasar a la siguiente promise 
-        return Promise.all(pedidoDTO.itemsDTO.map(item => 
-          ProductoService.obtenerProducto(item.productoID)));
-      })
-      .then((productos) => {
+    return Promise.resolve().then(()=>{
+      rolesValidator(comprador, [tipoUsuario.COMPRADOR])
+      rolesValidator(vendedor,[tipoUsuario.VENDEDOR] )
+      nuevoPedido.comprador = comprador._id
+      nuevoPedido.vendedor = vendedor._id
+          // Uso el map solo para formar un array de promises y asi poder pasar a la siguiente promise 
+      return Promise.all(pedidoDTO.itemsDTO.map(item => 
+            ProductoService.obtenerProducto(item.productoID)));
+    }).then((productos) => {
         // Le asigno a cada producto del ItemPedido su respectivo Producto, respetando el orden
         nuevoPedido.items.forEach((item, i) => {item.producto = productos[i]}) 
         nuevoPedido.validarStock()
@@ -60,7 +55,7 @@ class PedidoService {
   /************************** CAMBIAR EL ESTADO DE UN PEDIDO **************************/
   cambioEstado(cambioEstado, idPedido) {
     return this.usuarioEstaAutorizado(
-      cambioEstado.idUsuario,
+      cambioEstado.usuario._id,
       autorizadosAEstado[cambioEstado.estado],
     )
     .then(() => {
@@ -69,7 +64,7 @@ class PedidoService {
     .then((pedido) => {
       pedido.actualizarEstado(
         estado[cambioEstado.estado],
-        cambioEstado.idUsuario,
+        cambioEstado.usuario._id,
         cambioEstado.motivo,
       )
 
@@ -94,6 +89,7 @@ class PedidoService {
   }
 
 }
+//aplicar el authenticatr a cambio de pedido 
 
 export default new PedidoService(
   PedidoRepository,
