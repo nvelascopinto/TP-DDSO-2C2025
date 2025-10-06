@@ -26,7 +26,7 @@ export class Usuario {
 
   validarRol(roles) {
     if (!roles.includes(this.tipoUsuario)) {
-      throw new UsuarioSinPermisoError(this.id)
+      throw new UsuarioSinPermisoError(this.username)
     }
     return true
   }

@@ -11,7 +11,7 @@ pedidoRouter.post("/", authenticateUser('comprador'), authenticateUser('venedor'
   return PedidoController.crear(req, res)
 })
 
-pedidoRouter.post("/:id/cambioDeEstado", authenticateUser('usuario'), (req, res) => {
+pedidoRouter.post("/:id/cambioDeEstado", authenticateUser('X-User'), (req, res) => {
   return PedidoController.cambioEstado(req, res) // cambiar nombre
 })
 

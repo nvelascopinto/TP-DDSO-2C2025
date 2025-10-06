@@ -17,10 +17,10 @@ export const ordenEstados = [
 ]
 
 export const autorizadosAEstado = Object.freeze({
-  PENDIENTE: ["Vendedor", "Comprador,Admin"],
+  PENDIENTE: ["Vendedor", "Comprador, Admin"],
   CONFIRMADO: ["Vendedor"],
   EN_PREPARACION: ["Vendedor"],
   ENVIADO: ["Vendedor"],
   ENTREGADO: ["Vendedor", "Admin"],
-  CANCELADO: ["Vendedor", "Comprador,Admin"],
+  CANCELADO: ["Vendedor", "Comprador, Admin"],
 })

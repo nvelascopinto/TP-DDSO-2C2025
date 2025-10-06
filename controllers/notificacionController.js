@@ -6,7 +6,7 @@ class notificacionController {
 
   marcarComoLeida(req, res) {
     const idNotificacion = idValidator.parse(req.params.id)
-    const usuario = req.usuario // ver como lo trae el middleware
+    const usuario = req.user 
     return NotificacionService.marcarComoLeida(idNotificacion, usuario)
     .then(() => {
       res.status(200).json("La notificacion fue leida")
@@ -14,7 +14,7 @@ class notificacionController {
   } 
 
   getLeidas(req, res) {
-    const idUsuario = req.params.idUsuario
+    const idUsuario = req.user._id
 
     return NotificacionService.getNotificacionesLeidas(idUsuario)
       .then((notificacionesLeidas) => {
@@ -23,7 +23,7 @@ class notificacionController {
   }
 
   getNoLeidas(req, res) {
-    const idUsuario = req.params.idUsuario
+    const idUsuario = req.user._id
     return NotificacionService.getNotificacionesNoLeidas(idUsuario)
       .then((notificacionesNoLeidas) => {
         res.status(200).json(notificacionesNoLeidas)

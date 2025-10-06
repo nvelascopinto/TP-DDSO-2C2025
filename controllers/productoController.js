@@ -16,7 +16,7 @@ class ProductoController {
 
   obtenerTodosDeVendedor(req, res) {
     return Promise.resolve().then(() =>{
-      const vendedor = req.vendedor
+      const vendedor = req.user
       const { minPrecio, maxPrecio, pagina, limite, nombre, categoria, descripcion } = req.query
       const filtros = { minPrecio: parseFloat(minPrecio), maxPrecio: parseFloat(maxPrecio), nombre : nombre , categoria : categoria, descripcion : descripcion}
       ProductoService.obtenerTodosDeVendedor(VTTRegionendedor, filtros, pagina, limite)

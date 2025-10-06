@@ -50,7 +50,7 @@ class PedidoController {
     return Promise.resolve().then(()=> {
       const id = idValidator.parse(req.params.id)
       const cambioEstado = cambioEstadoPedidoValidator.parse(req.body)
-      cambioEstado.usuario = req.usuario
+      cambioEstado.usuario = req.user
       return PedidoService.cambioEstado(cambioEstado, id)})
       .then((mensaje) => res.status(200).json(mensaje))
   

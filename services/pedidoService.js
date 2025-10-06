@@ -45,42 +45,25 @@ class PedidoService {
 
   /************************** CONSULTAR EL HISTORIAL DE UN USUARIO **************************/
   consultarHistorial(id) {
-    // if (this.usuarioEstaAutorizado(id, [tipoUsuario.COMPRADOR,tipoUsuario.VENDEDOR,tipoUsuario.ADMIN,])) {
     return PedidoRepository.consultarHistorial(id)
       .then((historial) => historial)
-    //validarExistenciaDeHistorial(historialPedidos, id) ==> no tira ya el error mongo????
-    //}
   }
 
   /************************** CAMBIAR EL ESTADO DE UN PEDIDO **************************/
   cambioEstado(cambioEstado, idPedido) {
-    return this.usuarioEstaAutorizado(
-      cambioEstado.usuario._id,
-      autorizadosAEstado[cambioEstado.estado],
-    )
-    .then(() => {
-      return this.consultar(idPedido)
-    })
-    .then((pedido) => {
+    return Promise.resolve().then(()=> {
+       rolesValidator(cambioEstado.usuario, autorizadosAEstado[cambioEstado.estado])
+       return this.consultar(idPedido)
+    }).then((pedido) => {
       pedido.actualizarEstado(
         estado[cambioEstado.estado],
         cambioEstado.usuario._id,
         cambioEstado.motivo,
       )
-
       return this.pedidoRepository.actualizar(pedido)
-    })
-    .then((pedidoActualizado) => {
+    }).then((pedidoActualizado) => {
       return NotificacionService.crearSegunEstadoPedido(estado[cambioEstado.estado], pedidoActualizado)
-      .then( () => "Pedido " + pedidoActualizado.id + " cambio a estado " + pedidoActualizado.estado)
-    })
-  }
-
-  usuarioEstaAutorizado(id, roles) {
-    return UsuarioService.obtenerUsuario(id, roles)
-    .then((usuario) => {
-      if(usuario) {return true}
-      else {return false}
+      .then( () => "Pedido " + pedidoActualizado._id + " cambio a estado " + pedidoActualizado.estado)
     })
   }
 

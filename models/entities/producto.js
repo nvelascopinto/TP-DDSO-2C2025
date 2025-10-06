@@ -13,7 +13,7 @@ export class Producto {
     fotos,
     activo,
   ) {
-    this.id = null
+    //this.id = null
     this.vendedor = vendedor
     this.titulo = titulo
     this.descripcion = descripcion

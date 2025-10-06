@@ -9,7 +9,7 @@ import CambioEstadoInvalidoError from "../../errors/cambioEstadoInvalidoError.js
 export class Pedido {
   constructor(comprador, vendedor, items, moneda, direccionEntrega) {
     this.id = null // inciialmente se pone en null hasta que es guardado en el Repo
-    this.comprador = comprador // se debe chequear si es comprador ?
+    this.comprador = comprador 
     this.vendedor = vendedor
     this.items = items
     this.total = this.calcularTotal()
@@ -19,7 +19,7 @@ export class Pedido {
     this.fechaCreacion = new Date()
     this.historialCambioPedidos = []
 
-    // this.validarItemsConVendedor
+    this.validarItemsConVendedor
     this.validarMoneda
   }
 
@@ -49,7 +49,7 @@ export class Pedido {
   }
 
   validarItemsConVendedor() {
-    if (!this.items.every((item) => item.producto.vendedor.id === this.vendedor.id)) {
+    if (!this.items.every((item) => item.producto.vendedor.id === this.vendedor.id)) { // ver si son id o no????
       throw new DatosInvalidosError(
         "Los productos del pedido deben ser todos del mismo vendedor",
       )

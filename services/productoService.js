@@ -40,16 +40,21 @@ obtenerTodosDeVendedor(vendedor,filtros, pagina, limite) {
   }
 }*/
 
-ordenarPorPrecioAscendente(productos){
-  return productos.sort((a, b) => a.precio - b.precio);
+ordenarPorPrecio(productos, ascendente = true){
+  const factor = 1
+  if(!ascendente){
+      factor = -1
+  }
+  return productos.sort((a, b) => (a.precio - b.precio) * factor);
 
 }
-ordenarPorPrecioDescendente(productos){
-  return productos.sort((a, b) => b.precio - a.precio);
 
-}
-ordenarPorMasVendido(productos){
-  return productos.sort((a, b) => pedidoService.cantidadVentasProducto(b) - pedidoService.cantidadVentasProducto(a));
+ordenarPorVendido(productos, ascendente = true){
+  const factor = 1
+  if(!ascendente){
+      factor = -1
+  }
+  return productos.sort((a, b) => (pedidoService.cantidadVentasProducto(b) - pedidoService.cantidadVentasProducto(a) ) *factor );
 }
 }
 

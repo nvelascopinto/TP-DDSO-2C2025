@@ -5,9 +5,9 @@ import { estado } from "../models/entities/estadoPedido.js"
 class notificacionService {
 
   crearSegunPedido(pedido) {
-    const mensaje = "ID NUEVO PEDIDO REALIZADO: " + pedido.id
+    const mensaje = "ID NUEVO PEDIDO REALIZADO: " + pedido._id
 
-    const notificacion = new Notificacion(pedido.vendedor.id, mensaje)
+    const notificacion = new Notificacion(pedido.vendedor._id, mensaje)
     // Solo retorno la promise porque no me interesa devolver la notificacion creada
     return NotificacionRepository.crear(notificacion) 
   }
@@ -23,7 +23,7 @@ class notificacionService {
     } else {
       return destinatario
     }
-    return this.notificarEstadoPedido(estadoActual, destinatario.id, pedido.id) 
+    return this.notificarEstadoPedido(estadoActual, destinatario, pedido._id) 
   }
 
   notificarEstadoPedido(estado, destinatario, idPedido) {

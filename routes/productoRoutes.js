@@ -7,7 +7,8 @@ productoRouter.post("/", authenticateUser('vendedor'), (req, res) => {
   return ProductoController.crear(req, res)
 })
 
-productoRouter.get("/", authenticateUser('vendedor'), (req, res) => {
+//header X-User
+productoRouter.get("/", authenticateUser('X-User'), (req, res) => {
   return ProductoController.obtenerTodosDeVendedor(req, res)
 })
 

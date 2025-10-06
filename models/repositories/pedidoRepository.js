@@ -49,7 +49,7 @@ class PedidoRepository {
   } 
 
 cantidadVentasProducto(producto){
-    const productoId = producto.id;
+    const productoId = producto._id;
     const resultado = Pedido.aggregate([
       { $unwind: "$items" },
       { $match: { "items.productoId": productoId } },
