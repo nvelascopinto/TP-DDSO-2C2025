@@ -1,3 +1,4 @@
+import UsuarioSinPermisoError from "../../errors/usuarioSinPermisoError.js"
 export class Notificacion {
   constructor(usuarioDestino, mensaje) {
     //this.id = null
@@ -8,7 +9,10 @@ export class Notificacion {
     this.fechaLeida = null
   }
 
-  marcarComoleida() {
+  marcarComoleida(usuarioId) {
+    if(usuarioId != this.usuarioDestino) {
+      throw new UsuarioSinPermisoError(idUsuario)
+    }
     this.leida = true
     this.fechaLeida = new Date()
   }

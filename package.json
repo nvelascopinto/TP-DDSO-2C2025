@@ -18,6 +18,7 @@
   "dependencies": {
     "axios": "^1.6.2",
     "clean": "^4.0.2",
+    "clear": "^0.1.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "eslint": "^9.36.0",

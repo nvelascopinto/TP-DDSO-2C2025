@@ -1,5 +1,4 @@
 import ProductoRepository from "../models/repositories/productoRepository.js"
-import UsuarioService from "./usuarioService.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { validarExistenciaDeProducto } from "../validators/productoValidator.js"
 import { fromProductoDTO } from "../converters/productoConverter.js"
@@ -11,34 +10,42 @@ class ProductoService {
     return Promise.resolve().then(()=>{
         const producto = fromProductoDTO(productoDTO)
         rolesValidator(vendedor, [tipoUsuario.VENDEDOR])
-    
+        producto.validarCreador(vendedor._id) 
+        console.log(producto)
       return ProductoRepository.crear(producto)
     }).then((productoGuardado) => productoGuardado)
   }
 
   /************************** CONSULTAR UN PRODUCTO **************************/
   obtenerProducto(id) {
-    //validarExistenciaDeProducto(producto, id)
     return ProductoRepository.findById(id)
-    .then((producto) => producto)
+    .then((producto) => {
+      validarExistenciaDeProducto(producto,id)
+      return producto
+    })
   }
+//      const ordenamiento = {ordenVentas : ordenVentas , ordenMasVendios :ordenMasVendios, ascendente : ascendente}
 
   /************************** CONSULTAR TODOS LOS PRODUCTOS DE UN VENDEDOR **************************/
-obtenerTodosDeVendedor(vendedor,filtros, pagina, limite) {
+obtenerTodosDeVendedor(vendedor, filtros, pagina, limite, ordenamiento) {
   return Promise.resolve().then(()=> {
       rolesValidator(vendedor,[tipoUsuario.VENDEDOR])
       return ProductoRepository.obtenerTodosDeVendedor(vendedor._id,filtros, pagina, limite)
-  }).then((prodVendedor) => prodVendedor)
+  }).then((prodVendedor) =>{
+      return this.ordenar(ordenamiento,prodVendedor)
+  } )
   }
 
-/*ordenarPorPrecio(productos, tipoOrdenamiento){
-  if (tipoOrdenamiento == "asc"){
-    return productos.sort((a, b) => a.precio - b.precio);
+  ordenar(ordenamiento, productos) {
+    if(ordenamiento.ordenVentas) {
+      return this.ordenarPorPrecio(productos, ordenamiento.ascendente)
+    }
+    if(ordenamiento.ordenMasVendios) {
+      return this.ordenarPorVendido(productos,ordenamiento.ascendente)
+    }
+    return productos
   }
-  else if (tipoOrdenamiento == "desc"){
-    return productos.sort((a, b) => b.precio - a.precio);
-  }
-}*/
+
 
 ordenarPorPrecio(productos, ascendente = true){
   const factor = 1
@@ -58,4 +65,4 @@ ordenarPorVendido(productos, ascendente = true){
 }
 }
 
-export default new ProductoService(ProductoRepository, UsuarioService)
+export default new ProductoService(ProductoRepository)

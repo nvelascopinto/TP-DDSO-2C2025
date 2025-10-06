@@ -17,7 +17,7 @@ export function toProductoDTO(JSONProducto) {
 
 export function fromProductoDTO(productoDTO) {
   return new Producto(
-    productoDTO.vendedor,
+    productoDTO.vendedorID,
     productoDTO.titulo,
     productoDTO.descripcion,
     productoDTO.categoria,

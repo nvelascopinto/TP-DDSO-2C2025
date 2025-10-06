@@ -14,22 +14,24 @@ class ProductoRepository {
   }
 
   findById(id) {
-    return this.model.findById(id).populate("vendedor")
+    return this.model.findById(id)
   }
 
   obtenerTodosDeVendedor(idVendedor, filtros = {}, pagina, limite) {
     const query = this.mapFilter(filtros,idVendedor) 
+    if(!limite) {
+      limite = 5
+    }
     const desplazamiento = pagina && limite ? (pagina - 1) * limite : 0
-
-    const vendedoresFiltrados = this.model.find(query).skip(desplazamiento).limit(limite)
- 
-    return vendedoresFiltrados
+    console.log("DESAZAMIENTO", desplazamiento)
+    console.log("LIMITE", limite)
+    return this.model.find(query).skip(desplazamiento).limit(limite)
   }
 
   mapFilter(filtros,idVendedor)
   {
     const query = { vendedor: idVendedor }
-    const { nombre, categoria, descripcion, minPrecio, maxPrecio, pagina, limite } = filtros
+    const { nombre, categoria, descripcion, minPrecio, maxPrecio } = filtros
     if (minPrecio || maxPrecio) {
     query.precio = {}
       if (minPrecio) query.precio.$gte = minPrecio
@@ -44,6 +46,7 @@ class ProductoRepository {
     if(descripcion != null) {
       query.descripcion = { $regex:descripcion, $options: 'i' }
     }
+    return query
   }
 }
 

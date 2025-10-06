@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-const uri = process.env.MONGODB_URI || "mongodb://root:secret@127.0.0.1:27017/tp-ddso?authSource=admin"
+const uri = process.env.MONGODB_URI || "mongodb://admin:secret@127.0.0.1:27017/tp-ddso?authSource=admin"
 export class MongoDBClient {
   static connect() {
     console.log("Conectando a:", uri)

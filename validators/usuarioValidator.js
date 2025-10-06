@@ -10,7 +10,7 @@ export const usuarioValidator = z.object({
 })
 
 export function rolesValidator(user, roles) {
-    if(!roles.includes(user.tipoUsuario) ){
+    if(!(roles.includes(user.tipoUsuario)) ){
       throw new UsuarioSinPermisoError(user._id)
     }
 }

@@ -1,5 +1,4 @@
 import PedidoRepository from "../models/repositories/pedidoRepository.js"
-import UsuarioService from "./usuarioService.js"
 import ProductoService from "./productoService.js"
 import NotificacionService from "./notificacionService.js"
 import { fromPedidoDTO } from "../converters/pedidoConverter.js"
@@ -10,24 +9,23 @@ import {
   validarExistenciaDeHistorial,
 } from "../validators/pedidoValidator.js"
 import { rolesValidator } from "../validators/usuarioValidator.js"
+import mongoose from "mongoose"
+
 class PedidoService {
 
   /************************** CREAR UN PEDIDO **************************/
-  crear(pedidoDTO, vendedor, comprador) {
+  crear(pedidoDTO, comprador) {
     const nuevoPedido = fromPedidoDTO(pedidoDTO)
     return Promise.resolve().then(()=>{
       rolesValidator(comprador, [tipoUsuario.COMPRADOR])
-      rolesValidator(vendedor,[tipoUsuario.VENDEDOR] )
       nuevoPedido.comprador = comprador._id
-      nuevoPedido.vendedor = vendedor._id
-          // Uso el map solo para formar un array de promises y asi poder pasar a la siguiente promise 
       return Promise.all(pedidoDTO.itemsDTO.map(item => 
             ProductoService.obtenerProducto(item.productoID)));
     }).then((productos) => {
         // Le asigno a cada producto del ItemPedido su respectivo Producto, respetando el orden
         nuevoPedido.items.forEach((item, i) => {item.producto = productos[i]}) 
+        nuevoPedido.validarItemsConVendedor() // asigno vendedor
         nuevoPedido.validarStock()
-        nuevoPedido.validarItemsConVendedor()
         return PedidoRepository.crear(nuevoPedido)
       })
       .then((pedidoGuardado) => {
@@ -37,21 +35,29 @@ class PedidoService {
 }
 
   /************************** CONSULTAR UN PEDIDO **************************/
-  consultar(id) {
+  consultar(id, usuario) {
     return PedidoRepository.findById(id)
-      .then((pedidoBuscado) => pedidoBuscado)
-    //validarExistenciaDePedido(pedido, id) ==> no tira error mongo????
+      .then((pedidoBuscado) => {
+        validarExistenciaDePedido(pedidoBuscado, id)
+        pedidoBuscado.validarUsuario(usuario)
+        return pedidoBuscado
+      })
+   
   }
 
   /************************** CONSULTAR EL HISTORIAL DE UN USUARIO **************************/
   consultarHistorial(id) {
     return PedidoRepository.consultarHistorial(id)
-      .then((historial) => historial)
+      .then((historial) => {
+        validarExistenciaDeHistorial(historial,id)
+        return historial
+      })
   }
 
   /************************** CAMBIAR EL ESTADO DE UN PEDIDO **************************/
   cambioEstado(cambioEstado, idPedido) {
     return Promise.resolve().then(()=> {
+       //pedidoId = new mongoose.Types.ObjectId(idPedido)
        rolesValidator(cambioEstado.usuario, autorizadosAEstado[cambioEstado.estado])
        return this.consultar(idPedido)
     }).then((pedido) => {
@@ -72,11 +78,10 @@ class PedidoService {
   }
 
 }
-//aplicar el authenticatr a cambio de pedido 
+
 
 export default new PedidoService(
   PedidoRepository,
-  UsuarioService,
   ProductoService,
-  NotificacionService,
+  NotificacionService
 )

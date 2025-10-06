@@ -13,13 +13,13 @@ export const pedidoValidator = z.object({
   direccionEntrega: direccionEntregaValidator,
 })
 
-export function validarExistenciaDePedido(pedido, id) {
+export function validarExistenciaDePedido(pedido) {
   if (pedido == null) {
-    throw new PedidoInexistenteError(id)
+    throw new PedidoInexistenteError(pedido._id)
   }
 }
 
-export function validarExistenciaDeHistorial(historial, id) {
+export function validarExistenciaDeHistorial(historial,id) {
   if (historial.length == 0) {
     throw new HistorialInexistenteError(id)
   }

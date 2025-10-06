@@ -6,9 +6,11 @@ import YaEnEstadoError from "../../errors/yaEnEstadoError.js"
 import PedidoStockInsuficienteError from "../../errors/pedidoStockInsuficienteError.js"
 import DatosInvalidosError from "../../errors/datosInvalidosError.js"
 import CambioEstadoInvalidoError from "../../errors/cambioEstadoInvalidoError.js"
+import { tipoUsuario } from "./tipoUsuario.js"
+import UsuarioSinPermisoError from "../../errors/usuarioSinPermisoError.js"
 export class Pedido {
   constructor(comprador, vendedor, items, moneda, direccionEntrega) {
-    this.id = null // inciialmente se pone en null hasta que es guardado en el Repo
+    this._id = null // inciialmente se pone en null hasta que es guardado en el Repo
     this.comprador = comprador 
     this.vendedor = vendedor
     this.items = items
@@ -30,7 +32,7 @@ export class Pedido {
   actualizarEstado(nuevoEstado, quien, motivo) {
     this.validarCambioEstado(nuevoEstado)
     this.estado = nuevoEstado
-    const cambio = new CambioEstadoPedido(nuevoEstado, this.id, quien, motivo)
+    const cambio = new CambioEstadoPedido(nuevoEstado, this._id, quien, motivo)
     this.historialCambioPedidos.push(cambio)
   }
 
@@ -49,11 +51,13 @@ export class Pedido {
   }
 
   validarItemsConVendedor() {
-    if (!this.items.every((item) => item.producto.vendedor.id === this.vendedor.id)) { // ver si son id o no????
+    const vendedorUnico = this.items[0].producto.vendedor 
+    if (!this.items.every((item) => item.producto.vendedor === vendedorUnico)){ // ver si son id o no????
       throw new DatosInvalidosError(
         "Los productos del pedido deben ser todos del mismo vendedor",
       )
     }
+    this.vendedor = vendedorUnico
   }
 
   validarMoneda() {
@@ -74,5 +78,11 @@ export class Pedido {
     if (indiceNuevo < indiceActual || this.estado === estado.CANCELADO) {
       throw new CambioEstadoInvalidoError(this.estado, nuevoEstado)
     }
+  }
+  //usuario que puede acceder a ver el pedido
+  validarUsuario(usuario) {
+      if(usuario._id != this.vendedor && usuario._id != this.comprador && usuario.tipoUsuario != tipoUsuario.ADMIN) {
+        throw new UsuarioSinPermisoError(usuario._id)
+      }
   }
 }

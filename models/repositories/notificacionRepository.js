@@ -21,6 +21,9 @@ class notificacionRepository {
   getById(idNotificacion) {
     return this.model.findById(idNotificacion)
   }
+  update(notificacionModificada) {
+    return this.model.findByIdAndUpdate(notificacionModificada._id, notificacionModificada)
+  }
 }
 
 export default new notificacionRepository()

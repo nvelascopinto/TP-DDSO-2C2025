@@ -1,23 +1,27 @@
 import UsuarioRepository from "../models/repositories/usuarioRepository.js"
 import PedidoService from "./pedidoService.js"
-import PedidoRepository from "../models/repositories/pedidoRepository.js"
 // import PedidoService from "./pedidoService.js";
-import { validarExistenciaDeUsuario } from "../validators/usuarioValidator.js"
+import { rolesValidator, validarExistenciaDeUsuario } from "../validators/usuarioValidator.js"
 import { fromUsuarioDTO } from "../converters/usuarioConverter.js"
+import { validarExistenciaDeHistorial } from "../validators/pedidoValidator.js"
 
 class UsuarioService {
-
+  constructor() {
+    this.UsuarioRepository = UsuarioRepository
+    this.PedidoService = PedidoService
+  }
   /************************** "VALIDAR" UN USUARIO **************************/
   obtenerUsuario(id, roles) {
     console.log(id)
     return UsuarioRepository.findById(id)
     .then((usuario) => {
-      usuario.validarRol(roles)
+      validarExistenciaDeUsuario(usuario, id)
+      rolesValidator(usuario, roles)
       return usuario
     })
     // validarExistenciaDeUsuario(user, id)
   } // falta manejo de promises depsues de ver que hacemos con lo del authorization
-
+//DEBERIAMOS SACAR ESTE METODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO 
   /************************** CREAR UN USUARIO **************************/
   crearUsuario(usuarioDTO) {
     const usuario = fromUsuarioDTO(usuarioDTO) 
@@ -29,18 +33,21 @@ class UsuarioService {
   /************************** CONSULTAR UN USUARIO **************************/
   buscar(id) {
     return UsuarioRepository.findById(id)
-      .then((usuarioBuscado) => usuarioBuscado)
-    //validarExistenciaDeUsuario(usuario, id)
+      .then((usuarioBuscado) => {
+        validarExistenciaDeUsuario(usuarioBuscado, id)
+        return usuarioBuscado
+      })
+    
   }
 
   /************************** CONSULTAR EL HISTORIAL DE UN USUARIO **************************/
 
-  // TODO: Solucionar dependencia circular entre servicios: pedidos y usuarios
   consultarHistorial(id) {
-    // CAMBIAR A PEDIDO SERVICE DESPUES DE SOLUCIONAR LO DE AUTORIZACION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    return PedidoRepository.consultarHistorial(id) 
-    .then((historial) => historial)
+    return PedidoService.consultarHistorial(id) 
+    .then((historial) => {
+      return historial
+    })
   }
 }
 
-export default new UsuarioService(UsuarioRepository, PedidoRepository)
+export default new UsuarioService()

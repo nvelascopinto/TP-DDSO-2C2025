@@ -1,6 +1,6 @@
 import { Moneda } from "./moneda.js"
 import DatosInvalidosError from "../../errors/datosInvalidosError.js"
-
+import UsuarioSinPermisoError from "../../errors/usuarioSinPermisoError.js"
 export class Producto {
   constructor(
     vendedor,
@@ -13,8 +13,8 @@ export class Producto {
     fotos,
     activo,
   ) {
-    //this.id = null
-    this.vendedor = vendedor
+    this._id = null //lo va a escribir mongo
+    this.vendedor = vendedor // debe ser el id
     this.titulo = titulo
     this.descripcion = descripcion
     this.categoria = categoria
@@ -29,6 +29,13 @@ export class Producto {
 
   estaDisponible(cantidad) {
     return this.stock >= cantidad && this.activo
+  }
+
+  validarCreador(idUsuario) {
+    console.log(this.vendedor)
+    if(!(idUsuario == this.vendedor)) {
+      throw new UsuarioSinPermisoError(idUsuario)
+    }
   }
 
   reducirStock(cantidad) {

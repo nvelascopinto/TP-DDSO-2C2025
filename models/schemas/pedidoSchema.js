@@ -4,6 +4,7 @@ import { cambioEstadoPedidoSchema } from "./cambioEstadoPedidoSchema.js"
 
 const pedidoSchema = new mongoose.Schema(
   {
+    
     comprador: {
       type: String,
       ref: "Usuario",

@@ -3,7 +3,7 @@ import ProductoInexistenteError from "../errors/productoInexistenteError.js"
 import { Usuario } from "../models/entities/usuario.js"
 
 export const productoValidator = z.object({
-  vendedor: z.any(),
+  vendedor: z.string(),
   categoria: z.string(),
   titulo: z.string().min(1, "El titulo no puede estar vacío"),
   descripcion: z.string(),
@@ -13,7 +13,7 @@ export const productoValidator = z.object({
   activo: z.boolean(),
 })
 
-export function validarExistenciaDeProducto(producto, id) {
+export function validarExistenciaDeProducto(producto,id) {
   if (!producto) {
     throw new ProductoInexistenteError(id)
   }

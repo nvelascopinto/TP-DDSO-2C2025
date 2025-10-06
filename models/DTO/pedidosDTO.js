@@ -1,7 +1,5 @@
 export class PedidoDTO {
-  constructor(compradorID, vendedorID, itemsDTO, moneda, direccionEntregaDTO) {
-    this.compradorID = compradorID // se debe chequear si es comprador ?
-    this.vendedorID = vendedorID
+  constructor(itemsDTO, moneda, direccionEntregaDTO) {
     this.itemsDTO = itemsDTO
     this.moneda = moneda
     this.direccionEntregaDTO = direccionEntregaDTO

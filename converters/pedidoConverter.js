@@ -7,8 +7,6 @@ import { Pedido } from "../models/entities/pedido.js"
 
 export function toPedidoDTO(nuevoPedidoJSON) {
   return new PedidoDTO(
-    nuevoPedidoJSON.comprador,
-    nuevoPedidoJSON.vendedor,
     toItemsDTO(nuevoPedidoJSON.items),
     nuevoPedidoJSON.moneda,
     toDireccionDTO(nuevoPedidoJSON.direccionEntrega),
@@ -17,8 +15,8 @@ export function toPedidoDTO(nuevoPedidoJSON) {
 
 export function fromPedidoDTO(pedidoDTO) {
   return new Pedido(
-    pedidoDTO.compradorID,
-    pedidoDTO.vendedorID,
+    null,
+    null,
     fromItemsDTO(pedidoDTO.itemsDTO),
     pedidoDTO.moneda,
     fromDireccionDTO(pedidoDTO.direccionEntregaDTO),

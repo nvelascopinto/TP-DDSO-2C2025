@@ -7,7 +7,7 @@ class notificacionService {
   crearSegunPedido(pedido) {
     const mensaje = "ID NUEVO PEDIDO REALIZADO: " + pedido._id
 
-    const notificacion = new Notificacion(pedido.vendedor._id, mensaje)
+    const notificacion = new Notificacion(pedido.vendedor, mensaje)
     // Solo retorno la promise porque no me interesa devolver la notificacion creada
     return NotificacionRepository.crear(notificacion) 
   }
@@ -28,7 +28,6 @@ class notificacionService {
 
   notificarEstadoPedido(estado, destinatario, idPedido) {
     const notificacion = new Notificacion(destinatario, "El pedido " + idPedido + " cambio a estado " + estado,)
-
     return NotificacionRepository.crear(notificacion)
   }
 
@@ -48,12 +47,11 @@ class notificacionService {
   }
 
   marcarComoLeida(idNotificacion, usuario) {
-      NotificacionRepository.getById(idNotificacion).then((notificacion) => {
-          notificacionValidator(usuario, notificacion) 
-          notificacion.marcarComoLeida()
-      }) 
+      return NotificacionRepository.getById(idNotificacion).then((notificacion) => {
+          notificacion.marcarComoLeida(usuario) //valia al marcar como leida
+          return NotificacionRepository.update(notificacion)
+      }).then((notificacionLeida) => notificacionLeida)
   }
-
 }
 
 export default new notificacionService(NotificacionRepository)

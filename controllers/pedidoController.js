@@ -10,9 +10,8 @@ class PedidoController {
     return Promise.resolve().then(() => { 
         const body = pedidoValidator.parse(req.body)
         const pedido = toPedidoDTO(body)
-        const comprador = req.comprador
-        const vendedor = req.vendedor
-        PedidoService.crear(pedido, vendedor, comprador).then((nuevoPedido) => {
+        const comprador = req.user
+        return PedidoService.crear(pedido, comprador).then((nuevoPedido) => {
           res.status(201).json(nuevoPedido)
         })
   })
@@ -31,7 +30,8 @@ class PedidoController {
   consultar(req, res) {
     return Promise.resolve().then(()=> {
       const id = idValidator.parse(req.params.id)
-      return PedidoService.consultar(id)
+      const usuario = req.user
+      return PedidoService.consultar(id, usuario)
     }).then((pedido) => {
       res.status(200).json(pedido)
        })
