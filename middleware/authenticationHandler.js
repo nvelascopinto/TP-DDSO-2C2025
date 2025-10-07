@@ -1,6 +1,5 @@
 import usuarioRepository from "../models/repositories/usuarioRepository.js"
 import DatosInvalidosError from "../errors/datosInvalidosError.js"
-import { id } from "zod/locales";
 import { validarExistenciaDeUsuario } from "../validators/usuarioValidator.js";
 export const authenticateUser = (fieldName) => (req, _res, next) => {
   Promise.resolve().then(()=> {

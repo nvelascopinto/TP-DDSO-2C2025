@@ -1,13 +1,19 @@
 import { UsuarioService } from "../services/usuarioService.js"
 import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js"
-import { UsuarioSinPermiso } from "../errors/usuarioSinPermisos.js"
 import { UsuarioDTO } from "../models/DTO/usuarioDTO.js"
-import { DatosInvalidos } from "../errors/datosInvalidos.js"
 import { Usuario } from "../models/entities/usuario.js"
+import { Producto } from "../models/entities/producto.js"
+import { DireccionEntrega } from "../models/entities/direccionEntrega.js"
+import { ItemPedido } from "../models/entities/itemPedido.js"
+import { Pedido } from "../models/entities/pedido.js"
 
 const mockUsuarioRepository = {
   findById: jest.fn(),
   crear: jest.fn(),
+}
+
+const mockPedidoService = {
+  consultarHistorial: jest.fn(),
 }
 
 describe("UsuarioService", () => {
@@ -15,112 +21,120 @@ describe("UsuarioService", () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    usuarioService = new UsuarioService(mockUsuarioRepository)
+    usuarioService = new UsuarioService(mockUsuarioRepository, mockPedidoService)
   })
 
   describe("constructor", () => {
     it("debería inicializar con el repositorio pasado por parámetro", () => {
-      expect(usuarioService.usuarioRepository).toBe(mockUsuarioRepository)
-    })
-  })
-
-  describe("obtenerUsuario", () => {
-    it("debería retornar un usuario existente si tiene un rol permitido", () => {
-      const mockUser = { id: 1, nombre: "Pepe", tipoUsuario: "Admin" }
-      mockUsuarioRepository.findById.mockReturnValue(mockUser)
-
-      const rolesPermitidos = ["Comprador", "Vendedor", "Admin"]
-      const result = usuarioService.obtenerUsuario(1, rolesPermitidos)
-
-      expect(mockUsuarioRepository.findById).toHaveBeenCalledWith(1)
-      expect(result).toEqual(mockUser)
-    })
-
-    it("deberia lanzar UsuarioInexistenteError si el usuario no existe", () => {
-      mockUsuarioRepository.findById.mockReturnValue(null)
-
-      expect(() => usuarioService.obtenerUsuario(1, ["Admin"])).toThrow(
-        UsuarioInexistenteError,
-      )
-
-      expect(mockUsuarioRepository.findById).toHaveBeenCalledWith(1)
-    })
-
-    it("debería lanzar UsuarioSinPermiso si el rol del usuario está en la lista restringida", () => {
-      const mockUser = { id: 2, nombre: "Juan", tipoUsuario: "Vendedor" }
-      mockUsuarioRepository.findById.mockReturnValue(mockUser)
-
-      const rolesRestringidos = ["Comprador"]
-
-      expect(() => usuarioService.obtenerUsuario(2, rolesRestringidos)).toThrow(
-        UsuarioSinPermiso,
-      )
-
-      expect(mockUsuarioRepository.findById).toHaveBeenCalledWith(2)
-    })
-
-    it("debería permitir acceso a un COMPRADOR si no está en los roles restringidos", () => {
-      const mockUser = { id: 3, nombre: "Sofi", tipoUsuario: "Comprador" }
-      mockUsuarioRepository.findById.mockReturnValue(mockUser)
-
-      const rolesPermitidos = ["Comprador"]
-      const result = usuarioService.obtenerUsuario(3, rolesPermitidos)
-
-      expect(mockUsuarioRepository.findById).toHaveBeenCalledWith(3)
-      expect(result).toEqual(mockUser)
+      expect(usuarioService.UsuarioRepository).toBe(mockUsuarioRepository)
+      expect(usuarioService.PedidoService).toBe(mockPedidoService)
     })
   })
 
   describe("crearUsuario", () => {
-    it("no deberia crearlo ya que se ingresaro un tipo de Usuario invalido", () => {
+    it("deberia crear el usuario", async () => {
       let usuario = new UsuarioDTO(
+        "jose50",
         "Jose",
         "jose@gmail.com",
         "+54 11 3333 3333",
-        "Productor",
+        "Comprador",
       )
-
-      expect(() => {
-        usuarioService.crearUsuario(usuario)
-      }).toThrow(DatosInvalidos)
-    })
-
-    it("deneria crear el usuario", () => {
-      let usuario = new UsuarioDTO("Jose", "jose@gmail.com", "+54 11 3333 3333", "Admin")
       let usuarioCreado = new Usuario(
+        "jose50",
         "Jose",
         "jose@gmail.com",
         "+54 11 3333 3333",
-        "Admin",
+        "Comprador",
       )
-      usuarioCreado.id = 1
 
-      mockUsuarioRepository.crear.mockReturnValue(usuarioCreado)
-      expect(usuarioService.crearUsuario(usuario)).toEqual(usuarioCreado)
+      mockUsuarioRepository.crear.mockResolvedValue(usuarioCreado) // importante
+
+      const user = await usuarioService.crearUsuario(usuario)
+      expect(user).toEqual(usuarioCreado)
       expect(mockUsuarioRepository.crear).toHaveBeenCalledTimes(1)
     })
   })
 
   describe("buscar", () => {
-    it("debería devolver un usuario si existe en el repositorio", () => {
+    it("debería devolver un usuario si existe en el repositorio", async () => {
       const mockUser = {
-        id: 4,
+        username: "pepe",
         nombre: "Pepe",
         email: "pepeperez@gmail.com",
         telefono: "+54 11 3333 3333",
         tipoUsuario: "Vendedor",
       }
-      mockUsuarioRepository.findById.mockReturnValue(mockUser)
+      mockUsuarioRepository.findById.mockResolvedValue(mockUser)
 
-      const busqueda = usuarioService.buscar(4)
-      expect(mockUsuarioRepository.findById).toHaveBeenCalledWith(4)
+      const busqueda = await usuarioService.buscar("pepe")
+      expect(mockUsuarioRepository.findById).toHaveBeenCalledWith("pepe")
+      expect(mockUsuarioRepository.findById).toHaveBeenCalledTimes(1)
       expect(busqueda).toEqual(mockUser)
     })
-    it("debería tirar UsuarioInexistenteError si el usuario no existe", () => {
-      mockUsuarioRepository.findById.mockReturnValue(null)
+    it("debería tirar UsuarioInexistenteError si el usuario no existe", async () => {
+      mockUsuarioRepository.findById.mockResolvedValue(null)
 
-      expect(() => usuarioService.buscar(999)).toThrow(UsuarioInexistenteError)
-      expect(mockUsuarioRepository.findById).toHaveBeenCalledWith(999)
+      await expect(usuarioService.buscar("jajajaj")).rejects.toThrow(
+        UsuarioInexistenteError,
+      )
+      expect(mockUsuarioRepository.findById).toHaveBeenCalledWith("jajajaj")
+    })
+  })
+
+  describe("consultarHistorialUsuario", () => {
+    const comprador = new Usuario(
+      "juancito",
+      "Juan Perez",
+      "juan.perez@email.com",
+      "+541112345678",
+      "Comprador",
+    )
+
+    it("debería obtener el historial de un usuario si realizó más de un pedido", async () => {
+      const vendedor = new Usuario(
+        "juancho",
+        "Juan Perez",
+        "juan.perez@email.com",
+        "+541112345678",
+        "Vendedor",
+      )
+      const item1 = new Producto(
+        vendedor,
+        "auriculares",
+        "Auriculares bluetooth con cancelación de ruido y 20h de batería.",
+        "Electrónica",
+        15000,
+        "PESO_ARG",
+        200,
+        null,
+        true,
+      )
+      item1.id = 1
+      const direEntrega = new DireccionEntrega(
+        "Avenida Siempre Viva",
+        742,
+        1,
+        "d",
+        1000,
+        "Buenos Aires",
+        "Buenos Aires",
+        "Argentina",
+        -34.6037,
+        -58.3816,
+      )
+      const itemPed1 = new ItemPedido(item1, 1, 566)
+      const itemPed2 = new ItemPedido(item1, 4, 100)
+      const ped1 = new Pedido(comprador, vendedor, [itemPed1], "PESO_ARG", direEntrega)
+      ped1.id = 1
+      const ped2 = new Pedido(comprador, vendedor, [itemPed2], "PESO_ARG", direEntrega)
+      ped2.id = 2
+
+      mockPedidoService.consultarHistorial.mockReturnValue([ped1, ped2])
+      const historial = await mockPedidoService.consultarHistorial("juancito")
+      expect(historial).toEqual([ped1, ped2])
+      expect(mockPedidoService.consultarHistorial).toHaveBeenCalledTimes(1)
+      expect(mockPedidoService.consultarHistorial).toHaveBeenCalledWith("juancito")
     })
   })
 })

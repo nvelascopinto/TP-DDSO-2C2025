@@ -2,20 +2,23 @@ import NotificacionRepository from "../models/repositories/notificacionRepositor
 import { Notificacion } from "../models/entities/notificacion.js"
 import { estado } from "../models/entities/estadoPedido.js"
 
-class notificacionService {
+export class notificacionService {
+  constructor(NotificacionRepository) {
+    this.NotificacionRepository = NotificacionRepository
+  }
 
   crearSegunPedido(pedido) {
     const mensaje = "ID NUEVO PEDIDO REALIZADO: " + pedido._id
 
     const notificacion = new Notificacion(pedido.vendedor, mensaje)
     // Solo retorno la promise porque no me interesa devolver la notificacion creada
-    return NotificacionRepository.crear(notificacion) 
+    return this.NotificacionRepository.crear(notificacion)
   }
 
   crearSegunEstadoPedido(estadoActual, pedido) {
     let destinatario = null
-    if(estadoActual == estado.CONFIRMADO) {
-      distinatario = pedido.comprador
+    if (estadoActual == estado.CONFIRMADO) {
+      destinatario = pedido.comprador
     } else if (estadoActual == estado.CANCELADO) {
       destinatario = pedido.vendedor
     } else if (estadoActual == estado.ENVIADO) {
@@ -23,35 +26,43 @@ class notificacionService {
     } else {
       return destinatario
     }
-    return this.notificarEstadoPedido(estadoActual, destinatario, pedido._id) 
+    return this.notificarEstadoPedido(estadoActual, destinatario, pedido._id)
   }
 
   notificarEstadoPedido(estado, destinatario, idPedido) {
-    const notificacion = new Notificacion(destinatario, "El pedido " + idPedido + " cambio a estado " + estado,)
-    return NotificacionRepository.crear(notificacion)
+    const notificacion = new Notificacion(
+      destinatario,
+      "El pedido " + idPedido + " cambio a estado " + estado,
+    )
+    return this.NotificacionRepository.crear(notificacion)
   }
 
   getNotificacionesLeidas(idUsuario) {
-    return NotificacionRepository.getNotificacionesLeidas(idUsuario)
-      .then((notificacionesLeidas) => notificacionesLeidas)
+    return this.NotificacionRepository.getNotificacionesLeidas(idUsuario).then(
+      (notificacionesLeidas) => notificacionesLeidas,
+    )
   }
 
   getNotificacionesNoLeidas(idUsuario) {
-    return NotificacionRepository.getNotificacionesNoLeidas(idUsuario)
-      .then((notificacionesNoLeidas) => notificacionesNoLeidas)
+    return this.NotificacionRepository.getNotificacionesNoLeidas(idUsuario).then(
+      (notificacionesNoLeidas) => notificacionesNoLeidas,
+    )
   }
 
   getNotificacion(idNotificacion) {
-    return NotificacionRepository.getById(idNotificacion)
-      .then((notificacion) => notificacion)
+    return this.NotificacionRepository.getById(idNotificacion).then(
+      (notificacion) => notificacion,
+    )
   }
 
   marcarComoLeida(idNotificacion, usuario) {
-      return NotificacionRepository.getById(idNotificacion).then((notificacion) => {
-          notificacion.marcarComoLeida(usuario) //valia al marcar como leida
-          return NotificacionRepository.update(notificacion)
-      }).then((notificacionLeida) => notificacionLeida)
+    return this.NotificacionRepository.getById(idNotificacion)
+      .then((notificacion) => {
+        notificacion.marcarComoLeida(usuario) //valia al marcar como leida
+        return this.NotificacionRepository.update(notificacion)
+      })
+      .then((notificacionLeida) => notificacionLeida)
   }
 }
 
-export default new notificacionService(NotificacionRepository)
+export const notificationServiceInstance = new notificacionService(NotificacionRepository)

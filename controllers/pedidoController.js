@@ -1,4 +1,4 @@
-import PedidoService from "../services/pedidoService.js"
+import pedidoServiceInstance from "../services/pedidoService.js"
 import { toPedidoDTO } from "../converters/pedidoConverter.js"
 import { pedidoValidator } from "../validators/pedidoValidator.js"
 import { idValidator } from "../validators/idValidator.js"
@@ -11,7 +11,7 @@ class PedidoController {
         const body = pedidoValidator.parse(req.body)
         const pedido = toPedidoDTO(body)
         const comprador = req.user
-        return PedidoService.crear(pedido, comprador).then((nuevoPedido) => {
+        return pedidoServiceInstance.crear(pedido, comprador).then((nuevoPedido) => {
           res.status(201).json(nuevoPedido)
         })
   })
@@ -31,7 +31,7 @@ class PedidoController {
     return Promise.resolve().then(()=> {
       const id = idValidator.parse(req.params.id)
       const usuario = req.user
-      return PedidoService.consultar(id, usuario)
+      return pedidoServiceInstance.consultar(id, usuario)
     }).then((pedido) => {
       res.status(200).json(pedido)
        })
@@ -51,10 +51,10 @@ class PedidoController {
       const id = idValidator.parse(req.params.id)
       const cambioEstado = cambioEstadoPedidoValidator.parse(req.body)
       cambioEstado.usuario = req.user
-      return PedidoService.cambioEstado(cambioEstado, id)})
+      return pedidoServiceInstance.cambioEstado(cambioEstado, id)})
       .then((mensaje) => res.status(200).json(mensaje))
   
   }
 }
 
-export default new PedidoController(PedidoService)
+export default new PedidoController(pedidoServiceInstance)

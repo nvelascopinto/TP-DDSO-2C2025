@@ -11,7 +11,7 @@ export class Notificacion {
 
   marcarComoleida(usuarioId) {
     if(usuarioId != this.usuarioDestino) {
-      throw new UsuarioSinPermisoError(idUsuario)
+      throw new UsuarioSinPermisoError(usuarioId)
     }
     this.leida = true
     this.fechaLeida = new Date()

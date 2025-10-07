@@ -3,7 +3,7 @@ import { itemPedidoValidator } from "./itemPedidoValidator.js"
 import { direccionEntregaValidator } from "./direccionEntregaValidator.js"
 import PedidoInexistenteError from "../errors/pedidoInexistenteError.js"
 import HistorialInexistenteError from "../errors/historialInexistenteError.js"
-import { Usuario } from "../models/entities/usuario.js"
+//import { Usuario } from "../models/entities/usuario.js"
 
 export const pedidoValidator = z.object({
   comprador: z.any(), // ver si esto funciona
@@ -19,7 +19,7 @@ export function validarExistenciaDePedido(pedido) {
   }
 }
 
-export function validarExistenciaDeHistorial(historial,id) {
+export function validarExistenciaDeHistorial(historial, id) {
   if (historial.length == 0) {
     throw new HistorialInexistenteError(id)
   }

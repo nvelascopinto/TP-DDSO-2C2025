@@ -12,7 +12,7 @@ pedidoRouter.post("/", authenticateUser('X-User'), (req, res) => {
 })
 
 pedidoRouter.post("/:id/cambioDeEstado", authenticateUser('X-User'), (req, res) => {
-  return PedidoController.cambioEstado(req, res) // cambiar nombre
+  return PedidoController.cambioEstado(req, res)
 })
 
 export default pedidoRouter
