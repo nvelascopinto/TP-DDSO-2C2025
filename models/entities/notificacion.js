@@ -2,6 +2,7 @@ import UsuarioSinPermisoError from "../../errors/usuarioSinPermisoError.js"
 export class Notificacion {
   constructor(usuarioDestino, mensaje) {
     //this.id = null
+  
     this.usuarioDestino = usuarioDestino
     this.mensaje = mensaje
     this.fechaAlta = new Date()

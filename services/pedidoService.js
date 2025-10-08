@@ -24,7 +24,7 @@ export class PedidoService {
     return Promise.resolve()
       .then(() => {
         rolesValidator(comprador, [tipoUsuario.COMPRADOR])
-        nuevoPedido.comprador = comprador._id
+        nuevoPedido.comprador = comprador.username
         return Promise.all(
           pedidoDTO.itemsDTO.map((item) =>
             this.productoService.obtenerProducto(item.productoID),
@@ -75,7 +75,7 @@ export class PedidoService {
       .then((pedido) => {
         pedido.actualizarEstado(
           estado[cambioEstado.estado],
-          cambioEstado.usuario._id,
+          cambioEstado.usuario.username,
           cambioEstado.motivo,
         )
         return this.pedidoRepository.actualizar(pedido)

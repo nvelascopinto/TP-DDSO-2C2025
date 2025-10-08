@@ -8,6 +8,7 @@ import DatosInvalidosError from "../../errors/datosInvalidosError.js"
 import CambioEstadoInvalidoError from "../../errors/cambioEstadoInvalidoError.js"
 import { tipoUsuario } from "./tipoUsuario.js"
 import UsuarioSinPermisoError from "../../errors/usuarioSinPermisoError.js"
+import { Usuario } from "./usuario.js"
 export class Pedido {
   constructor(comprador, vendedor, items, moneda, direccionEntrega) {
     this._id = null // inciialmente se pone en null hasta que es guardado en el Repo
@@ -20,8 +21,6 @@ export class Pedido {
     this.estado = estado.PENDIENTE
     this.fechaCreacion = new Date()
     this.historialCambioPedidos = []
-
-    this.validarItemsConVendedor
     this.validarMoneda
   }
 
@@ -81,8 +80,11 @@ export class Pedido {
   }
   //usuario que puede acceder a ver el pedido
   validarUsuario(usuario) {
-      if(usuario._id != this.vendedor && usuario._id != this.comprador && usuario.tipoUsuario != tipoUsuario.ADMIN) {
-        throw new UsuarioSinPermisoError(usuario._id)
+    console.log("USUARIO QUE CONSULTA: ", usuario.username)
+    console.log("VENDEDOR ", this.vendedor)
+    console.log("COMPRADOR ", this.comprador)
+      if(usuario.username != this.vendedor && usuario.username != this.comprador && usuario.tipoUsuario != tipoUsuario.ADMIN) {
+        throw new UsuarioSinPermisoError(usuario.username)
       }
   }
 }

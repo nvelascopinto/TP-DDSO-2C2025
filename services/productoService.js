@@ -16,7 +16,7 @@ export class ProductoService {
       .then(() => {
         const producto = fromProductoDTO(productoDTO)
         rolesValidator(vendedor, [tipoUsuario.VENDEDOR])
-        producto.validarCreador(vendedor._id)
+        producto.validarCreador(vendedor.username)
         console.log(producto)
         return this.ProductoRepository.crear(producto)
       })
@@ -38,7 +38,7 @@ export class ProductoService {
       .then(() => {
         rolesValidator(vendedor, [tipoUsuario.VENDEDOR])
         return this.ProductoRepository.obtenerTodosDeVendedor(
-          vendedor._id,
+          vendedor.username,
           filtros,
           pagina,
           limite,

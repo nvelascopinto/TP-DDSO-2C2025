@@ -17,7 +17,7 @@ class notificacionController {
   getLeidas(req, res) {
     return Promise.resolve()
       .then(() => {
-        const idUsuario = req.user._id
+        const idUsuario = req.user.username
         return notificacionServiceInstance.getNotificacionesLeidas(idUsuario)
       })
       .then((notificacionesLeidas) => {
@@ -28,7 +28,7 @@ class notificacionController {
   getNoLeidas(req, res) {
     return Promise.resolve()
       .then(() => {
-        const idUsuario = req.user._id
+        const idUsuario = req.user.username
         return notificacionServiceInstance.getNotificacionesNoLeidas(idUsuario)
       })
       .then((notificacionesNoLeidas) => {

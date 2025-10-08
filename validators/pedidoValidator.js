@@ -13,9 +13,9 @@ export const pedidoValidator = z.object({
   direccionEntrega: direccionEntregaValidator,
 })
 
-export function validarExistenciaDePedido(pedido) {
+export function validarExistenciaDePedido(pedido, id) {
   if (pedido == null) {
-    throw new PedidoInexistenteError(pedido._id)
+    throw new PedidoInexistenteError(id)
   }
 }
 

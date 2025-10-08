@@ -2,7 +2,7 @@ import NotificacionRepository from "../models/repositories/notificacionRepositor
 import { Notificacion } from "../models/entities/notificacion.js"
 import { estado } from "../models/entities/estadoPedido.js"
 
-export class notificacionService {
+export class NotificacionService {
   constructor(NotificacionRepository) {
     this.NotificacionRepository = NotificacionRepository
   }
@@ -65,4 +65,4 @@ export class notificacionService {
   }
 }
 
-export const notificationServiceInstance = new notificacionService(NotificacionRepository)
+export const notificationServiceInstance = new NotificacionService(NotificacionRepository)
