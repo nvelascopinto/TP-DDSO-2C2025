@@ -14,6 +14,7 @@ import DatosInvalidosError from "../errors/datosInvalidosError.js"
 import UsuarioSinPermisoError from "../errors/usuarioSinPermisoError.js"
 import { MongooseError } from "mongoose"
 import EstadoInvalidoError from "../errors/estadoInvalidoError.js"
+import HistorialInexistenteError from "../errors/historialInexistenteError.js"
 
 const mockPedidoRepository = {
   crear: jest.fn(),
@@ -879,5 +880,110 @@ describe("PedidosService", () => {
       expect(mockNotificacionService.crearSegunEstadoPedido).toHaveBeenCalledTimes(0)
     })
 
+  })
+
+  describe("consultarHistorial", () => {
+
+      const comprador = new Usuario(
+          "juancito",
+          "Juan Perez",
+          "juan.perez@email.com",
+          "+541112345678",
+          "Comprador",
+        )
+        const vendedor = new Usuario(
+            "juancho",
+            "Juan Perez",
+            "juan.perez@email.com",
+            "+541112345678",
+            "Vendedor",
+          )
+    
+          const admin = new Usuario(
+            "pepita",
+            "Juan Perez",
+            "juan.perez@email.com",
+            "+541112345678",
+            "Admin",
+          )
+          const item1 = new Producto(
+            "juancho",
+            "auriculares",
+            "Auriculares bluetooth con cancelación de ruido y 20h de batería.",
+            "Electrónica",
+            15000,
+            "PESO_ARG",
+            200,
+            null,
+            true,
+          )
+          item1._id = 1
+          const direEntrega = new DireccionEntrega(
+            "Avenida Siempre Viva",
+            742,
+            1,
+            "d",
+            1000,
+            "Buenos Aires",
+            "Buenos Aires",
+            "Argentina",
+            -34.6037,
+            -58.3816,
+          )
+    it("deberia devolver el historial dado un usuario valido y un historial existente", async () => {
+        const itemPed1 = new ItemPedido(item1, 1, 566)
+          const itemPed2 = new ItemPedido(item1, 4, 100)
+          const ped1 = new Pedido("juancito", "juancho", [itemPed1], "PESO_ARG", direEntrega)
+          ped1._id = 1
+          const ped2 = new Pedido("juancito", "juancho", [itemPed2], "PESO_ARG", direEntrega)
+          ped2._id = 2
+          mockPedidoRepository.consultarHistorial.mockResolvedValue([ped1, ped2])
+          const historial = await pedidoService.consultarHistorial("juancito", comprador)
+          expect(historial).toEqual([ped1, ped2])
+          expect(mockPedidoRepository.consultarHistorial).toHaveBeenCalledTimes(1)
+          expect(mockPedidoRepository.consultarHistorial).toHaveBeenCalledWith("juancito")
+    })
+
+    it("no deberia devolver el historial  por no existir ", async () => {
+       
+          mockPedidoRepository.consultarHistorial.mockResolvedValue([])
+          await expect(pedidoService.consultarHistorial("juancito", comprador)).rejects.toThrow(HistorialInexistenteError)
+          expect(mockPedidoRepository.consultarHistorial).toHaveBeenCalledTimes(1)
+          expect(mockPedidoRepository.consultarHistorial).toHaveBeenCalledWith("juancito")
+    })
+
+    it("no deberia devolver el historial  por ser pedido por un usuario invalido ", async () => {
+      const itemPed1 = new ItemPedido(item1, 1, 566)
+          const itemPed2 = new ItemPedido(item1, 4, 100)
+          const ped1 = new Pedido("juancito", "juancho", [itemPed1], "PESO_ARG", direEntrega)
+          ped1._id = 1
+          const ped2 = new Pedido("juancito", "juancho", [itemPed2], "PESO_ARG", direEntrega)
+          ped2._id = 2
+          const otroVendedor = new Usuario(
+          "jose",
+          "Juan Perez",
+          "juan.perez@email.com",
+          "+541112345678",
+          "Vendedor",
+          )
+          mockPedidoRepository.consultarHistorial.mockResolvedValue([ped1,ped2])
+          await expect(pedidoService.consultarHistorial("juancito", otroVendedor)).rejects.toThrow(UsuarioSinPermisoError)
+          expect(mockPedidoRepository.consultarHistorial).toHaveBeenCalledTimes(1)
+          expect(mockPedidoRepository.consultarHistorial).toHaveBeenCalledWith("juancito")
+    })
+
+    it("deberia devolver el historial  por ser pedido por un ADMIN ", async () => {
+        const itemPed1 = new ItemPedido(item1, 1, 566)
+          const itemPed2 = new ItemPedido(item1, 4, 100)
+          const ped1 = new Pedido("juancito", "juancho", [itemPed1], "PESO_ARG", direEntrega)
+          ped1._id = 1
+          const ped2 = new Pedido("juancito", "juancho", [itemPed2], "PESO_ARG", direEntrega)
+          ped2._id = 2
+          mockPedidoRepository.consultarHistorial.mockResolvedValue([ped1, ped2])
+          const historial = await pedidoService.consultarHistorial("juancito", admin)
+          expect(historial).toEqual([ped1, ped2])
+          expect(mockPedidoRepository.consultarHistorial).toHaveBeenCalledTimes(1)
+          expect(mockPedidoRepository.consultarHistorial).toHaveBeenCalledWith("juancito")
+    })
   })
 })

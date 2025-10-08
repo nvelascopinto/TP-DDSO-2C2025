@@ -12,6 +12,10 @@ class UsuarioRepository {
   findById(id) {
     return this.model.findById(id)
   }
+
+  update(notificacion) {
+    return this.model.findByIdAndUpdate(notificacion._id, notificacion, {new : true})
+  }
 }
 
 export default new UsuarioRepository()

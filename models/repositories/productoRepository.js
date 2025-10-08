@@ -10,7 +10,7 @@ class ProductoRepository {
   }
 
   actualizar(id, productoModificado) {
-    return this.model.findByIdAndUpdate(id, productoModificado)
+    return this.model.findByIdAndUpdate(id, productoModificado, {new : true})
   }
 
   findById(id) {

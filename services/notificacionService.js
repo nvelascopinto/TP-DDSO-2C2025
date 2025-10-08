@@ -1,6 +1,7 @@
 import NotificacionRepository from "../models/repositories/notificacionRepository.js"
 import { Notificacion } from "../models/entities/notificacion.js"
 import { estado } from "../models/entities/estadoPedido.js"
+import { notificacionExisteValidator } from "../validators/notificacionValidator.js"
 
 export class NotificacionService {
   constructor(NotificacionRepository) {
@@ -58,7 +59,8 @@ export class NotificacionService {
   marcarComoLeida(idNotificacion, usuario) {
     return this.NotificacionRepository.getById(idNotificacion)
       .then((notificacion) => {
-        notificacion.marcarComoLeida(usuario) //valia al marcar como leida
+        notificacionExisteValidator(notificacion, idNotificacion)
+        notificacion.marcarComoleida(usuario) //valia al marcar como leida
         return this.NotificacionRepository.update(notificacion)
       })
       .then((notificacionLeida) => notificacionLeida)

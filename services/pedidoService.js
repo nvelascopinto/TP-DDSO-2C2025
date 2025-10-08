@@ -55,9 +55,10 @@ export class PedidoService {
   }
 
   /************************** CONSULTAR EL HISTORIAL DE UN USUARIO **************************/
-  consultarHistorial(id) {
+  consultarHistorial(id,usuario) {
     return this.pedidoRepository.consultarHistorial(id).then((historial) => {
       validarExistenciaDeHistorial(historial, id)
+      historial.forEach((pedido)=> pedido.validarUsuario(usuario))
       return historial
     })
   }
@@ -90,7 +91,7 @@ export class PedidoService {
   }
 
   cantidadVentasProducto(producto) {
-    this.pedidoRepository.cantidadVentasProducto(producto)
+    return this.pedidoRepository.cantidadVentasProducto(producto)
   }
 }
 

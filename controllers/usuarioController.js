@@ -31,8 +31,9 @@ class UsuarioController {
   verHistorialUsuario(req, res) {
     return Promise.resolve()
       .then(() => {
+        const usuario = req.user
         const id = idValidator.parse(req.params.id)
-        return usuarioServiceInstance.consultarHistorial(id)
+        return usuarioServiceInstance.consultarHistorial(id,usuario)
       })
       .then((pedidos) => {
         res.status(200).json(pedidos)

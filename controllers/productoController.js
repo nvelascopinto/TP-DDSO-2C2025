@@ -25,7 +25,7 @@ class ProductoController {
         console.log(query)
         const { minPrecio, maxPrecio, pagina, limite, nombre, categoria, descripcion } =
           query
-        const { ordenVentas, ordenMasVendios, ascendente } = query
+        const { ordenPrecio, ordenMasVendios, ascendente } = query
         const filtros = {
           minPrecio: parseFloat(minPrecio),
           maxPrecio: parseFloat(maxPrecio),
@@ -34,7 +34,7 @@ class ProductoController {
           descripcion: descripcion,
         }
         const ordenamiento = {
-          ordenVentas: ordenVentas,
+          ordenPrecio: ordenPrecio,
           ordenMasVendios: ordenMasVendios,
           ascendente: ascendente,
         }

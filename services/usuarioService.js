@@ -11,17 +11,6 @@ export class UsuarioService {
     this.UsuarioRepository = UsuarioRepository
     this.PedidoService = pedidoServiceInstance
   }
-  /************************** "VALIDAR" UN USUARIO **************************/
-  obtenerUsuario(id, roles) {
-    console.log(id)
-    return this.UsuarioRepository.findById(id).then((usuario) => {
-      validarExistenciaDeUsuario(usuario, id)
-      rolesValidator(usuario, roles)
-      return usuario
-    })
-    // validarExistenciaDeUsuario(user, id)
-  } // falta manejo de promises depsues de ver que hacemos con lo del authorization
-  //DEBERIAMOS SACAR ESTE METODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
   /************************** CREAR UN USUARIO **************************/
   crearUsuario(usuarioDTO) {
     return Promise.resolve()
@@ -42,8 +31,8 @@ export class UsuarioService {
 
   /************************** CONSULTAR EL HISTORIAL DE UN USUARIO **************************/
 
-  consultarHistorial(id) {
-    return this.PedidoService.consultarHistorial(id).then((historial) => {
+  consultarHistorial(id,usuario) {
+    return this.PedidoService.consultarHistorial(id,usuario).then((historial) => {
       return historial
     })
   }

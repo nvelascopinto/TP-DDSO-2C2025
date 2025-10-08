@@ -30,7 +30,6 @@ export class ProductoService {
       return producto
     })
   }
-  //      const ordenamiento = {ordenVentas : ordenVentas , ordenMasVendios :ordenMasVendios, ascendente : ascendente}
 
   /************************** CONSULTAR TODOS LOS PRODUCTOS DE UN VENDEDOR **************************/
   obtenerTodosDeVendedor(vendedor, filtros, pagina, limite, ordenamiento) {
@@ -50,7 +49,7 @@ export class ProductoService {
   }
 
   ordenar(ordenamiento, productos) {
-    if (ordenamiento.ordenVentas) {
+    if (ordenamiento.ordenPrecio) {
       return this.ordenarPorPrecio(productos, ordenamiento.ascendente)
     }
     if (ordenamiento.ordenMasVendios) {
@@ -74,9 +73,8 @@ export class ProductoService {
     }
     return productos.sort(
       (a, b) =>
-        (this.pedidoService.cantidadVentasProducto(b) -
-          this.pedidoService.cantidadVentasProducto(a)) *
-        factor,
+        (this.pedidoService.cantidadVentasProducto(a) -
+          this.pedidoService.cantidadVentasProducto(b)) * factor
     )
   }
 }

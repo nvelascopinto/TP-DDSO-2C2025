@@ -4,13 +4,14 @@ import { Producto } from "../models/entities/producto.js"
 import { ProductoService } from "../services/productoService.js"
 import { Usuario } from "../models/entities/usuario.js"
 import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js"
+import UsuarioSinPermisoError from "../errors/usuarioSinPermisoError.js"
 
 const mockProductoRepository = {
   findById: jest.fn(),
   crear: jest.fn(),
 }
-const mockUsuarioService = {
-  obtenerUsuario: jest.fn(),
+const mockPedidoService = {
+  cantidadVentasProducto : jest.fn()
 }
 
 describe("ProductosService", () => {
@@ -18,28 +19,28 @@ describe("ProductosService", () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    productoService = new ProductoService(mockProductoRepository, mockUsuarioService)
+    productoService = new ProductoService(mockProductoRepository, mockPedidoService)
   })
 
   describe("constructor", () => {
     it("debería inicializar con el repositorio y el service pasados por parámetro", () => {
-      expect(productoService.productoRepository).toBe(mockProductoRepository)
-      expect(productoService.usuarioService).toBe(mockUsuarioService)
+      expect(productoService.ProductoRepository).toBe(mockProductoRepository)
+      expect(productoService.pedidoService).toBe(mockPedidoService)
     })
   })
 
   describe("crear", () => {
     const vendedor = new Usuario(
+      "pepe",
       "Juan Perez",
       "juan.perez@email.com",
       "+541112345678",
       "Vendedor",
     )
 
-    vendedor.id = 2
 
     let productoDTO = new ProductoDTO(
-      2,
+      "pepe",
       "auriculares",
       "Auriculares bluetooth con cancelación de ruido y 20h de batería.",
       "Electrónica",
@@ -50,9 +51,9 @@ describe("ProductosService", () => {
       true,
     )
 
-    it("deberia crear el producto pasado", () => {
+    it("deberia crear el producto pasado", async () => {
       const mockProducto = new Producto(
-        vendedor,
+        "pepe",
         "auriculares",
         "Auriculares bluetooth con cancelación de ruido y 20h de batería.",
         "Electrónica",
@@ -62,54 +63,17 @@ describe("ProductosService", () => {
         null,
         true,
       )
-      mockProducto.id = 1
-      mockProductoRepository.crear.mockReturnValue(mockProducto)
-      mockUsuarioService.obtenerUsuario.mockReturnValue(vendedor)
-      expect(productoService.crear(productoDTO)).toEqual(mockProducto)
-      expect(mockUsuarioService.obtenerUsuario).toHaveBeenCalledWith(2, ["Vendedor"])
+      mockProducto._id = 1
+      mockProductoRepository.crear.mockResolvedValue(mockProducto)
+      const prodNuevo = await productoService.crear(productoDTO,vendedor)
+      expect(prodNuevo).toEqual(mockProducto)
       expect(mockProductoRepository.crear).toHaveBeenCalledTimes(1)
     })
 
-    it("no deberia crear un producto con stock en 0", () => {
+    it("No debería crearse el producto por tener un vendedor invalido", async () => {
+      
       productoDTO = new ProductoDTO(
-        2,
-        "auriculares",
-        "Auriculares bluetooth con cancelación de ruido y 20h de batería.",
-        "Electrónica",
-        15000,
-        "PESO_ARG",
-        0,
-        null,
-        true,
-      )
-      expect(() => {
-        productoService.crear(productoDTO)
-      }).toThrow(DatosInvalidos)
-      expect(mockProductoRepository.crear)
-    })
-
-    it("no deberia crear un producto por tener moneda invalida", () => {
-      productoDTO = new ProductoDTO(
-        2,
-        "auriculares",
-        "Auriculares bluetooth con cancelación de ruido y 20h de batería.",
-        "Electrónica",
-        15000,
-        "PESO_Ur",
-        50,
-        null,
-        true,
-      )
-      expect(() => {
-        productoService.crear(productoDTO)
-      }).toThrow(DatosInvalidos)
-    })
-    it("No debería crearse el producto por tener un vendedor invalido", () => {
-      mockUsuarioService.obtenerUsuario.mockImplementationOnce(() => {
-        throw new UsuarioInexistenteError(100)
-      })
-      productoDTO = new ProductoDTO(
-        100,
+        "joseMaria",
         "auriculares",
         "Auriculares bluetooth con cancelación de ruido y 20h de batería.",
         "Electrónica",
@@ -120,8 +84,118 @@ describe("ProductosService", () => {
         true,
       )
 
-      expect(() => productoService.crear(productoDTO)).toThrow(UsuarioInexistenteError)
+      await expect(productoService.crear(productoDTO,vendedor)).rejects.toThrow(UsuarioSinPermisoError)
+      expect(mockProductoRepository.crear).not.toHaveBeenCalled()
+    })
+
+    it("No debería crearse el producto por tener un vendedor que no es un vendedor", async () => {
+      
+      productoDTO = new ProductoDTO(
+        "pepe",
+        "auriculares",
+        "Auriculares bluetooth con cancelación de ruido y 20h de batería.",
+        "Electrónica",
+        15000,
+        "PESO_ARG",
+        50,
+        null,
+        true,
+      )
+
+      const comprador = new Usuario(
+      "juan",
+      "Juan Perez",
+      "juan.perez@email.com",
+      "+541112345678",
+      "Vendedor",
+    )
+
+      await expect(productoService.crear(productoDTO,comprador)).rejects.toThrow(UsuarioSinPermisoError)
       expect(mockProductoRepository.crear).not.toHaveBeenCalled()
     })
   })
+
+  describe("obtenerTodosDeVendedor", () => {
+
+  })
+
+  describe("ordenar", () => {
+    const prod1 = new Producto(
+        "pepe",
+        "auriculares",
+        "Auriculares bluetooth con cancelación de ruido y 20h de batería.",
+        "Electrónica",
+        15000,
+        "PESO_ARG",
+        50,
+        null,
+        true,
+      )
+      prod1._id =1
+    const prod2 = new Producto(
+        "pepe",
+        "auriculares",
+        "Auriculares bluetooth con cancelación de ruido y 20h de batería.",
+        "Electrónica",
+        150,
+        "PESO_ARG",
+        50,
+        null,
+        true,
+      )
+     prod2._id =2
+
+    const prod3= new Producto(
+        "pepe",
+        "auriculares",
+        "Auriculares bluetooth con cancelación de ruido y 20h de batería.",
+        "Electrónica",
+        3000000,
+        "PESO_ARG",
+        50,
+        null,
+        true,
+      )
+     prod3._id =3
+
+    const productos = [prod1,prod2, prod3]
+    it ("deberia ordenar los productos por precio ascendentemente ",() => {
+      const ordenamiento = {
+          ordenPrecio: true,
+          ascendente: true,
+        }
+       const ordenados =  productoService.ordenar(ordenamiento, productos)
+       expect(ordenados).toEqual([prod2, prod1, prod3])
+    })
+
+    it ("deberia ordenar los productos por precio desendentemente ",() => {
+      const ordenamiento = {
+          ordenPrecio: true,
+          ascendente: false,
+        }
+       const ordenados =  productoService.ordenar(ordenamiento, productos)
+       expect(ordenados).toEqual([prod3, prod1, prod2])
+    })
+    it ("deberia ordenar los productos por precio ascendente por default  ",() => {
+      const ordenamiento = {
+          ordenPrecio: true
+        }
+       const ordenados =  productoService.ordenar(ordenamiento, productos)
+      expect(ordenados).toEqual([prod2, prod1, prod3])
+    })
+     it ("deberia ordenar los productos por mas vendido ascendente",() => {
+      const ordenamiento = {
+          ordenMasVendios: true, 
+          ascendente : true
+        }
+      mockPedidoService.cantidadVentasProducto.mockImplementation((valor) => {
+        if(valor===prod1) return 7
+        if(valor===prod2) return 5
+        if(valor===prod3) return 6
+      })
+       const ordenados =  productoService.ordenar(ordenamiento, productos)
+      expect(ordenados).toEqual([prod2, prod3, prod1])
+    })
+  })
+
 })

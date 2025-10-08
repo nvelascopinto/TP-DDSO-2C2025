@@ -6,7 +6,7 @@ class notificacionController {
     return Promise.resolve()
       .then(() => {
         const idNotificacion = idValidator.parse(req.params.id)
-        const usuario = req.user
+        const usuario = req.user.username
         return notificacionServiceInstance.marcarComoLeida(idNotificacion, usuario)
       })
       .then(() => {

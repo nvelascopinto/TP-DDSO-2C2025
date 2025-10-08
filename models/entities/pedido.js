@@ -83,9 +83,6 @@ export class Pedido {
   }
   //usuario que puede acceder a ver el pedido
   validarUsuario(usuario) {
-    console.log("USUARIO QUE CONSULTA: ", usuario.username)
-    console.log("VENDEDOR ", this.vendedor)
-    console.log("COMPRADOR ", this.comprador)
     if (
       usuario.username != this.vendedor &&
       usuario.username != this.comprador &&
