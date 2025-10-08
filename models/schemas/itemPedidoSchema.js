@@ -12,7 +12,7 @@ const itemPedidoSchema = new mongoose.Schema(
       type: Number,
       min: 0,
       required: true,
-    },
+    },  
     precioUnitario: {
       type: Number,
       min: 0,

@@ -51,22 +51,29 @@ class PedidoRepository {
 
   cantidadVentasProducto(producto) {
     const productoId = producto._id // mongoose.Types.ObjectId(producto._id)
-    const resultado = this.modelPedido
+    return this.modelPedido
       .aggregate([
-        { $unwind: "$items" },
-        { $match: { "items.productoId": productoId } },
-        {
-          $group: {
-            _id: "$items.productoId",
-            totalUnidadesVendidas: { $sum: "$items.cantidad" },
-          },
-        },
-      ])
-      .toArray()
-    // const total = data?.totalUnidadesVendidas || 0;
-    const total = resultado[0]?.totalUnidadesVendidas || 0
-    return total
-  }
+    { $unwind: "$items" },                    // cada itemId por separado
+    {
+      $lookup: {
+        from: "items",                        // nombre de la colección ItemPedido (verificar)
+        localField: "items",                  // en Pedido: array de ObjectId
+        foreignField: "_id",                  // en ItemPedido: _id
+        as: "itemDoc"
+      }
+    },
+    { $unwind: "$itemDoc" },                  // ahora itemDoc es el documento real
+    { $match: { "itemDoc.producto": productoId } }, // filtrar por producto
+    {
+      $group: {
+        _id: "$itemDoc.producto",
+        totalUnidadesVendidas: { $sum: "$itemDoc.cantidad" }
+      }
+    }
+  ])
+      .exec()
+  .then(resultado => resultado[0]?.totalUnidadesVendidas || 0);
+  } 
 }
 
 export default new PedidoRepository()

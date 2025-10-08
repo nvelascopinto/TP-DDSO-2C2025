@@ -13,19 +13,24 @@ const mockProductoRepository = {
 const mockPedidoService = {
   cantidadVentasProducto : jest.fn()
 }
+const asLazy = x => () => x;
+
+
+
 
 describe("ProductosService", () => {
   let productoService
-
+  let pedidoGetter
   beforeEach(() => {
     jest.clearAllMocks()
-    productoService = new ProductoService(mockProductoRepository, mockPedidoService)
+    pedidoGetter = asLazy(mockPedidoService)
+    productoService = new ProductoService(mockProductoRepository, pedidoGetter )
   })
 
   describe("constructor", () => {
     it("debería inicializar con el repositorio y el service pasados por parámetro", () => {
       expect(productoService.ProductoRepository).toBe(mockProductoRepository)
-      expect(productoService.pedidoService).toBe(mockPedidoService)
+      expect(productoService.pedidoService).toBe(pedidoGetter)
     })
   })
 
@@ -159,31 +164,31 @@ describe("ProductosService", () => {
      prod3._id =3
 
     const productos = [prod1,prod2, prod3]
-    it ("deberia ordenar los productos por precio ascendentemente ",() => {
+    it ("deberia ordenar los productos por precio ascendentemente ", async() => {
       const ordenamiento = {
-          ordenPrecio: true,
+          ordenPrecio: true, 
           ascendente: true,
         }
-       const ordenados =  productoService.ordenar(ordenamiento, productos)
+       const ordenados =  await productoService.ordenar(ordenamiento, productos)
        expect(ordenados).toEqual([prod2, prod1, prod3])
     })
 
-    it ("deberia ordenar los productos por precio desendentemente ",() => {
+    it ("deberia ordenar los productos por precio desendentemente ", async () => {
       const ordenamiento = {
           ordenPrecio: true,
           ascendente: false,
         }
-       const ordenados =  productoService.ordenar(ordenamiento, productos)
+       const ordenados = await productoService.ordenar(ordenamiento, productos)
        expect(ordenados).toEqual([prod3, prod1, prod2])
     })
-    it ("deberia ordenar los productos por precio ascendente por default  ",() => {
+    it ("deberia ordenar los productos por precio ascendente por default  ", async() => {
       const ordenamiento = {
           ordenPrecio: true
         }
-       const ordenados =  productoService.ordenar(ordenamiento, productos)
+       const ordenados =  await productoService.ordenar(ordenamiento, productos)
       expect(ordenados).toEqual([prod2, prod1, prod3])
     })
-     it ("deberia ordenar los productos por mas vendido ascendente",() => {
+     it ("deberia ordenar los productos por mas vendido ascendente", async () => {
       const ordenamiento = {
           ordenMasVendios: true, 
           ascendente : true
@@ -193,7 +198,7 @@ describe("ProductosService", () => {
         if(valor===prod2) return 5
         if(valor===prod3) return 6
       })
-       const ordenados =  productoService.ordenar(ordenamiento, productos)
+       const ordenados =  await productoService.ordenar(ordenamiento, productos)
       expect(ordenados).toEqual([prod2, prod3, prod1])
     })
   })

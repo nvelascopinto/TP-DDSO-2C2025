@@ -7,11 +7,11 @@ notificacionRouter.patch("/:id", authenticateUser('X-User'), (req, res) => {
   return NotificacionController.marcarComoLeida(req, res)
 })
 
-notificacionRouter.get("/:idusuario/leidas", authenticateUser('X-User'),(req, res) => {
+notificacionRouter.get("/leidas", authenticateUser('X-User'),(req, res) => {
   return NotificacionController.getLeidas(req, res)
 })
 
-notificacionRouter.get("/:idusuario/noleidas",authenticateUser('X-User'), (req, res) => {
+notificacionRouter.get("/noleidas",authenticateUser('X-User'), (req, res) => {
   return NotificacionController.getNoLeidas(req, res)
 })
 

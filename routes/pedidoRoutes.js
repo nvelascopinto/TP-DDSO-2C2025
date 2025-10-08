@@ -11,7 +11,7 @@ pedidoRouter.post("/", authenticateUser('X-User'), (req, res) => {
   return PedidoController.crear(req, res)
 })
 
-pedidoRouter.post("/:id/cambioDeEstado", authenticateUser('X-User'), (req, res) => {
+pedidoRouter.patch("/:id", authenticateUser('X-User'), (req, res) => {
   return PedidoController.cambioEstado(req, res)
 })
 

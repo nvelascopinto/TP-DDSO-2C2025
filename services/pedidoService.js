@@ -25,7 +25,7 @@ export class PedidoService {
         nuevoPedido.comprador = comprador.username
         return Promise.all(
           pedidoDTO.itemsDTO.map((item) =>
-            this.productoService().obtenerProducto(item.productoID),
+            this.productoService().obtenerProducto(item.productoID)
           ),
         )
       })
@@ -36,9 +36,12 @@ export class PedidoService {
         })
         nuevoPedido.validarItemsConVendedor() // asigno vendedor
         nuevoPedido.validarStock()
-        return this.pedidoRepository.crear(nuevoPedido)
-      })
-      .then((pedidoGuardado) => {
+        return Promise.all(nuevoPedido.items.map((item) => {
+          this.productoService().update(item.producto)
+        })).then(() => {
+            return this.pedidoRepository.crear(nuevoPedido)
+        }) 
+      }).then((pedidoGuardado) => {
         return this.notificacionService
           .crearSegunPedido(pedidoGuardado)
           .then(() => pedidoGuardado) // Devuelvo el pedido que me llego de la otra promise
@@ -91,7 +94,11 @@ export class PedidoService {
   }
 
   cantidadVentasProducto(producto) {
-    return this.pedidoRepository.cantidadVentasProducto(producto)
+    return this.pedidoRepository.cantidadVentasProducto(producto).then((cantidad) =>{
+      console.log("CANTIDAD VENDIA de", producto._id)
+      console.log(cantidad)
+      return cantidad
+    })
   }
 }
 

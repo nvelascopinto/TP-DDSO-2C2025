@@ -1,9 +1,6 @@
 import UsuarioRepository from "../models/repositories/usuarioRepository.js"
 import  {pedidoServiceInstance}  from "./pedidoService.js"
-import {
-  rolesValidator,
-  validarExistenciaDeUsuario,
-} from "../validators/usuarioValidator.js"
+import {validarExistenciaDeUsuario} from "../validators/usuarioValidator.js"
 import { fromUsuarioDTO } from "../converters/usuarioConverter.js"
 
 export class UsuarioService {

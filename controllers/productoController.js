@@ -1,7 +1,6 @@
 import {productoServiceInstance} from "../services/productoService.js"
 import { toProductoDTO } from "../converters/productoConverter.js"
 import { productoValidator } from "../validators/productoValidator.js"
-import { filtrosValidator } from "../validators/filtrosValidator.js"
 
 class ProductoController {
   crear(req, res) {
@@ -37,7 +36,7 @@ class ProductoController {
           ordenPrecio: ordenPrecio,
           ordenMasVendios: ordenMasVendios,
           ascendente: ascendente,
-        }
+        } 
         return productoServiceInstance.obtenerTodosDeVendedor(
           vendedor,
           filtros,

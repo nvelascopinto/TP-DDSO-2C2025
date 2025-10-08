@@ -50,10 +50,10 @@ export class ProductoService {
 
   ordenar(ordenamiento, productos) {
     if (ordenamiento.ordenPrecio) {
-      return this.ordenarPorPrecio(productos, ordenamiento.ascendente)
+      return Promise.resolve().then(() =>this.ordenarPorPrecio(productos, ordenamiento.ascendente))
     }
     if (ordenamiento.ordenMasVendios) {
-      return this.ordenarPorVendido(productos, ordenamiento.ascendente)
+      return this.ordenarPorVendido(productos, ordenamiento.ascendente).then(orden => orden)
     }
     return productos
   }
@@ -63,19 +63,27 @@ export class ProductoService {
     if (!ascendente) {
       factor = -1
     }
-    return productos.sort((a, b) => (a.precio - b.precio) * factor)
+    return  productos.sort((a, b) => (a.precio - b.precio) * factor) 
   }
 
-  ordenarPorVendido(productos, ascendente = true) {
+  async ordenarPorVendido(productos, ascendente = true) {
     let factor = 1
     if (!ascendente) {
       factor = -1
     }
-    return productos.sort(
-      (a, b) =>
-        (this.pedidoService().cantidadVentasProducto(a) -
-          this.pedidoService().cantidadVentasProducto(b)) * factor
-    )
+    const cantidades = await Promise.all(
+    productos.map(p => this.pedidoService().cantidadVentasProducto(p))
+    );
+  
+  const ordenados = productos
+    .map((p, i) => ({ producto: p, ventas: cantidades[i] ?? 0 }))
+    .sort((x, y) => (x.ventas - y.ventas) * factor)
+    .map(x => x.producto);
+    
+  return ordenados
+  }
+  update(producto) {
+    return this.ProductoRepository.actualizar(producto._id,producto).then((productoModificadp) => productoModificadp)
   }
 }
 

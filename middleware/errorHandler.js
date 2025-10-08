@@ -1,6 +1,7 @@
 import { ZodError } from "zod"
 import { MongooseError } from "mongoose"
 import AppError from "../errors/appError.js"
+import { MongoError } from "mongodb" 
 
 export function errorHandler(error, _req, res, _next) {
   console.log(error.message)
@@ -18,9 +19,15 @@ export function errorHandler(error, _req, res, _next) {
       details: error.details,
     })
    } else if (error instanceof MongooseError) {
-    return res.status(500).json({
+    return res.status(400).json({
       name: "DatabaseError",  
-      message: "Error en la base de datos",
+      message: "Error en la base de datos, datos invalidos",
+      details: error.message,
+    })
+  } else { if (error instanceof MongoError) {
+    return res.status(400).json({
+      name: "DatabaseError",
+      message: "Error en la base de datos, datos invalidos",
       details: error.message,
     })
   }
@@ -31,4 +38,5 @@ export function errorHandler(error, _req, res, _next) {
       details: null,
     })
   }
+}
 }

@@ -26,6 +26,7 @@ const mockPedidoRepository = {
 
 const mockProductoService = {
   obtenerProducto: jest.fn(),
+  update : jest.fn()
 }
 
 const mockNotificacionService = {
@@ -33,22 +34,26 @@ const mockNotificacionService = {
   crearSegunPedido: jest.fn(),
 }
 
+const asLazy = x => () => x;
+
 describe("PedidosService", () => {
   let pedidoService
-
+  let productoGetter
   beforeEach(() => {
-    jest.clearAllMocks()
+    jest.clearAllMocks();
+    productoGetter = asLazy(mockProductoService);       // <- la creás una vez
     pedidoService = new PedidoService(
-      mockPedidoRepository,
-      mockProductoService,
-      mockNotificacionService,
-    )
+    mockPedidoRepository,
+    productoGetter,
+    mockNotificacionService,
+  );
   })
 
   describe("constructor", () => {
     it("debería inicializar con los repositorios y service pasados por parámetro", () => {
+       const getter = asLazy(mockProductoService);
       expect(pedidoService.pedidoRepository).toBe(mockPedidoRepository)
-      expect(pedidoService.productoService).toBe(mockProductoService)
+      expect(pedidoService.productoService).toBe(productoGetter)
       expect(pedidoService.notificacionService).toBe(mockNotificacionService)
     })
   })
@@ -123,6 +128,7 @@ describe("PedidosService", () => {
       mockPedido._id = 1
       mockNotificacionService.crearSegunPedido.mockResolvedValue("mock-notificacion")
       mockProductoService.obtenerProducto.mockReturnValue(item)
+      mockProductoService.update.mockResolvedValue(item)
       mockPedidoRepository.crear.mockReturnValue(mockPedido)
       const result = await pedidoService.crear(pedidoDTO, comprador)
 

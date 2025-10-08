@@ -39,6 +39,9 @@ export class Pedido {
     if (!this.items.every((item) => item.producto.estaDisponible(item.cantidad))) {
       throw new PedidoStockInsuficienteError()
     }
+    this.items.forEach((item) => {
+      item.producto.reducirStock(item.cantidad)
+    })
 
     return true
   }

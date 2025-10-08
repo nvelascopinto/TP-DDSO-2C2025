@@ -1,5 +1,3 @@
-import { tipoUsuario } from "./tipoUsuario.js"
-import DatosInvalidosError from "../../errors/datosInvalidosError.js"
 import UsuarioSinPermisoError from "../../errors/usuarioSinPermisoError.js"
 
 export class Usuario {

@@ -1,8 +1,8 @@
 openapi: 3.0.1
 info:
-  title: API Usuarios
+  title: API Usuarios (TP)
   version: "1.0.0"
-  description: Documentación manual de los endpoints de usuarios
+  description: Documentación de endpoints de usuarios (adaptada al TP). Usa el esquema PedidoResumen definido en docs/pedidos.yaml
 servers:
   - url: http://localhost:3000
 tags:
@@ -79,8 +79,8 @@ paths:
     get:
       tags:
         - Usuarios
-      summary: Consultar historial de pedidos de un usuario
-      description: Retorna los pedidos donde el usuario fue comprador. Puede requerir autenticación (header X-User) según la implementación.
+      summary: Consultar historial de pedidos de un usuario (comprador)
+      description: Retorna los pedidos donde el usuario fue comprador. Puede requerir autenticación (header X-User).
       parameters:
         - name: id
           in: path
@@ -98,13 +98,13 @@ paths:
             example: "jose50"
       responses:
         '200':
-          description: Lista de pedidos del usuario
+          description: Lista de pedidos del usuario (resumen)
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/PedidoResumen'
+                  $ref: './pedidos.yaml#/components/schemas/PedidoResumen'
               examples:
                 ejemplo:
                   value:
@@ -124,6 +124,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
 components:
   schemas:
     UsuarioDTO:
@@ -168,26 +169,6 @@ components:
               type: string
               format: date-time
               example: "2025-10-01T12:00:00Z"
-
-    PedidoResumen:
-      type: object
-      properties:
-        _id:
-          type: string
-          example: "654a8f0c3e8f9b0a1d2c3e00"
-        total:
-          type: number
-          example: 1234
-        moneda:
-          type: string
-          example: "ARS"
-        estado:
-          type: string
-          example: "PENDIENTE"
-        fechaCreacion:
-          type: string
-          format: date-time
-          example: "2025-10-01T12:34:56Z"
 
     Error:
       type: object
