@@ -1,4 +1,4 @@
-import usuarioServiceInstance from "../services/usuarioService.js"
+import {usuarioServiceInstance} from "../services/usuarioService.js"
 import { toUsuarioDTO } from "../converters/usuarioConverter.js"
 import { usuarioValidator } from "../validators/usuarioValidator.js"
 import { idValidator } from "../validators/idValidator.js"

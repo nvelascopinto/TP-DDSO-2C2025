@@ -1,4 +1,4 @@
-import productoServiceInstance from "../services/productoService.js"
+import {productoServiceInstance} from "../services/productoService.js"
 import { toProductoDTO } from "../converters/productoConverter.js"
 import { productoValidator } from "../validators/productoValidator.js"
 import { filtrosValidator } from "../validators/filtrosValidator.js"
@@ -21,7 +21,7 @@ class ProductoController {
     return Promise.resolve()
       .then(() => {
         const vendedor = req.vendedor
-        const query = filtrosValidator.parse(req.query)
+        const query = req.body
         console.log(query)
         const { minPrecio, maxPrecio, pagina, limite, nombre, categoria, descripcion } =
           query

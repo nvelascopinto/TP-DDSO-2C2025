@@ -3,12 +3,12 @@ import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { validarExistenciaDeProducto } from "../validators/productoValidator.js"
 import { fromProductoDTO } from "../converters/productoConverter.js"
 import { rolesValidator } from "../validators/usuarioValidator.js"
-import { pedidoServiceInstance } from "./pedidoService.js"
+import  {pedidoServiceInstance}  from "./pedidoService.js"
 
 export class ProductoService {
-  constructor(ProductoRepository, pedidoServiceInstance) {
+  constructor(ProductoRepository, getPedidoService) {
     this.ProductoRepository = ProductoRepository
-    this.pedidoService = pedidoServiceInstance
+    this.pedidoService = getPedidoService
   }
   /************************** CREAR UN PRODUCTO **************************/
   crear(productoDTO, vendedor) {
@@ -40,7 +40,7 @@ export class ProductoService {
           vendedor.username,
           filtros,
           pagina,
-          limite,
+          limite
         )
       })
       .then((prodVendedor) => {
@@ -73,13 +73,13 @@ export class ProductoService {
     }
     return productos.sort(
       (a, b) =>
-        (this.pedidoService.cantidadVentasProducto(a) -
-          this.pedidoService.cantidadVentasProducto(b)) * factor
+        (this.pedidoService().cantidadVentasProducto(a) -
+          this.pedidoService().cantidadVentasProducto(b)) * factor
     )
   }
 }
 
 export const productoServiceInstance = new ProductoService(
   ProductoRepository,
-  pedidoServiceInstance,
+  () => pedidoServiceInstance,
 )

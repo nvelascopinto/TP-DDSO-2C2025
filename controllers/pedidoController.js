@@ -1,4 +1,4 @@
-import pedidoServiceInstance from "../services/pedidoService.js"
+import {pedidoServiceInstance} from "../services/pedidoService.js"
 import { toPedidoDTO } from "../converters/pedidoConverter.js"
 import { pedidoValidator } from "../validators/pedidoValidator.js"
 import { idValidator } from "../validators/idValidator.js"

@@ -67,4 +67,4 @@ export class NotificacionService {
   }
 }
 
-export const notificationServiceInstance = new NotificacionService(NotificacionRepository)
+export const  notificacionServiceInstance = new NotificacionService(NotificacionRepository)

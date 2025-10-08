@@ -18,6 +18,7 @@ class ProductoRepository {
   }
 
   obtenerTodosDeVendedor(idVendedor, filtros = {}, pagina, limite) {
+    console.log("FILTROS EN REPO", filtros)
     const query = this.mapFilter(filtros,idVendedor) 
     if(!limite) {
       limite = 5

@@ -1,6 +1,6 @@
 import PedidoRepository from "../models/repositories/pedidoRepository.js"
-import productoServiceInstance from "./productoService.js"
-import notificacionServiceInstance from "./notificacionService.js"
+import {productoServiceInstance} from "./productoService.js"
+import {notificacionServiceInstance} from "./notificacionService.js"
 import { fromPedidoDTO } from "../converters/pedidoConverter.js"
 import { autorizadosAEstado, estado } from "../models/entities/estadoPedido.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
@@ -11,9 +11,9 @@ import {
 import { rolesValidator } from "../validators/usuarioValidator.js"
 import { validarEstado } from "../validators/estadoValidador.js"
 export class PedidoService {
-  constructor(PedidoRepository, productoServiceInstance, notificationServiceInstance) {
+  constructor(PedidoRepository, getProductoService, notificationServiceInstance) {
     this.pedidoRepository = PedidoRepository
-    this.productoService = productoServiceInstance
+    this.productoService = getProductoService
     this.notificacionService = notificationServiceInstance
   }
   /************************** CREAR UN PEDIDO **************************/
@@ -25,7 +25,7 @@ export class PedidoService {
         nuevoPedido.comprador = comprador.username
         return Promise.all(
           pedidoDTO.itemsDTO.map((item) =>
-            this.productoService.obtenerProducto(item.productoID),
+            this.productoService().obtenerProducto(item.productoID),
           ),
         )
       })
@@ -97,6 +97,6 @@ export class PedidoService {
 
 export const pedidoServiceInstance = new PedidoService(
   PedidoRepository,
-  productoServiceInstance,
+  () => productoServiceInstance,
   notificacionServiceInstance,
 )

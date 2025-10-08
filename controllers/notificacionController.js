@@ -1,4 +1,4 @@
-import notificacionServiceInstance from "../services/notificacionService.js"
+import {notificacionServiceInstance} from "../services/notificacionService.js"
 import { idValidator } from "../validators/idValidator.js"
 
 class notificacionController {

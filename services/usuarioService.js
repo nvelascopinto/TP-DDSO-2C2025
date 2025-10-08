@@ -1,5 +1,5 @@
 import UsuarioRepository from "../models/repositories/usuarioRepository.js"
-import { pedidoServiceInstance } from "./pedidoService.js"
+import  {pedidoServiceInstance}  from "./pedidoService.js"
 import {
   rolesValidator,
   validarExistenciaDeUsuario,

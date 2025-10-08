@@ -22,5 +22,5 @@ export const autorizadosAEstado = Object.freeze({
   EN_PREPARACION: ["Vendedor"],
   ENVIADO: ["Vendedor"],
   ENTREGADO: ["Vendedor", "Admin"],
-  CANCELADO: ["Vendedor", "Comprador, Admin"],
+  CANCELADO: ["Vendedor", "Comprador", "Admin"],
 })
