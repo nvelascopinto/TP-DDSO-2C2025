@@ -1,0 +1,177 @@
+openapi: 3.0.1
+info:
+  title: API Notificaciones
+  version: "1.0.0"
+  description: Endpoints para consultar y marcar notificaciones
+servers:
+  - url: http://localhost:3000
+tags:
+  - name: Notificaciones
+    description: Operaciones sobre notificaciones de usuarios
+paths:
+  /notificaciones/no-leidas/{idUsuario}:
+    get:
+      tags:
+        - Notificaciones
+      summary: Obtener notificaciones no leídas de un usuario
+      parameters:
+        - name: idUsuario
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Id o username del usuario
+      responses:
+        "200":
+          description: Lista de notificaciones no leídas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NotificacionResumen"
+              examples:
+                ejemplo:
+                  value:
+                    - _id: "654a8f0c3e8f9b0a1d2c3e00"
+                      destinatario: "jose50"
+                      mensaje: "El pedido 123 cambió a estado ENVIADO"
+                      leida: false
+                      fecha: "2025-10-01T12:34:56Z"
+        "404":
+          description: Usuario no encontrado o sin notificaciones
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /notificaciones/leidas/{idUsuario}:
+    get:
+      tags:
+        - Notificaciones
+      summary: Obtener notificaciones leídas de un usuario
+      parameters:
+        - name: idUsuario
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Id o username del usuario
+      responses:
+        "200":
+          description: Lista de notificaciones leídas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NotificacionResumen"
+        "404":
+          description: Usuario no encontrado o sin notificaciones
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /notificaciones/{id}/marcar-como-leida:
+    post:
+      tags:
+        - Notificaciones
+      summary: Marcar una notificación como leída
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Id de la notificación
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                usuario:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                      example: "jose50"
+      responses:
+        "200":
+          description: Notificación marcada como leída
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notificacion"
+        "403":
+          description: Usuario no autorizado para marcar la notificación
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Notificación no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    NotificacionDTO:
+      type: object
+      required:
+        - destinatario
+        - mensaje
+      properties:
+        destinatario:
+          type: string
+          example: "vendedor01"
+        mensaje:
+          type: string
+          example: "Nuevo pedido creado: 123"
+        leida:
+          type: boolean
+          example: false
+
+    Notificacion:
+      allOf:
+        - $ref: "#/components/schemas/NotificacionDTO"
+        - type: object
+          properties:
+            _id:
+              type: string
+              example: "654a8f0c3e8f9b0a1d2c3e00"
+            fecha:
+              type: string
+              format: date-time
+              example: "2025-10-01T12:34:56Z"
+
+    NotificacionResumen:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "654a8f0c3e8f9b0a1d2c3e00"
+        destinatario:
+          type: string
+          example: "jose50"
+        mensaje:
+          type: string
+          example: "El pedido 123 cambió a estado ENVIADO"
+        leida:
+          type: boolean
+          example: false
+        fecha:
+          type: string
+          format: date-time
+          example: "2025-10-01T12:34:56Z"
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Detalle del error"

@@ -1,0 +1,171 @@
+openapi: 3.0.1
+info:
+  title: API Productos
+  version: "1.0.0"
+  description: Documentación manual de los endpoints de productos
+servers:
+  - url: http://localhost:3000
+tags:
+  - name: Productos
+    description: Operaciones sobre productos
+
+paths:
+  /productos:
+    post:
+      tags:
+        - Productos
+      summary: Crear un nuevo producto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductoDTO'
+            examples:
+              ejemplo:
+                value:
+                  vendedor: "jose50"
+                  nombre: "Camisa deportiva"
+                  descripcion: "100% algodón, talle M"
+                  precio: 2500
+                  stock: 10
+                  activo: true
+      responses:
+        '201':
+          description: Producto creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '400':
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: No autorizado (falta header X-User o no coincide vendedor)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /productos/vendedor/{vendedor}:
+    get:
+      tags:
+        - Productos
+      summary: Obtener todos los productos de un vendedor
+      parameters:
+        - name: vendedor
+          in: path
+          description: username o id del vendedor
+          required: true
+          schema:
+            type: string
+            example: "jose50"
+        - name: X-User
+          in: header
+          description: Username del requester (si el endpoint requiere autenticación)
+          required: false
+          schema:
+            type: string
+            example: "jose50"
+      responses:
+        '200':
+          description: Lista de productos del vendedor
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductoResumen'
+              examples:
+                ejemplo:
+                  value:
+                    - _id: "654a8f0c3e8f9b0a1d2c3e00"
+                      nombre: "Camisa deportiva"
+                      precio: 2500
+                      stock: 10
+                      activo: true
+                    - _id: "654a8f0c3e8f9b0a1d2c3e11"
+                      nombre: "Pantalón running"
+                      precio: 3200
+                      stock: 5
+                      activo: true
+        '404':
+          description: Vendedor no encontrado o sin productos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    ProductoDTO:
+      type: object
+      required:
+        - vendedor
+        - nombre
+        - precio
+        - stock
+      properties:
+        vendedor:
+          type: string
+          example: "jose50"
+        nombre:
+          type: string
+          example: "Camisa deportiva"
+        descripcion:
+          type: string
+          example: "100% algodón, talle M"
+        precio:
+          type: number
+          example: 2500
+        moneda:
+          type: string
+          example: "ARS"
+        stock:
+          type: integer
+          example: 10
+        activo:
+          type: boolean
+          example: true
+
+    Producto:
+      allOf:
+        - $ref: '#/components/schemas/ProductoDTO'
+        - type: object
+          properties:
+            _id:
+              type: string
+              example: "64b1f0c3e8f9b0a1d2c3e4f5"
+            fechaCreacion:
+              type: string
+              format: date-time
+              example: "2025-10-01T12:00:00Z"
+
+    ProductoResumen:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "654a8f0c3e8f9b0a1d2c3e00"
+        nombre:
+          type: string
+          example: "Camisa deportiva"
+        precio:
+          type: number
+          example: 2500
+        stock:
+          type: integer
+          example: 10
+        activo:
+          type: boolean
+          example: true
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Detalle del error"

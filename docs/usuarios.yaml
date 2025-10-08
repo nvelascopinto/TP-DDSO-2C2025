@@ -1,0 +1,197 @@
+openapi: 3.0.1
+info:
+  title: API Usuarios
+  version: "1.0.0"
+  description: Documentación manual de los endpoints de usuarios
+servers:
+  - url: http://localhost:3000
+tags:
+  - name: Usuarios
+    description: Operaciones sobre usuarios y su historial
+paths:
+  /usuarios:
+    post:
+      tags:
+        - Usuarios
+      summary: Crear un nuevo usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioDTO'
+            examples:
+              ejemplo:
+                value:
+                  username: "jose50"
+                  nombre: "Jose"
+                  email: "jose@gmail.com"
+                  telefono: "+54 11 3333 3333"
+                  tipoUsuario: "Comprador"
+      responses:
+        '201':
+          description: Usuario creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '400':
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Usuario ya existe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /usuarios/{id}:
+    get:
+      tags:
+        - Usuarios
+      summary: Obtener un usuario por su id
+      parameters:
+        - name: id
+          in: path
+          description: Id del usuario
+          required: true
+          schema:
+            type: string
+            example: "64a8f0c3e8f9b0a1d2c3e4f5"
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /usuarios/{id}/historial:
+    get:
+      tags:
+        - Usuarios
+      summary: Consultar historial de pedidos de un usuario
+      description: Retorna los pedidos donde el usuario fue comprador. Puede requerir autenticación (header X-User) según la implementación.
+      parameters:
+        - name: id
+          in: path
+          description: Id del usuario cuyo historial se consulta
+          required: true
+          schema:
+            type: string
+            example: "64a8f0c3e8f9b0a1d2c3e4f5"
+        - name: X-User
+          in: header
+          description: Username del requester (si su middleware lo requiere)
+          required: false
+          schema:
+            type: string
+            example: "jose50"
+      responses:
+        '200':
+          description: Lista de pedidos del usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PedidoResumen'
+              examples:
+                ejemplo:
+                  value:
+                    - _id: "654a8f0c3e8f9b0a1d2c3e00"
+                      total: 1234
+                      moneda: "ARS"
+                      estado: "PENDIENTE"
+                      fechaCreacion: "2025-10-01T12:34:56Z"
+                    - _id: "654a8f0c3e8f9b0a1d2c3e11"
+                      total: 450
+                      moneda: "ARS"
+                      estado: "ENVIADO"
+                      fechaCreacion: "2025-09-15T09:10:00Z"
+        '404':
+          description: No hay historial para el usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    UsuarioDTO:
+      type: object
+      required:
+        - username
+        - nombre
+        - email
+        - telefono
+        - tipoUsuario
+      properties:
+        username:
+          type: string
+          example: "jose50"
+        nombre:
+          type: string
+          example: "Jose"
+        email:
+          type: string
+          format: email
+          example: "jose@gmail.com"
+        telefono:
+          type: string
+          example: "+54 11 3333 3333"
+        tipoUsuario:
+          type: string
+          enum:
+            - Comprador
+            - Vendedor
+            - Admin
+          example: "Comprador"
+
+    Usuario:
+      allOf:
+        - $ref: '#/components/schemas/UsuarioDTO'
+        - type: object
+          properties:
+            _id:
+              type: string
+              example: "64a8f0c3e8f9b0a1d2c3e4f5"
+            fechaCreacion:
+              type: string
+              format: date-time
+              example: "2025-10-01T12:00:00Z"
+
+    PedidoResumen:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "654a8f0c3e8f9b0a1d2c3e00"
+        total:
+          type: number
+          example: 1234
+        moneda:
+          type: string
+          example: "ARS"
+        estado:
+          type: string
+          example: "PENDIENTE"
+        fechaCreacion:
+          type: string
+          format: date-time
+          example: "2025-10-01T12:34:56Z"
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Detalle del error"
