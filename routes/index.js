@@ -5,6 +5,7 @@ import productoRouter from "./productoRoutes.js"
 import usuarioRouter from "./usuarioRoutes.js"
 import notificacionRouter from "./notificacionRoutes.js"
 import { errorHandler } from "../middleware/errorHandler.js"
+import swaggerRoutes from "./swaggerRoutes.js"
 
 const router = express.Router()
 
@@ -12,6 +13,7 @@ router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
 router.use(healthRouter)
+router.use("/docs", swaggerRoutes)
 router.use("/pedidos", pedidoRouter)
 router.use("/productos", productoRouter)
 router.use("/usuarios", usuarioRouter)
