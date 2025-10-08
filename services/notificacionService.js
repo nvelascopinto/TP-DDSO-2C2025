@@ -26,7 +26,7 @@ export class NotificacionService {
     } else {
       return destinatario
     }
-    return this.notificarEstadoPedido(estadoActual, destinatario, pedido._id)
+    return this.notificarEstadoPedido(estadoActual, destinatario, pedido._id).then((creado) => creado)
   }
 
   notificarEstadoPedido(estado, destinatario, idPedido) {
@@ -34,7 +34,7 @@ export class NotificacionService {
       destinatario,
       "El pedido " + idPedido + " cambio a estado " + estado,
     )
-    return this.NotificacionRepository.crear(notificacion)
+    return this.NotificacionRepository.crear(notificacion).then((notificacion) => notificacion)
   }
 
   getNotificacionesLeidas(idUsuario) {

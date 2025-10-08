@@ -41,7 +41,7 @@ class PedidoRepository {
   }
 
   actualizar(pedido) {
-    return this.modelPedido.findByIdAndUpdate(pedido._id, pedido)
+    return this.modelPedido.findByIdAndUpdate(pedido._id, pedido, { new: true })
   }
 
   findById(id) {
@@ -64,7 +64,7 @@ class PedidoRepository {
       ])
       .toArray()
     // const total = data?.totalUnidadesVendidas || 0;
-    const total = resultado[0]?.totalUnidadesVendidas || 0;
+    const total = resultado[0]?.totalUnidadesVendidas || 0
     return total
   }
 }

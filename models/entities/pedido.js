@@ -8,11 +8,11 @@ import DatosInvalidosError from "../../errors/datosInvalidosError.js"
 import CambioEstadoInvalidoError from "../../errors/cambioEstadoInvalidoError.js"
 import { tipoUsuario } from "./tipoUsuario.js"
 import UsuarioSinPermisoError from "../../errors/usuarioSinPermisoError.js"
-import { Usuario } from "./usuario.js"
+import EstadoInvalidoError from "../../errors/estadoInvalidoError.js"
 export class Pedido {
   constructor(comprador, vendedor, items, moneda, direccionEntrega) {
     this._id = null // inciialmente se pone en null hasta que es guardado en el Repo
-    this.comprador = comprador 
+    this.comprador = comprador
     this.vendedor = vendedor
     this.items = items
     this.total = this.calcularTotal()
@@ -50,14 +50,17 @@ export class Pedido {
   }
 
   validarItemsConVendedor() {
-    const vendedorUnico = this.items[0].producto.vendedor 
-    if (!this.items.every((item) => item.producto.vendedor === vendedorUnico)){ // ver si son id o no????
+    const vendedorUnico = this.items[0].producto.vendedor
+    if (!this.items.every((item) => item.producto.vendedor === vendedorUnico)) {
+      // ver si son id o no????
       throw new DatosInvalidosError(
         "Los productos del pedido deben ser todos del mismo vendedor",
       )
     }
     this.vendedor = vendedorUnico
   }
+  
+  
 
   validarMoneda() {
     if (!Object.values(Moneda).includes(this.moneda)) {
@@ -83,8 +86,12 @@ export class Pedido {
     console.log("USUARIO QUE CONSULTA: ", usuario.username)
     console.log("VENDEDOR ", this.vendedor)
     console.log("COMPRADOR ", this.comprador)
-      if(usuario.username != this.vendedor && usuario.username != this.comprador && usuario.tipoUsuario != tipoUsuario.ADMIN) {
-        throw new UsuarioSinPermisoError(usuario.username)
-      }
+    if (
+      usuario.username != this.vendedor &&
+      usuario.username != this.comprador &&
+      usuario.tipoUsuario != tipoUsuario.ADMIN
+    ) {
+      throw new UsuarioSinPermisoError(usuario.username)
+    }
   }
 }

@@ -26,7 +26,7 @@ export class UsuarioService {
   crearUsuario(usuarioDTO) {
     return Promise.resolve()
       .then(() => {
-        usuario = fromUsuarioDTO(usuarioDTO)
+        const usuario = fromUsuarioDTO(usuarioDTO)
         return this.UsuarioRepository.crear(usuario)
       })
       .then((usuarioCreado) => usuarioCreado)
