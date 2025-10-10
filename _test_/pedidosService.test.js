@@ -7,7 +7,6 @@ import { ItemPedido } from "../models/entities/itemPedido.js"
 import { Pedido } from "../models/entities/pedido.js"
 import { Producto } from "../models/entities/producto.js"
 import { Usuario } from "../models/entities/usuario.js"
-import { PedidoService } from "../services/pedidoService.js"
 import { estado } from "../models/entities/estadoPedido.js"
 import { CambioEstadoInvalidoError } from "../errors/cambioEstadoInvalidoError.js"
 import DatosInvalidosError from "../errors/datosInvalidosError.js"
@@ -16,43 +15,43 @@ import { MongooseError } from "mongoose"
 import EstadoInvalidoError from "../errors/estadoInvalidoError.js"
 import HistorialInexistenteError from "../errors/historialInexistenteError.js"
 
-const mockPedidoRepository = {
-  crear: jest.fn(),
-  findById: jest.fn(),
-  consultarHistorial: jest.fn(),
-  cantidadVentasProducto: jest.fn(),
-  actualizar: jest.fn()
-}
+jest.mock("../models/repositories/pedidoRepository.js", () => ({
+  __esModule: true,
+  default: {
+    crear: jest.fn(),
+    findById: jest.fn(),
+    consultarHistorial: jest.fn(),
+    cantidadVentasProducto: jest.fn(),
+    actualizar: jest.fn()
+  }
+}))
 
-const mockProductoService = {
-  obtenerProducto: jest.fn(),
-  update: jest.fn()
-}
+jest.mock("../services/productoService.js", () => ({
+  __esModule: true,
+  default: {
+    obtenerProducto: jest.fn(),
+    update: jest.fn()
+  }
+}))
 
-const mockNotificacionService = {
-  crearSegunEstadoPedido: jest.fn(),
-  crearSegunPedido: jest.fn()
-}
+jest.mock("../services/notificacionService.js", () => ({
+  __esModule: true,
+  default: {
+    crearSegunEstadoPedido: jest.fn(),
+    crearSegunPedido: jest.fn()
+  }
+}))
 
-const asLazy = (x) => () => x
+import pedidoService from "../services/pedidoService.js"
+import mockPedidoRepository from "../models/repositories/pedidoRepository.js"
+import mockProductoService from "../services/productoService.js"
+import mockNotificacionService from "../services/notificacionService.js"
 
 describe("PedidosService", () => {
-  let pedidoService
-  let productoGetter
   beforeEach(() => {
     jest.clearAllMocks()
-    productoGetter = asLazy(mockProductoService) // <- la creás una vez
-    pedidoService = new PedidoService(mockPedidoRepository, productoGetter, mockNotificacionService)
   })
 
-  describe("constructor", () => {
-    it("debería inicializar con los repositorios y service pasados por parámetro", () => {
-      const getter = asLazy(mockProductoService)
-      expect(pedidoService.pedidoRepository).toBe(mockPedidoRepository)
-      expect(pedidoService.productoService).toBe(productoGetter)
-      expect(pedidoService.notificacionService).toBe(mockNotificacionService)
-    })
-  })
   describe("creacion de un pedido", () => {
     it("deberia crear el pedido a partir del DTO correcto", async () => {
       const pedidoDTO = {

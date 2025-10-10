@@ -1,4 +1,3 @@
-import { NotificacionService } from "../services/notificacionService.js"
 import { estado } from "../models/entities/estadoPedido.js"
 import NotificacionInexistenteError from "../errors/notificacionInexistenteError.js"
 import UsuarioSinPermisoError from "../errors/usuarioSinPermisoError.js"
@@ -6,11 +5,19 @@ import YaLeidaError from "../errors/yaLeidaError.js"
 import { Notificacion } from "../models/entities/notificacion.js"
 //import { Notificacion } from "../models/entities/notificacion"
 
-const mockNotificacionRepository = {
-  crear: jest.fn().mockResolvedValue("mock-result"),
-  getById: jest.fn(),
-  update: jest.fn()
-}
+jest.mock("../models/repositories/notificacionRepository.js", () => ({
+  __esModule: true,
+  default: {
+    crear: jest.fn().mockResolvedValue("mock-result"),
+    getById: jest.fn(),
+    update: jest.fn(),
+    getNotificacionesLeidas: jest.fn(),
+    getNotificacionesNoLeidas: jest.fn()
+  }
+}))
+
+import notificacionService from "../services/notificacionService.js"
+import mockNotificacionRepository from "../models/repositories/notificacionRepository.js"
 
 const fechaFija = new Date("2025-10-07T21:30:00Z")
 const mockDate = jest.spyOn(global, "Date").mockImplementation(() => fechaFija)
@@ -18,14 +25,12 @@ const mockDate = jest.spyOn(global, "Date").mockImplementation(() => fechaFija)
 global.Notificacion = jest.fn()
 
 describe("NotificacionService", () => {
-  let notificacionService
   let pedidoMock
   let vendedorMock
   let compradorMock
 
   beforeEach(() => {
     jest.clearAllMocks()
-    notificacionService = new NotificacionService(mockNotificacionRepository)
     //notificacionService.notificarEstadoPedido = jest.fn()
     compradorMock = "pepe"
     vendedorMock = "sofia"

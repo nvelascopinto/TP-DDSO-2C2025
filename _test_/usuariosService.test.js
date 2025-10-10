@@ -1,4 +1,3 @@
-import { UsuarioService } from "../services/usuarioService.js"
 import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js"
 import { UsuarioDTO } from "../models/DTO/usuarioDTO.js"
 import { Usuario } from "../models/entities/usuario.js"
@@ -8,28 +7,20 @@ import { ItemPedido } from "../models/entities/itemPedido.js"
 import { Pedido } from "../models/entities/pedido.js"
 import UsuarioSinPermisoError from "../errors/usuarioSinPermisoError.js"
 
-const mockUsuarioRepository = {
-  findById: jest.fn(),
-  crear: jest.fn()
-}
+jest.mock("../models/repositories/usuarioRepository.js", () => ({
+  __esModule: true,
+  default: {
+    findById: jest.fn(),
+    crear: jest.fn()
+  }
+}))
 
-const mockPedidoService = {
-  consultarHistorial: jest.fn()
-}
+import usuarioService from "../services/usuarioService.js"
+import mockUsuarioRepository from "../models/repositories/usuarioRepository.js"
 
 describe("UsuarioService", () => {
-  let usuarioService
-
   beforeEach(() => {
     jest.clearAllMocks()
-    usuarioService = new UsuarioService(mockUsuarioRepository, mockPedidoService)
-  })
-
-  describe("constructor", () => {
-    it("debería inicializar con el repositorio pasado por parámetro", () => {
-      expect(usuarioService.UsuarioRepository).toBe(mockUsuarioRepository)
-      expect(usuarioService.PedidoService).toBe(mockPedidoService)
-    })
   })
 
   describe("crearUsuario", () => {

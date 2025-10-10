@@ -25,7 +25,8 @@ export default defineConfig([
         {
           js: "always"
         }
-      ]
+      ],
+      "@typescript-eslint/require-await": "off"
     }
   },
   {

@@ -1,4 +1,4 @@
-import { usuarioServiceInstance } from "../services/usuarioService.js"
+import usuarioService from "../services/usuarioService.js"
 import { toUsuarioDTO } from "../converters/usuarioConverter.js"
 import { usuarioValidator } from "../validators/usuarioValidator.js"
 import { idValidator } from "../validators/idValidator.js"
@@ -10,7 +10,7 @@ class UsuarioController {
         const body = usuarioValidator.parse(req.body)
         const usuario = toUsuarioDTO(body)
 
-        return usuarioServiceInstance.crearUsuario(usuario)
+        return usuarioService.crearUsuario(usuario)
       })
       .then((nuevoUsuario) => {
         return res.status(201).json(nuevoUsuario)
@@ -21,7 +21,7 @@ class UsuarioController {
     return Promise.resolve()
       .then(() => {
         const id = idValidator.parse(req.params.id)
-        return usuarioServiceInstance.buscar(id)
+        return usuarioService.buscar(id)
       })
       .then((usuario) => {
         res.status(200).json(usuario)
@@ -33,7 +33,7 @@ class UsuarioController {
       .then(() => {
         const usuario = req.user
         const id = idValidator.parse(req.params.id)
-        return usuarioServiceInstance.consultarHistorial(id, usuario)
+        return usuarioService.consultarHistorial(id, usuario)
       })
       .then((pedidos) => {
         res.status(200).json(pedidos)
@@ -41,4 +41,4 @@ class UsuarioController {
   }
 }
 
-export default new UsuarioController(usuarioServiceInstance)
+export default new UsuarioController()

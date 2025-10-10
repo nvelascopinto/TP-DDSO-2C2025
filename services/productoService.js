@@ -1,15 +1,11 @@
-import ProductoRepository from "../models/repositories/productoRepository.js"
+import productoRepository from "../models/repositories/productoRepository.js"
+import pedidoService from "./pedidoService.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { validarExistenciaDeProducto } from "../validators/productoValidator.js"
 import { fromProductoDTO } from "../converters/productoConverter.js"
 import { rolesValidator } from "../validators/usuarioValidator.js"
-import { pedidoServiceInstance } from "./pedidoService.js"
 
-export class ProductoService {
-  constructor(ProductoRepository, getPedidoService) {
-    this.ProductoRepository = ProductoRepository
-    this.pedidoService = getPedidoService
-  }
+class ProductoService {
   /************************** CREAR UN PRODUCTO **************************/
   crear(productoDTO, vendedor) {
     return Promise.resolve()
@@ -18,14 +14,14 @@ export class ProductoService {
         rolesValidator(vendedor, [tipoUsuario.VENDEDOR])
         producto.validarCreador(vendedor.username)
         console.log(producto)
-        return this.ProductoRepository.crear(producto)
+        return productoRepository.crear(producto)
       })
       .then((productoGuardado) => productoGuardado)
   }
 
   /************************** CONSULTAR UN PRODUCTO **************************/
   obtenerProducto(id) {
-    return this.ProductoRepository.findById(id).then((producto) => {
+    return productoRepository.findById(id).then((producto) => {
       validarExistenciaDeProducto(producto, id)
       return producto
     })
@@ -36,7 +32,7 @@ export class ProductoService {
     return Promise.resolve()
       .then(() => {
         rolesValidator(vendedor, [tipoUsuario.VENDEDOR])
-        return this.ProductoRepository.obtenerTodosDeVendedor(vendedor.username, filtros, pagina, limite)
+        return productoRepository.obtenerTodosDeVendedor(vendedor.username, filtros, pagina, limite)
       })
       .then((prodVendedor) => {
         return this.ordenar(ordenamiento, prodVendedor)
@@ -66,7 +62,7 @@ export class ProductoService {
     if (!ascendente) {
       factor = -1
     }
-    const cantidades = await Promise.all(productos.map((p) => this.pedidoService().cantidadVentasProducto(p)))
+    const cantidades = await Promise.all(productos.map((p) => pedidoService.cantidadVentasProducto(p)))
 
     const ordenados = productos
       .map((p, i) => ({ producto: p, ventas: cantidades[i] ?? 0 }))
@@ -76,8 +72,8 @@ export class ProductoService {
     return ordenados
   }
   update(producto) {
-    return this.ProductoRepository.actualizar(producto._id, producto).then((productoModificadp) => productoModificadp)
+    return productoRepository.actualizar(producto._id, producto).then((productoModificadp) => productoModificadp)
   }
 }
 
-export const productoServiceInstance = new ProductoService(ProductoRepository, () => pedidoServiceInstance)
+export default new ProductoService()

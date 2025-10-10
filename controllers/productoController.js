@@ -1,4 +1,4 @@
-import { productoServiceInstance } from "../services/productoService.js"
+import productoService from "../services/productoService.js"
 import { toProductoDTO } from "../converters/productoConverter.js"
 import { productoValidator } from "../validators/productoValidator.js"
 
@@ -9,7 +9,7 @@ class ProductoController {
         const body = productoValidator.parse(req.body)
         const usuario = req.user
         const producto = toProductoDTO(body)
-        return productoServiceInstance.crear(producto, usuario)
+        return productoService.crear(producto, usuario)
       })
       .then((nuevoProducto) => {
         res.status(201).json(nuevoProducto)
@@ -36,7 +36,7 @@ class ProductoController {
           ordenMasVendios: ordenMasVendios,
           ascendente: ascendente
         }
-        return productoServiceInstance.obtenerTodosDeVendedor(vendedor, filtros, pagina, limite, ordenamiento)
+        return productoService.obtenerTodosDeVendedor(vendedor, filtros, pagina, limite, ordenamiento)
       })
       .then((productos) => {
         res.status(200).json(productos)
@@ -44,4 +44,4 @@ class ProductoController {
   }
 }
 
-export default new ProductoController(productoServiceInstance)
+export default new ProductoController()

@@ -1,18 +1,14 @@
-import PedidoRepository from "../models/repositories/pedidoRepository.js"
-import { productoServiceInstance } from "./productoService.js"
-import { notificacionServiceInstance } from "./notificacionService.js"
+import pedidoRepository from "../models/repositories/pedidoRepository.js"
+import productoService from "./productoService.js"
+import notificacionService from "./notificacionService.js"
 import { fromPedidoDTO } from "../converters/pedidoConverter.js"
 import { autorizadosAEstado, estado } from "../models/entities/estadoPedido.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { validarExistenciaDePedido, validarExistenciaDeHistorial } from "../validators/pedidoValidator.js"
 import { rolesValidator } from "../validators/usuarioValidator.js"
 import { validarEstado } from "../validators/estadoValidador.js"
-export class PedidoService {
-  constructor(PedidoRepository, getProductoService, notificationServiceInstance) {
-    this.pedidoRepository = PedidoRepository
-    this.productoService = getProductoService
-    this.notificacionService = notificationServiceInstance
-  }
+
+class PedidoService {
   /************************** CREAR UN PEDIDO **************************/
   crear(pedidoDTO, comprador) {
     const nuevoPedido = fromPedidoDTO(pedidoDTO)
@@ -20,7 +16,7 @@ export class PedidoService {
       .then(() => {
         rolesValidator(comprador, [tipoUsuario.COMPRADOR])
         nuevoPedido.comprador = comprador.username
-        return Promise.all(pedidoDTO.itemsDTO.map((item) => this.productoService().obtenerProducto(item.productoID)))
+        return Promise.all(pedidoDTO.itemsDTO.map((item) => productoService.obtenerProducto(item.productoID)))
       })
       .then((productos) => {
         // Le asigno a cada producto del ItemPedido su respectivo Producto, respetando el orden
@@ -31,20 +27,20 @@ export class PedidoService {
         nuevoPedido.validarStock()
         return Promise.all(
           nuevoPedido.items.map((item) => {
-            this.productoService().update(item.producto)
+            productoService.update(item.producto)
           })
         ).then(() => {
-          return this.pedidoRepository.crear(nuevoPedido)
+          return pedidoRepository.crear(nuevoPedido)
         })
       })
       .then((pedidoGuardado) => {
-        return this.notificacionService.crearSegunPedido(pedidoGuardado).then(() => pedidoGuardado) // Devuelvo el pedido que me llego de la otra promise
+        return notificacionService.crearSegunPedido(pedidoGuardado).then(() => pedidoGuardado) // Devuelvo el pedido que me llego de la otra promise
       })
   }
 
   /************************** CONSULTAR UN PEDIDO **************************/
   consultar(id, usuario) {
-    return this.pedidoRepository.findById(id).then((pedidoBuscado) => {
+    return pedidoRepository.findById(id).then((pedidoBuscado) => {
       validarExistenciaDePedido(pedidoBuscado, id)
       pedidoBuscado.validarUsuario(usuario)
       return pedidoBuscado
@@ -53,7 +49,7 @@ export class PedidoService {
 
   /************************** CONSULTAR EL HISTORIAL DE UN USUARIO **************************/
   consultarHistorial(id, usuario) {
-    return this.pedidoRepository.consultarHistorial(id).then((historial) => {
+    return pedidoRepository.consultarHistorial(id).then((historial) => {
       validarExistenciaDeHistorial(historial, id)
       historial.forEach((pedido) => pedido.validarUsuario(usuario))
       return historial
@@ -74,10 +70,10 @@ export class PedidoService {
         console.log("ESTADO ====================", cambioEstado.estado)
         console.log("ESTADO PEDIDOOOO ===================", pedido.estado)
         pedido.actualizarEstado(estado[cambioEstado.estado], cambioEstado.usuario.username, cambioEstado.motivo)
-        return this.pedidoRepository.actualizar(pedido)
+        return pedidoRepository.actualizar(pedido)
       })
       .then((pedidoActualizado) => {
-        return this.notificacionService.crearSegunEstadoPedido(estado[cambioEstado.estado], pedidoActualizado)
+        return notificacionService.crearSegunEstadoPedido(estado[cambioEstado.estado], pedidoActualizado)
       })
       .then((notificacion) => {
         console.log("NOTIFICACION", notificacion)
@@ -86,7 +82,7 @@ export class PedidoService {
   }
 
   cantidadVentasProducto(producto) {
-    return this.pedidoRepository.cantidadVentasProducto(producto).then((cantidad) => {
+    return pedidoRepository.cantidadVentasProducto(producto).then((cantidad) => {
       console.log("CANTIDAD VENDIA de", producto._id)
       console.log(cantidad)
       return cantidad
@@ -94,8 +90,4 @@ export class PedidoService {
   }
 }
 
-export const pedidoServiceInstance = new PedidoService(
-  PedidoRepository,
-  () => productoServiceInstance,
-  notificacionServiceInstance
-)
+export default new PedidoService()

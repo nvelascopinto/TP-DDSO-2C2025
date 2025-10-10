@@ -1,34 +1,32 @@
 import { DatosInvalidos } from "../errors/datosInvalidosError.js"
 import { ProductoDTO } from "../models/DTO/productoDTO.js"
 import { Producto } from "../models/entities/producto.js"
-import { ProductoService } from "../services/productoService.js"
 import { Usuario } from "../models/entities/usuario.js"
 import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js"
 import UsuarioSinPermisoError from "../errors/usuarioSinPermisoError.js"
 
-const mockProductoRepository = {
-  findById: jest.fn(),
-  crear: jest.fn()
-}
-const mockPedidoService = {
-  cantidadVentasProducto: jest.fn()
-}
-const asLazy = (x) => () => x
+jest.mock("../models/repositories/productoRepository.js", () => ({
+  __esModule: true,
+  default: {
+    findById: jest.fn(),
+    crear: jest.fn()
+  }
+}))
+
+jest.mock("../services/pedidoService.js", () => ({
+  __esModule: true,
+  default: {
+    cantidadVentasProducto: jest.fn()
+  }
+}))
+
+import productoService from "../services/productoService.js"
+import mockProductoRepository from "../models/repositories/productoRepository.js"
+import mockPedidoService from "../services/pedidoService.js"
 
 describe("ProductosService", () => {
-  let productoService
-  let pedidoGetter
   beforeEach(() => {
     jest.clearAllMocks()
-    pedidoGetter = asLazy(mockPedidoService)
-    productoService = new ProductoService(mockProductoRepository, pedidoGetter)
-  })
-
-  describe("constructor", () => {
-    it("debería inicializar con el repositorio y el service pasados por parámetro", () => {
-      expect(productoService.ProductoRepository).toBe(mockProductoRepository)
-      expect(productoService.pedidoService).toBe(pedidoGetter)
-    })
   })
 
   describe("crear", () => {
