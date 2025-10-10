@@ -6,44 +6,44 @@ const productoSchema = new mongoose.Schema(
     vendedor: {
       type: String,
       ref: "Usuario",
-      required: true,
+      required: true
     },
     titulo: {
       type: String,
-      required: true,
+      required: true
     },
     descripcion: {
       type: String,
-      required: true,
+      required: true
     },
     precio: {
       type: Number,
       min: 0,
-      required: true,
+      required: true
     },
     moneda: {
       type: String,
       enum: ["PESO_ARG", "DOLAR_USA", "REAL"],
-      required: true,
+      required: true
     },
     stock: {
       type: Number,
       required: true,
-      min: 0,
+      min: 0
     },
     fotos: {
       type: [String],
-      required: false,
+      required: false
     },
     activo: {
       type: Boolean,
-      required: true,
-    },
+      required: true
+    }
   },
   {
     //timestamps: true,
-    collection: "productos",
-  },
+    collection: "productos"
+  }
 )
 
 productoSchema.loadClass(Producto)

@@ -5,7 +5,7 @@ export const filtrosValidator = z.object({
   minPrecio: z.number().nonnegative().optional(),
   maxPrecio: z.number().nonnegative().optional(),
   pagina: z.number().nonnegative().optional(),
-  limite : z.number().nonnegative().optional(),
+  limite: z.number().nonnegative().optional(),
   nombre: z.string().optional(),
   categoria: z.string().optional(),
   descripcion: z.string().optional(),

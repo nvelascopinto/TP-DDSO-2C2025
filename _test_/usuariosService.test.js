@@ -10,11 +10,11 @@ import UsuarioSinPermisoError from "../errors/usuarioSinPermisoError.js"
 
 const mockUsuarioRepository = {
   findById: jest.fn(),
-  crear: jest.fn(),
+  crear: jest.fn()
 }
 
 const mockPedidoService = {
-  consultarHistorial: jest.fn(),
+  consultarHistorial: jest.fn()
 }
 
 describe("UsuarioService", () => {
@@ -34,20 +34,8 @@ describe("UsuarioService", () => {
 
   describe("crearUsuario", () => {
     it("deberia crear el usuario", async () => {
-      let usuario = new UsuarioDTO(
-        "jose50",
-        "Jose",
-        "jose@gmail.com",
-        "+54 11 3333 3333",
-        "Comprador",
-      )
-      let usuarioCreado = new Usuario(
-        "jose50",
-        "Jose",
-        "jose@gmail.com",
-        "+54 11 3333 3333",
-        "Comprador",
-      )
+      let usuario = new UsuarioDTO("jose50", "Jose", "jose@gmail.com", "+54 11 3333 3333", "Comprador")
+      let usuarioCreado = new Usuario("jose50", "Jose", "jose@gmail.com", "+54 11 3333 3333", "Comprador")
 
       mockUsuarioRepository.crear.mockResolvedValue(usuarioCreado) // importante
 
@@ -64,7 +52,7 @@ describe("UsuarioService", () => {
         nombre: "Pepe",
         email: "pepeperez@gmail.com",
         telefono: "+54 11 3333 3333",
-        tipoUsuario: "Vendedor",
+        tipoUsuario: "Vendedor"
       }
       mockUsuarioRepository.findById.mockResolvedValue(mockUser)
 
@@ -76,14 +64,8 @@ describe("UsuarioService", () => {
     it("debería tirar UsuarioInexistenteError si el usuario no existe", async () => {
       mockUsuarioRepository.findById.mockResolvedValue(null)
 
-      await expect(usuarioService.buscar("jajajaj")).rejects.toThrow(
-        UsuarioInexistenteError
-      )
+      await expect(usuarioService.buscar("jajajaj")).rejects.toThrow(UsuarioInexistenteError)
       expect(mockUsuarioRepository.findById).toHaveBeenCalledWith("jajajaj")
     })
   })
-
-  })
-
-
-
+})

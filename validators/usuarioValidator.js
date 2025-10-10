@@ -6,13 +6,13 @@ export const usuarioValidator = z.object({
   nombre: z.string().min(1, "El nombre no puede estar vacío"),
   email: z.string(),
   telefono: z.string(),
-  tipoUsuario: z.string(),
+  tipoUsuario: z.string()
 })
 
 export function rolesValidator(user, roles) {
-    if(!(roles.includes(user.tipoUsuario)) ){
-      throw new UsuarioSinPermisoError(user.username)
-    }
+  if (!roles.includes(user.tipoUsuario)) {
+    throw new UsuarioSinPermisoError(user.username)
+  }
 }
 
 export function validarExistenciaDeUsuario(usuario, id) {

@@ -3,48 +3,48 @@ import { Usuario } from "../entities/usuario.js"
 
 const usuarioSchema = new mongoose.Schema(
   {
-    // USERNAME 
+    // USERNAME
     _id: {
-      type : String
+      type: String
     },
     username: {
       type: String,
       required: true,
-      unique : true
+      unique: true
     },
     nombre: {
       type: String,
       required: true,
-      trim: true,
+      trim: true
     },
     email: {
       type: String,
-      trim: true,
+      trim: true
     },
     telefono: {
       type: String,
-      trim: true,
+      trim: true
     },
     tipoUsuario: {
       type: String,
-      enum: ["Comprador", "Vendedor", "Admin"],
+      enum: ["Comprador", "Vendedor", "Admin"]
     },
     fechaAlta: {
       type: Date,
-      required: true,
-    },
+      required: true
+    }
   },
   {
-    collection: "usuarios",
-  },
+    collection: "usuarios"
+  }
 )
 
-usuarioSchema.pre('save', function(next) {
+usuarioSchema.pre("save", function (next) {
   if (!this._id) {
-    this._id = this.username;
+    this._id = this.username
   }
-  next();
-});
+  next()
+})
 
 usuarioSchema.loadClass(Usuario)
 

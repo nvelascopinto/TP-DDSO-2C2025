@@ -10,5 +10,5 @@ export const direccionEntregaValidator = z.object({
   provincia: z.string(),
   pais: z.string(),
   latitud: z.number(),
-  longitud: z.number(),
+  longitud: z.number()
 })

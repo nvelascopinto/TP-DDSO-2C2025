@@ -6,23 +6,23 @@ const itemPedidoSchema = new mongoose.Schema(
     producto: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Producto",
-      required: true,
+      required: true
     },
     cantidad: {
       type: Number,
       min: 0,
-      required: true,
-    },  
+      required: true
+    },
     precioUnitario: {
       type: Number,
       min: 0,
-      required: true,
-    },
+      required: true
+    }
   },
   {
     //timestamps: true,
-    collection: "items",
-  },
+    collection: "items"
+  }
 )
 
 itemPedidoSchema.loadClass(ItemPedido)

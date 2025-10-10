@@ -4,7 +4,6 @@ import { cambioEstadoPedidoSchema } from "./cambioEstadoPedidoSchema.js"
 
 const pedidoSchema = new mongoose.Schema(
   {
-    
     comprador: {
       type: String,
       ref: "Usuario",
@@ -13,52 +12,45 @@ const pedidoSchema = new mongoose.Schema(
     vendedor: {
       type: String,
       ref: "Usuario",
-      required: true,
+      required: true
     },
     items: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "ItemPedido",
-      required: true,
+      required: true
     },
     total: {
       type: Number,
       min: 0,
-      required: true,
+      required: true
     },
     moneda: {
       type: String,
       enum: ["PESO_ARG", "DOLAR_USA", "REAL"],
-      required: true,
+      required: true
     },
     estado: {
       type: String,
-      enum: [
-        "Pendiente",
-        "Confirmado",
-        "En_Preparacion",
-        "Enviado",
-        "Entregado",
-        "Cancelado",
-      ],
-      required: true,
+      enum: ["Pendiente", "Confirmado", "En_Preparacion", "Enviado", "Entregado", "Cancelado"],
+      required: true
     },
     direccionEntrega: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "DireccionEntrega",
-      required: true,
+      required: true
     },
     historialCambioPedidos: {
-      type: [cambioEstadoPedidoSchema],
+      type: [cambioEstadoPedidoSchema]
     },
     fechaCreacion: {
       type: Date,
-      required: true,
-    },
+      required: true
+    }
   },
   {
     //timestamps: true,
-    collection: "pedidos",
-  },
+    collection: "pedidos"
+  }
 )
 
 pedidoSchema.loadClass(Pedido)

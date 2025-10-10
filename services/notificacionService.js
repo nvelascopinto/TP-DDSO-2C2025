@@ -31,29 +31,24 @@ export class NotificacionService {
   }
 
   notificarEstadoPedido(estado, destinatario, idPedido) {
-    const notificacion = new Notificacion(
-      destinatario,
-      "El pedido " + idPedido + " cambio a estado " + estado,
-    )
+    const notificacion = new Notificacion(destinatario, "El pedido " + idPedido + " cambio a estado " + estado)
     return this.NotificacionRepository.crear(notificacion).then((notificacion) => notificacion)
   }
 
   getNotificacionesLeidas(idUsuario) {
     return this.NotificacionRepository.getNotificacionesLeidas(idUsuario).then(
-      (notificacionesLeidas) => notificacionesLeidas,
+      (notificacionesLeidas) => notificacionesLeidas
     )
   }
 
   getNotificacionesNoLeidas(idUsuario) {
     return this.NotificacionRepository.getNotificacionesNoLeidas(idUsuario).then(
-      (notificacionesNoLeidas) => notificacionesNoLeidas,
+      (notificacionesNoLeidas) => notificacionesNoLeidas
     )
   }
 
   getNotificacion(idNotificacion) {
-    return this.NotificacionRepository.getById(idNotificacion).then(
-      (notificacion) => notificacion,
-    )
+    return this.NotificacionRepository.getById(idNotificacion).then((notificacion) => notificacion)
   }
 
   marcarComoLeida(idNotificacion, usuario) {
@@ -67,4 +62,4 @@ export class NotificacionService {
   }
 }
 
-export const  notificacionServiceInstance = new NotificacionService(NotificacionRepository)
+export const notificacionServiceInstance = new NotificacionService(NotificacionRepository)

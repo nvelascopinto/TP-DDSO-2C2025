@@ -19,7 +19,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UsuarioDTO'
+              $ref: "#/components/schemas/UsuarioDTO"
             examples:
               ejemplo:
                 value:
@@ -29,24 +29,24 @@ paths:
                   telefono: "+54 11 3333 3333"
                   tipoUsuario: "Comprador"
       responses:
-        '201':
+        "201":
           description: Usuario creado correctamente
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Usuario'
-        '400':
+                $ref: "#/components/schemas/Usuario"
+        "400":
           description: Datos inválidos
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '409':
+                $ref: "#/components/schemas/Error"
+        "409":
           description: Usuario ya existe
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /usuarios/{id}:
     get:
@@ -62,18 +62,18 @@ paths:
             type: string
             example: "64a8f0c3e8f9b0a1d2c3e4f5"
       responses:
-        '200':
+        "200":
           description: Usuario encontrado
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Usuario'
-        '404':
+                $ref: "#/components/schemas/Usuario"
+        "404":
           description: Usuario no encontrado
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /usuarios/{id}/historial:
     get:
@@ -97,14 +97,14 @@ paths:
             type: string
             example: "jose50"
       responses:
-        '200':
+        "200":
           description: Lista de pedidos del usuario (resumen)
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: './pedidos.yaml#/components/schemas/PedidoResumen'
+                  $ref: "./pedidos.yaml#/components/schemas/PedidoResumen"
               examples:
                 ejemplo:
                   value:
@@ -118,12 +118,12 @@ paths:
                       moneda: "ARS"
                       estado: "ENVIADO"
                       fechaCreacion: "2025-09-15T09:10:00Z"
-        '404':
+        "404":
           description: No hay historial para el usuario
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
 components:
   schemas:
@@ -159,7 +159,7 @@ components:
 
     Usuario:
       allOf:
-        - $ref: '#/components/schemas/UsuarioDTO'
+        - $ref: "#/components/schemas/UsuarioDTO"
         - type: object
           properties:
             _id:

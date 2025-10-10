@@ -1,6 +1,6 @@
 import js from "@eslint/js"
 import globals from "globals"
-import importPlugin from "eslint-plugin-import";
+import importPlugin from "eslint-plugin-import"
 import { defineConfig } from "eslint/config"
 
 export default defineConfig([
@@ -16,25 +16,25 @@ export default defineConfig([
         {
           argsIgnorePattern: "^_",
           varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
-        },
+          caughtErrorsIgnorePattern: "^_"
+        }
       ],
       "import/extensions": [
         "error",
         "ignorePackages",
         {
-          js: "always",
-        },
-      ],
-    },
+          js: "always"
+        }
+      ]
+    }
   },
   {
     files: ["_test_/**/*.{js,mjs,cjs,jsx}"],
     languageOptions: {
       globals: {
         ...globals.node,
-        ...globals.jest,
-      },
-    },
-  },
+        ...globals.jest
+      }
+    }
+  }
 ])

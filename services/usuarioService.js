@@ -1,6 +1,6 @@
 import UsuarioRepository from "../models/repositories/usuarioRepository.js"
-import  {pedidoServiceInstance}  from "./pedidoService.js"
-import {validarExistenciaDeUsuario} from "../validators/usuarioValidator.js"
+import { pedidoServiceInstance } from "./pedidoService.js"
+import { validarExistenciaDeUsuario } from "../validators/usuarioValidator.js"
 import { fromUsuarioDTO } from "../converters/usuarioConverter.js"
 
 export class UsuarioService {
@@ -28,14 +28,11 @@ export class UsuarioService {
 
   /************************** CONSULTAR EL HISTORIAL DE UN USUARIO **************************/
 
-  consultarHistorial(id,usuario) {
-    return this.PedidoService.consultarHistorial(id,usuario).then((historial) => {
+  consultarHistorial(id, usuario) {
+    return this.PedidoService.consultarHistorial(id, usuario).then((historial) => {
       return historial
     })
   }
 }
 
-export const usuarioServiceInstance = new UsuarioService(
-  UsuarioRepository,
-  pedidoServiceInstance,
-)
+export const usuarioServiceInstance = new UsuarioService(UsuarioRepository, pedidoServiceInstance)

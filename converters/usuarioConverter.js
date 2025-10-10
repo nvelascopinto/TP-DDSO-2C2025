@@ -7,7 +7,7 @@ export function toUsuarioDTO(JSONUsuario) {
     JSONUsuario.nombre,
     JSONUsuario.email,
     JSONUsuario.telefono,
-    JSONUsuario.tipoUsuario,
+    JSONUsuario.tipoUsuario
   )
 }
 
@@ -17,6 +17,6 @@ export function fromUsuarioDTO(usuarioDTO) {
     usuarioDTO.nombre,
     usuarioDTO.email,
     usuarioDTO.telefono,
-    usuarioDTO.tipoUsuario,
+    usuarioDTO.tipoUsuario
   )
 }

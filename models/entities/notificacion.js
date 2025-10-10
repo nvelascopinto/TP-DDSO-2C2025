@@ -3,7 +3,7 @@ import YaLeidaError from "../../errors/yaLeidaError.js"
 export class Notificacion {
   constructor(usuarioDestino, mensaje) {
     this._id = null
-  
+
     this.usuarioDestino = usuarioDestino
     this.mensaje = mensaje
     this.fechaAlta = new Date()
@@ -12,10 +12,10 @@ export class Notificacion {
   }
 
   marcarComoleida(usuarioId) {
-    if(usuarioId != this.usuarioDestino) {
+    if (usuarioId != this.usuarioDestino) {
       throw new UsuarioSinPermisoError(usuarioId)
     }
-    if(this.leida) {
+    if (this.leida) {
       throw new YaLeidaError(this._id)
     }
     this.leida = true

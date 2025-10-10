@@ -6,28 +6,28 @@ const notificacionSchema = new mongoose.Schema(
     usuarioDestino: {
       type: String,
       ref: "Usuario",
-      required: true,
+      required: true
     },
     mensaje: {
       type: String,
-      required: true,
+      required: true
     },
     leida: {
       type: Boolean,
-      required: true,
+      required: true
     },
     fechaAlta: {
       type: Date,
-      required: true,
+      required: true
     },
     fechaLeida: {
-      type: Date,
-    },
+      type: Date
+    }
   },
   {
     //timestamps: true,
-    collection: "notificaciones",
-  },
+    collection: "notificaciones"
+  }
 )
 
 notificacionSchema.loadClass(Notificacion)

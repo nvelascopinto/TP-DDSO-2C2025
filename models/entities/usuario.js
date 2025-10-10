@@ -14,7 +14,6 @@ export class Usuario {
     this.notificaciones.push(notificacion)
   }
 
-
   validarRol(roles) {
     if (!roles.includes(this.tipoUsuario)) {
       throw new UsuarioSinPermisoError(this.username)

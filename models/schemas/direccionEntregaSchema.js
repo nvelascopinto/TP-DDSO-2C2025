@@ -5,48 +5,48 @@ const direccionEntregaSchema = new mongoose.Schema(
   {
     calle: {
       type: String,
-      required: true,
+      required: true
     },
     altura: {
       type: Number,
-      required: true,
+      required: true
     },
     piso: {
       type: Number,
       required: false,
-      min: 0,
+      min: 0
     },
     departamento: {
       type: String,
-      required: false,
+      required: false
     },
     codigoPostal: {
       type: Number,
-      required: true,
+      required: true
     },
     ciudad: {
       type: String,
-      required: true,
+      required: true
     },
     provincia: {
       type: String,
-      required: true,
+      required: true
     },
     pais: {
       type: String,
-      required: true,
+      required: true
     },
     latitud: {
-      type: Number,
+      type: Number
     },
     longitud: {
-      type: Number,
-    },
+      type: Number
+    }
   },
   {
     //timestamps: true,
-    collection: "direcciones",
-  },
+    collection: "direcciones"
+  }
 )
 
 direccionEntregaSchema.loadClass(DireccionEntrega)

@@ -1,16 +1,5 @@
 export class DireccionEntrega {
-  constructor(
-    calle,
-    altura,
-    piso,
-    departamento,
-    codigoPostal,
-    ciudad,
-    provincia,
-    pais,
-    latitud,
-    longitud,
-  ) {
+  constructor(calle, altura, piso, departamento, codigoPostal, ciudad, provincia, pais, latitud, longitud) {
     this.calle = calle
     this.altura = altura
     this.piso = piso

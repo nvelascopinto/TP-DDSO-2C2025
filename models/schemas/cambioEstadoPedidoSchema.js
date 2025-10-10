@@ -4,33 +4,26 @@ import { CambioEstadoPedido } from "../entities/cambioEstadoPedido.js"
 export const cambioEstadoPedidoSchema = new mongoose.Schema({
   fecha: {
     type: Date,
-    required: true,
+    required: true
   },
   estado: {
     type: String,
-    enum: [
-      "Pendiente",
-      "Confirmado",
-      "En_Preparacion",
-      "Enviado",
-      "Entregado",
-      "Cancelado",
-    ],
-    required: true,
+    enum: ["Pendiente", "Confirmado", "En_Preparacion", "Enviado", "Entregado", "Cancelado"],
+    required: true
   },
   pedido: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Pedido",
-    required: true,
+    required: true
   },
   usuario: {
     type: String,
     ref: "Usuario",
-    required: true,
+    required: true
   },
   motivo: {
-    type: String,
-  },
+    type: String
+  }
 })
 
 cambioEstadoPedidoSchema.loadClass(CambioEstadoPedido)

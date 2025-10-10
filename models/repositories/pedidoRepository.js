@@ -26,22 +26,21 @@ class PedidoRepository {
       estado: pedido.estado,
       direccionEntrega: direccionGuardada._id,
       historialCambioPedidos: pedido.historialCambioPedidos,
-      fechaCreacion: pedido.fechaCreacion,
+      fechaCreacion: pedido.fechaCreacion
     })
 
     return pedidoGuardado.save()
   }
 
   consultarHistorial(id) {
-    const historial = this.modelPedido
-      .find({ comprador: id })
-      .populate("direccionEntrega")
-      .populate("items")
+    const historial = this.modelPedido.find({ comprador: id }).populate("direccionEntrega").populate("items")
     return historial
   }
 
   actualizar(pedido) {
-    return this.modelPedido.findByIdAndUpdate(pedido._id, pedido, { new: true })
+    return this.modelPedido.findByIdAndUpdate(pedido._id, pedido, {
+      new: true
+    })
   }
 
   findById(id) {
@@ -53,27 +52,27 @@ class PedidoRepository {
     const productoId = producto._id // mongoose.Types.ObjectId(producto._id)
     return this.modelPedido
       .aggregate([
-    { $unwind: "$items" },                    // cada itemId por separado
-    {
-      $lookup: {
-        from: "items",                        // nombre de la colección ItemPedido (verificar)
-        localField: "items",                  // en Pedido: array de ObjectId
-        foreignField: "_id",                  // en ItemPedido: _id
-        as: "itemDoc"
-      }
-    },
-    { $unwind: "$itemDoc" },                  // ahora itemDoc es el documento real
-    { $match: { "itemDoc.producto": productoId } }, // filtrar por producto
-    {
-      $group: {
-        _id: "$itemDoc.producto",
-        totalUnidadesVendidas: { $sum: "$itemDoc.cantidad" }
-      }
-    }
-  ])
+        { $unwind: "$items" }, // cada itemId por separado
+        {
+          $lookup: {
+            from: "items", // nombre de la colección ItemPedido (verificar)
+            localField: "items", // en Pedido: array de ObjectId
+            foreignField: "_id", // en ItemPedido: _id
+            as: "itemDoc"
+          }
+        },
+        { $unwind: "$itemDoc" }, // ahora itemDoc es el documento real
+        { $match: { "itemDoc.producto": productoId } }, // filtrar por producto
+        {
+          $group: {
+            _id: "$itemDoc.producto",
+            totalUnidadesVendidas: { $sum: "$itemDoc.cantidad" }
+          }
+        }
+      ])
       .exec()
-  .then(resultado => resultado[0]?.totalUnidadesVendidas || 0);
-  } 
+      .then((resultado) => resultado[0]?.totalUnidadesVendidas || 0)
+  }
 }
 
 export default new PedidoRepository()

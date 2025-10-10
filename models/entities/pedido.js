@@ -56,20 +56,14 @@ export class Pedido {
     const vendedorUnico = this.items[0].producto.vendedor
     if (!this.items.every((item) => item.producto.vendedor === vendedorUnico)) {
       // ver si son id o no????
-      throw new DatosInvalidosError(
-        "Los productos del pedido deben ser todos del mismo vendedor",
-      )
+      throw new DatosInvalidosError("Los productos del pedido deben ser todos del mismo vendedor")
     }
     this.vendedor = vendedorUnico
   }
-  
-  
 
   validarMoneda() {
     if (!Object.values(Moneda).includes(this.moneda)) {
-      throw new DatosInvalidosError(
-        "La moneda ingresada no esta dentro de las opciones ofrecidas",
-      )
+      throw new DatosInvalidosError("La moneda ingresada no esta dentro de las opciones ofrecidas")
     }
   }
 

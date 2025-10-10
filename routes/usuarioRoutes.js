@@ -11,7 +11,7 @@ usuarioRouter.get("/:id", (req, res) => {
   return UsuarioController.verUsuario(req, res)
 })
 
-usuarioRouter.get("/:id/pedidos", authenticateUser("X-User") , (req, res) => {
+usuarioRouter.get("/:id/pedidos", authenticateUser("X-User"), (req, res) => {
   return UsuarioController.verHistorialUsuario(req, res)
 })
 

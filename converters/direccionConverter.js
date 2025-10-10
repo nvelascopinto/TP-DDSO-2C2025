@@ -2,18 +2,18 @@ import { DireccionEntregaDTO } from "../models/DTO/direccionEntregaDTO.js"
 import { DireccionEntrega } from "../models/entities/direccionEntrega.js"
 
 export function toDireccionDTO(direccionJSON) {
-    return new DireccionEntregaDTO(
-      direccionJSON.calle,
-      direccionJSON.altura,
-      direccionJSON.piso,
-      direccionJSON.departamento,
-      direccionJSON.codigoPostal,
-      direccionJSON.ciudad,
-      direccionJSON.provincia,
-      direccionJSON.pais,
-      direccionJSON.latitud,
-      direccionJSON.longitud,
-    )
+  return new DireccionEntregaDTO(
+    direccionJSON.calle,
+    direccionJSON.altura,
+    direccionJSON.piso,
+    direccionJSON.departamento,
+    direccionJSON.codigoPostal,
+    direccionJSON.ciudad,
+    direccionJSON.provincia,
+    direccionJSON.pais,
+    direccionJSON.latitud,
+    direccionJSON.longitud
+  )
 }
 
 export function fromDireccionDTO(direccionDTO) {
@@ -27,6 +27,6 @@ export function fromDireccionDTO(direccionDTO) {
     direccionDTO.provincia,
     direccionDTO.pais,
     direccionDTO.latitud,
-    direccionDTO.longitud,
+    direccionDTO.longitud
   )
 }

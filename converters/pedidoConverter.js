@@ -9,7 +9,7 @@ export function toPedidoDTO(nuevoPedidoJSON) {
   return new PedidoDTO(
     toItemsDTO(nuevoPedidoJSON.items),
     nuevoPedidoJSON.moneda,
-    toDireccionDTO(nuevoPedidoJSON.direccionEntrega),
+    toDireccionDTO(nuevoPedidoJSON.direccionEntrega)
   )
 }
 
@@ -19,6 +19,6 @@ export function fromPedidoDTO(pedidoDTO) {
     null,
     fromItemsDTO(pedidoDTO.itemsDTO),
     pedidoDTO.moneda,
-    fromDireccionDTO(pedidoDTO.direccionEntregaDTO),
+    fromDireccionDTO(pedidoDTO.direccionEntregaDTO)
   )
 }

@@ -11,7 +11,7 @@ export function toProductoDTO(JSONProducto) {
     JSONProducto.moneda,
     JSONProducto.stock,
     JSONProducto.fotos,
-    JSONProducto.activo,
+    JSONProducto.activo
   )
 }
 
@@ -25,6 +25,6 @@ export function fromProductoDTO(productoDTO) {
     productoDTO.moneda,
     productoDTO.stock,
     productoDTO.fotos,
-    productoDTO.activo,
+    productoDTO.activo
   )
 }

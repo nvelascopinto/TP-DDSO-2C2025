@@ -10,7 +10,7 @@ export const pedidoValidator = z.object({
   vendedor: z.any(),
   items: z.array(itemPedidoValidator).min(1),
   moneda: z.string(),
-  direccionEntrega: direccionEntregaValidator,
+  direccionEntrega: direccionEntregaValidator
 })
 
 export function validarExistenciaDePedido(pedido, id) {

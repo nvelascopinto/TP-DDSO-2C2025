@@ -14,7 +14,9 @@ class UsuarioRepository {
   }
 
   update(notificacion) {
-    return this.model.findByIdAndUpdate(notificacion._id, notificacion, {new : true})
+    return this.model.findByIdAndUpdate(notificacion._id, notificacion, {
+      new: true
+    })
   }
 }
 

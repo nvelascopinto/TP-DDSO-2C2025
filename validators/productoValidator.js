@@ -10,7 +10,7 @@ export const productoValidator = z.object({
   precio: z.number().nonnegative("Precio no puede ser negativo"),
   moneda: z.string(),
   stock: z.number().positive("Stock debe ser un numero mayor a 0"),
-  activo: z.boolean(),
+  activo: z.boolean()
 })
 
 export function validarExistenciaDeProducto(producto, id) {

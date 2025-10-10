@@ -2,17 +2,7 @@ import { Moneda } from "./moneda.js"
 import DatosInvalidosError from "../../errors/datosInvalidosError.js"
 import UsuarioSinPermisoError from "../../errors/usuarioSinPermisoError.js"
 export class Producto {
-  constructor(
-    vendedor,
-    titulo,
-    descripcion,
-    categoria,
-    precio,
-    moneda,
-    stock,
-    fotos,
-    activo,
-  ) {
+  constructor(vendedor, titulo, descripcion, categoria, precio, moneda, stock, fotos, activo) {
     this._id = null //lo va a escribir mongo
     this.vendedor = vendedor // debe ser el id
     this.titulo = titulo
@@ -33,7 +23,7 @@ export class Producto {
 
   validarCreador(idUsuario) {
     console.log(this.vendedor)
-    if(!(idUsuario == this.vendedor)) {
+    if (!(idUsuario == this.vendedor)) {
       throw new UsuarioSinPermisoError(idUsuario)
     }
   }
@@ -69,9 +59,7 @@ export class Producto {
 
   validarMoneda() {
     if (!Object.values(Moneda).includes(this.moneda)) {
-      throw new DatosInvalidosError(
-        "La moneda ingresada no esta dentro de las opciones ofrecidas",
-      )
+      throw new DatosInvalidosError("La moneda ingresada no esta dentro de las opciones ofrecidas")
     }
   }
 }

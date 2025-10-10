@@ -10,7 +10,9 @@ class ProductoRepository {
   }
 
   actualizar(id, productoModificado) {
-    return this.model.findByIdAndUpdate(id, productoModificado, {new : true})
+    return this.model.findByIdAndUpdate(id, productoModificado, {
+      new: true
+    })
   }
 
   findById(id) {
@@ -19,8 +21,8 @@ class ProductoRepository {
 
   obtenerTodosDeVendedor(idVendedor, filtros = {}, pagina, limite) {
     console.log("FILTROS EN REPO", filtros)
-    const query = this.mapFilter(filtros,idVendedor) 
-    if(!limite) {
+    const query = this.mapFilter(filtros, idVendedor)
+    if (!limite) {
       limite = 5
     }
     const desplazamiento = pagina && limite ? (pagina - 1) * limite : 0
@@ -29,27 +31,25 @@ class ProductoRepository {
     return this.model.find(query).skip(desplazamiento).limit(limite)
   }
 
-  mapFilter(filtros,idVendedor)
-  {
+  mapFilter(filtros, idVendedor) {
     const query = { vendedor: idVendedor }
     const { nombre, categoria, descripcion, minPrecio, maxPrecio } = filtros
     if (minPrecio || maxPrecio) {
-    query.precio = {}
+      query.precio = {}
       if (minPrecio) query.precio.$gte = minPrecio
       if (maxPrecio) query.precio.$lte = maxPrecio
     }
-    if(nombre != null) {
-      query.nombre = { $regex:nombre, $options: 'i' }
+    if (nombre != null) {
+      query.nombre = { $regex: nombre, $options: "i" }
     }
-    if(categoria != null) {
-      query.categoria = { $regex:categoria, $options: 'i' }
+    if (categoria != null) {
+      query.categoria = { $regex: categoria, $options: "i" }
     }
-    if(descripcion != null) {
-      query.descripcion = { $regex:descripcion, $options: 'i' }
+    if (descripcion != null) {
+      query.descripcion = { $regex: descripcion, $options: "i" }
     }
     return query
   }
 }
-
 
 export default new ProductoRepository()

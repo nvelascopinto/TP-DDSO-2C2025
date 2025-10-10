@@ -4,7 +4,7 @@ export const estado = Object.freeze({
   EN_PREPARACION: "En_Preparacion",
   ENVIADO: "Enviado",
   ENTREGADO: "Entregado",
-  CANCELADO: "Cancelado",
+  CANCELADO: "Cancelado"
 })
 
 export const ordenEstados = [
@@ -13,7 +13,7 @@ export const ordenEstados = [
   estado.EN_PREPARACION,
   estado.CANCELADO,
   estado.ENVIADO,
-  estado.ENTREGADO,
+  estado.ENTREGADO
 ]
 
 export const autorizadosAEstado = Object.freeze({
@@ -22,5 +22,5 @@ export const autorizadosAEstado = Object.freeze({
   EN_PREPARACION: ["Vendedor"],
   ENVIADO: ["Vendedor"],
   ENTREGADO: ["Vendedor", "Admin"],
-  CANCELADO: ["Vendedor", "Comprador", "Admin"],
+  CANCELADO: ["Vendedor", "Comprador", "Admin"]
 })
