@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 import { ItemPedido } from "../entities/itemPedido.js"
 
-const itemPedidoSchema = new mongoose.Schema(
+export const itemPedidoSchema = new mongoose.Schema(
   {
     producto: {
       type: mongoose.Schema.Types.ObjectId,
@@ -26,5 +26,3 @@ const itemPedidoSchema = new mongoose.Schema(
 )
 
 itemPedidoSchema.loadClass(ItemPedido)
-
-export const ItemPedidoModel = mongoose.model("ItemPedido", itemPedidoSchema)

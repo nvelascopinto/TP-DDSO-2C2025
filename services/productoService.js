@@ -28,15 +28,15 @@ class ProductoService {
   }
 
   /************************** CONSULTAR TODOS LOS PRODUCTOS DE UN VENDEDOR **************************/
-  obtenerTodosDeVendedor(vendedor, filtros, pagina, limite, ordenamiento) {
+  obtenerTodosDeVendedor(vendedor, filtros, pagina, limite) {
     return Promise.resolve()
       .then(() => {
         rolesValidator(vendedor, [tipoUsuario.VENDEDOR])
         return productoRepository.obtenerTodosDeVendedor(vendedor.username, filtros, pagina, limite)
       })
-      .then((prodVendedor) => {
+    /* .then((prodVendedor) => {
         return this.ordenar(ordenamiento, prodVendedor)
-      })
+      })*/
   }
 
   ordenar(ordenamiento, productos) {
@@ -71,9 +71,16 @@ class ProductoService {
 
     return ordenados
   }
+  
   update(producto) {
     return productoRepository.actualizar(producto._id, producto).then((productoModificadp) => productoModificadp)
   }
+
+  actualizarCantidadVentas(items) {
+    items.forEach(item => { item.producto.cantVentas = (item.producto.cantVentas) + item.cantidad;
+                            this.update(item.producto)
+    });
+    }
 }
 
 export default new ProductoService()

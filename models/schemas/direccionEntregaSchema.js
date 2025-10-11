@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 import { DireccionEntrega } from "../entities/direccionEntrega.js"
 
-const direccionEntregaSchema = new mongoose.Schema(
+export const direccionEntregaSchema = new mongoose.Schema(
   {
     calle: {
       type: String,
@@ -49,6 +49,3 @@ const direccionEntregaSchema = new mongoose.Schema(
   }
 )
 
-direccionEntregaSchema.loadClass(DireccionEntrega)
-
-export const DireccionEntregaModel = mongoose.model("DireccionEntrega", direccionEntregaSchema)

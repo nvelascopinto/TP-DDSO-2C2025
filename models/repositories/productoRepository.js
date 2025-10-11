@@ -22,13 +22,18 @@ class ProductoRepository {
   obtenerTodosDeVendedor(idVendedor, filtros = {}, pagina, limite) {
     console.log("FILTROS EN REPO", filtros)
     const query = this.mapFilter(filtros, idVendedor)
+    const sort = this.mapSort(filtros.orden)
+
     if (!limite) {
       limite = 5
     }
     const desplazamiento = pagina && limite ? (pagina - 1) * limite : 0
-    console.log("DESAZAMIENTO", desplazamiento)
+    console.log("DESPLAZAMIENTO", desplazamiento)
     console.log("LIMITE", limite)
-    return this.model.find(query).skip(desplazamiento).limit(limite)
+    console.log("ORDEN", sort)
+    
+    return this.model.find(query).sort(sort).skip(desplazamiento).limit(limite)
+
   }
 
   mapFilter(filtros, idVendedor) {
@@ -50,6 +55,20 @@ class ProductoRepository {
     }
     return query
   }
-}
 
+
+mapSort(orden){
+  // valores esperados: "precioAsc", "precioDesc", "masVendido"
+  switch (orden) {
+    case "precioAsc":
+      return { precio: 1 }
+    case "precioDesc":
+      return { precio: -1 } 
+    case "masVendido":
+      return { unidadesVendidas: -1 }
+    default:
+      return {} // sin orden específico
+  }
+}
+}
 export default new ProductoRepository()

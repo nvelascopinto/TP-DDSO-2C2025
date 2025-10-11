@@ -1,30 +1,24 @@
 import { PedidoModel } from "../schemas/pedidoSchema.js"
-import { DireccionEntregaModel } from "../schemas/direccionEntregaSchema.js"
-import { ItemPedidoModel } from "../schemas/itemPedidoSchema.js"
+
 
 class PedidoRepository {
   constructor() {
     this.modelPedido = PedidoModel
-    this.modelDireccion = DireccionEntregaModel
-    this.modelItem = ItemPedidoModel
+
   }
 
   crear(pedido) {
-    const direccionGuardada = new this.modelDireccion(pedido.direccionEntrega)
-    const itemsGuardados = pedido.items.map((item) => {
-      const nuevoItem = new this.modelItem(item)
-      nuevoItem.save()
-      return nuevoItem
-    })
-    direccionGuardada.save()
+   
+    
+
     const pedidoGuardado = new this.modelPedido({
       comprador: pedido.comprador,
       vendedor: pedido.vendedor,
-      items: itemsGuardados.map((i) => i._id),
+      items: pedido.items,
       total: pedido.total,
       moneda: pedido.moneda,
       estado: pedido.estado,
-      direccionEntrega: direccionGuardada._id,
+      direccionEntrega: pedido.direccionEntrega,
       historialCambioPedidos: pedido.historialCambioPedidos,
       fechaCreacion: pedido.fechaCreacion
     })
@@ -33,7 +27,7 @@ class PedidoRepository {
   }
 
   consultarHistorial(id) {
-    const historial = this.modelPedido.find({ comprador: id }).populate("direccionEntrega").populate("items")
+    const historial = this.modelPedido.find({ comprador: id }).populate("items.producto")
     return historial
   }
 
@@ -45,7 +39,7 @@ class PedidoRepository {
 
   findById(id) {
     console.log(id)
-    return this.modelPedido.findById(id).populate("direccionEntrega").populate("items")
+    return this.modelPedido.findById(id).populate("items.producto")
   }
 
   cantidadVentasProducto(producto) {

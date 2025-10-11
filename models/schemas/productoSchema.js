@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 import { Producto } from "../entities/producto.js"
 
-const productoSchema = new mongoose.Schema(
+export const productoSchema = new mongoose.Schema(
   {
     vendedor: {
       type: String,
@@ -38,6 +38,9 @@ const productoSchema = new mongoose.Schema(
     activo: {
       type: Boolean,
       required: true
+    },
+    cantVentas: {
+      type: Number
     }
   },
   {

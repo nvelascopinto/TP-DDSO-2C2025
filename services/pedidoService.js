@@ -21,7 +21,8 @@ class PedidoService {
       .then((productos) => {
         // Le asigno a cada producto del ItemPedido su respectivo Producto, respetando el orden
         nuevoPedido.items.forEach((item, i) => {
-          item.producto = productos[i]
+          const prod = productos[i]
+          item.producto = prod
         })
         nuevoPedido.validarItemsConVendedor() // asigno vendedor
         nuevoPedido.validarStock()
@@ -30,10 +31,17 @@ class PedidoService {
             productoService.update(item.producto)
           })
         ).then(() => {
+          productoService.actualizarCantidadVentas(nuevoPedido.items)
+
+          nuevoPedido.items.forEach((item) => {
+            item.producto = item.producto._id
+          })
+          
           return pedidoRepository.crear(nuevoPedido)
         })
       })
       .then((pedidoGuardado) => {
+
         return notificacionService.crearSegunPedido(pedidoGuardado).then(() => pedidoGuardado) // Devuelvo el pedido que me llego de la otra promise
       })
   }

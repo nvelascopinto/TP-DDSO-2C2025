@@ -1,6 +1,8 @@
 import mongoose from "mongoose"
 import { Pedido } from "../entities/pedido.js"
 import { cambioEstadoPedidoSchema } from "./cambioEstadoPedidoSchema.js"
+import { direccionEntregaSchema } from "./direccionEntregaSchema.js"
+import { itemPedidoSchema } from "./itemPedidoSchema.js"
 
 const pedidoSchema = new mongoose.Schema(
   {
@@ -15,8 +17,7 @@ const pedidoSchema = new mongoose.Schema(
       required: true
     },
     items: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "ItemPedido",
+      type: [itemPedidoSchema],
       required: true
     },
     total: {
@@ -35,8 +36,7 @@ const pedidoSchema = new mongoose.Schema(
       required: true
     },
     direccionEntrega: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "DireccionEntrega",
+      type: direccionEntregaSchema,
       required: true
     },
     historialCambioPedidos: {

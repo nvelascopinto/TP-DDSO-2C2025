@@ -19,24 +19,25 @@ class ProductoController {
   obtenerTodosDeVendedor(req, res) {
     return Promise.resolve()
       .then(() => {
-        const vendedor = req.vendedor
-        const query = req.body
+        const vendedor = req.user
+        const query = req.query
         console.log(query)
-        const { minPrecio, maxPrecio, pagina, limite, nombre, categoria, descripcion } = query
-        const { ordenPrecio, ordenMasVendios, ascendente } = query
+        const { minPrecio, maxPrecio, pagina, limite, nombre, categoria, descripcion, orden } = query
+        //const { ordenPrecio, ordenMasVendios, ascendente } = query
         const filtros = {
           minPrecio: parseFloat(minPrecio),
           maxPrecio: parseFloat(maxPrecio),
           nombre: nombre,
           categoria: categoria,
-          descripcion: descripcion
+          descripcion: descripcion,
+          orden : orden
         }
-        const ordenamiento = {
+        /*const ordenamiento = {
           ordenPrecio: ordenPrecio,
           ordenMasVendios: ordenMasVendios,
           ascendente: ascendente
-        }
-        return productoService.obtenerTodosDeVendedor(vendedor, filtros, pagina, limite, ordenamiento)
+        }*/
+        return productoService.obtenerTodosDeVendedor(vendedor, filtros, pagina, limite)
       })
       .then((productos) => {
         res.status(200).json(productos)

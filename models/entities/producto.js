@@ -3,7 +3,7 @@ import DatosInvalidosError from "../../errors/datosInvalidosError.js"
 import UsuarioSinPermisoError from "../../errors/usuarioSinPermisoError.js"
 export class Producto {
   constructor(vendedor, titulo, descripcion, categoria, precio, moneda, stock, fotos, activo) {
-    this._id = null //lo va a escribir mongo
+    // this._id = null //lo va a escribir mongo
     this.vendedor = vendedor // debe ser el id
     this.titulo = titulo
     this.descripcion = descripcion
@@ -13,6 +13,7 @@ export class Producto {
     this.stock = stock
     this.fotos = fotos
     this.activo = activo
+    this.cantVentas = 0
 
     this.validarMoneda()
   }
