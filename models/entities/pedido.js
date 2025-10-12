@@ -21,7 +21,11 @@ export class Pedido {
     this.estado = estado.PENDIENTE
     this.fechaCreacion = new Date()
     this.historialCambioPedidos = []
-    this.validarMoneda
+    this.validarMoneda()
+  }
+
+  asignarComprador(comprador) {
+    this.comprador = comprador
   }
 
   calcularTotal() {
@@ -80,11 +84,7 @@ export class Pedido {
   }
   //usuario que puede acceder a ver el pedido
   validarUsuario(usuario) {
-    if (
-      usuario.username != this.vendedor &&
-      usuario.username != this.comprador &&
-      usuario.tipoUsuario != tipoUsuario.ADMIN
-    ) {
+    if (usuario.username != this.vendedor && usuario.username != this.comprador && usuario.tipoUsuario != tipoUsuario.ADMIN) {
       throw new UsuarioSinPermisoError(usuario.username)
     }
   }

@@ -1,28 +1,22 @@
 import mongoose from "mongoose"
 import { ItemPedido } from "../entities/itemPedido.js"
+import { productoSchema } from "./productoSchema.js"
 
-export const itemPedidoSchema = new mongoose.Schema(
-  {
-    producto: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Producto",
-      required: true
-    },
-    cantidad: {
-      type: Number,
-      min: 0,
-      required: true
-    },
-    precioUnitario: {
-      type: Number,
-      min: 0,
-      required: true
-    }
+export const itemPedidoSchema = new mongoose.Schema({
+  producto: {
+    type: productoSchema,
+    required: true
   },
-  {
-    //timestamps: true,
-    collection: "items"
+  cantidad: {
+    type: Number,
+    min: 0,
+    required: true
+  },
+  precioUnitario: {
+    type: Number,
+    min: 0,
+    required: true
   }
-)
+})
 
 itemPedidoSchema.loadClass(ItemPedido)

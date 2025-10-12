@@ -25,9 +25,7 @@ class UsuarioService {
   /************************** CONSULTAR EL HISTORIAL DE UN USUARIO **************************/
 
   consultarHistorial(id, usuario) {
-    return pedidoService.consultarHistorial(id, usuario).then((historial) => {
-      return historial
-    })
+    return pedidoService.consultarHistorial(id, usuario).then((historial) => historial)
   }
 }
 

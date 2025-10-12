@@ -5,8 +5,7 @@ export const authenticateUser = (fieldName) => (req, _res, next) => {
   Promise.resolve()
     .then(() => {
       //header X-User
-      const idUser =
-        req.get(fieldName.toLowerCase()) || req.body[fieldName] || req.params[fieldName] || req.query[fieldName]
+      const idUser = req.get(fieldName.toLowerCase()) || req.body[fieldName] || req.params[fieldName] || req.query[fieldName]
       if (idUser == null) {
         throw new DatosInvalidosError("Username es requerido")
       }

@@ -30,7 +30,8 @@ jest.mock("../services/productoService.js", () => ({
   __esModule: true,
   default: {
     obtenerProducto: jest.fn(),
-    update: jest.fn()
+    update: jest.fn(),
+    actualizarCantidadVentas: jest.fn()
   }
 }))
 
@@ -169,17 +170,7 @@ describe("PedidosService", () => {
         null,
         true
       )
-      const item2 = new Producto(
-        "pepe",
-        "licuadora",
-        "licuadora de frutas",
-        "Electrónica",
-        1000,
-        "PESO_ARG",
-        5,
-        null,
-        true
-      )
+      const item2 = new Producto("pepe", "licuadora", "licuadora de frutas", "Electrónica", 1000, "PESO_ARG", 5, null, true)
 
       item1._id = 1
       item1._id = 2
@@ -256,17 +247,7 @@ describe("PedidosService", () => {
         null,
         true
       )
-      const item2 = new Producto(
-        "pepe",
-        "licuadora",
-        "licuadora de frutas",
-        "Electrónica",
-        100,
-        "PESO_ARG",
-        1,
-        null,
-        false
-      )
+      const item2 = new Producto("pepe", "licuadora", "licuadora de frutas", "Electrónica", 100, "PESO_ARG", 1, null, false)
 
       item1._id = 1
       item1._id = 2
@@ -391,17 +372,7 @@ describe("PedidosService", () => {
         null,
         true
       )
-      const item2 = new Producto(
-        "carlitos",
-        "licuadora",
-        "licuadora de frutas",
-        "Electrónica",
-        100,
-        "PESO_ARG",
-        20,
-        null,
-        true
-      )
+      const item2 = new Producto("carlitos", "licuadora", "licuadora de frutas", "Electrónica", 100, "PESO_ARG", 20, null, true)
 
       item1._id = 1
       item1._id = 2
@@ -475,13 +446,7 @@ describe("PedidosService", () => {
     })
 
     it(" no deberia devolver el pedido ya que no es un usuario valido", async () => {
-      const compradorNoValido = new Usuario(
-        "pepita",
-        "Juan Perez",
-        "juan.perez@email.com",
-        "+541112345678",
-        "Comprador"
-      )
+      const compradorNoValido = new Usuario("pepita", "Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
       const mockPedido = new Pedido("juana", "juanchi", [itemPed], "PESO_ARG", direEntrega)
       mockPedido._id = 2
       mockPedidoRepository.findById.mockResolvedValue(mockPedido)

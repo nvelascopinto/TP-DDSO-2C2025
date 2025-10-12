@@ -1,7 +1,6 @@
 export class ItemDTO {
-  constructor(productoID, cantidad, precioUnitario) {
+  constructor(productoID, cantidad) {
     this.productoID = productoID
     this.cantidad = cantidad
-    this.precioUnitario = precioUnitario
   }
 }

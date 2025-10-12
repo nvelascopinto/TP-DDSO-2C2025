@@ -6,10 +6,8 @@ import { notificacionExisteValidator } from "../validators/notificacionValidator
 class NotificacionService {
   crearSegunPedido(pedido) {
     const mensaje = "ID NUEVO PEDIDO REALIZADO: " + pedido._id
-
     const notificacion = new Notificacion(pedido.vendedor, mensaje)
-    // Solo retorno la promise porque no me interesa devolver la notificacion creada
-    return notificacionRepository.crear(notificacion)
+    return notificacionRepository.crear(notificacion).then((notiCreada) => notiCreada)
   }
 
   crearSegunEstadoPedido(estadoActual, pedido) {
@@ -32,15 +30,11 @@ class NotificacionService {
   }
 
   getNotificacionesLeidas(idUsuario) {
-    return notificacionRepository
-      .getNotificacionesLeidas(idUsuario)
-      .then((notificacionesLeidas) => notificacionesLeidas)
+    return notificacionRepository.getNotificacionesLeidas(idUsuario).then((notificacionesLeidas) => notificacionesLeidas)
   }
 
   getNotificacionesNoLeidas(idUsuario) {
-    return notificacionRepository
-      .getNotificacionesNoLeidas(idUsuario)
-      .then((notificacionesNoLeidas) => notificacionesNoLeidas)
+    return notificacionRepository.getNotificacionesNoLeidas(idUsuario).then((notificacionesNoLeidas) => notificacionesNoLeidas)
   }
 
   getNotificacion(idNotificacion) {
@@ -52,7 +46,7 @@ class NotificacionService {
       .getById(idNotificacion)
       .then((notificacion) => {
         notificacionExisteValidator(notificacion, idNotificacion)
-        notificacion.marcarComoleida(usuario) //valia al marcar como leida
+        notificacion.marcarComoleida(usuario) //valida al marcar como leida
         return notificacionRepository.update(notificacion)
       })
       .then((notificacionLeida) => notificacionLeida)

@@ -11,8 +11,9 @@ class ProductoService {
     return Promise.resolve()
       .then(() => {
         const producto = fromProductoDTO(productoDTO)
-        rolesValidator(vendedor, [tipoUsuario.VENDEDOR])
-        producto.validarCreador(vendedor.username)
+        vendedor.validarRol([tipoUsuario.VENDEDOR])
+        producto.asignarVendedor(vendedor.username)
+        // producto.validarCreador(vendedor.username)
         console.log(producto)
         return productoRepository.crear(producto)
       })
@@ -29,58 +30,43 @@ class ProductoService {
 
   /************************** CONSULTAR TODOS LOS PRODUCTOS DE UN VENDEDOR **************************/
   obtenerTodosDeVendedor(vendedor, filtros, pagina, limite) {
-    return Promise.resolve()
-      .then(() => {
-        rolesValidator(vendedor, [tipoUsuario.VENDEDOR])
-        return productoRepository.obtenerTodosDeVendedor(vendedor.username, filtros, pagina, limite)
-      })
-    /* .then((prodVendedor) => {
-        return this.ordenar(ordenamiento, prodVendedor)
-      })*/
+    return Promise.resolve().then(() => {
+      vendedor.validarRol([tipoUsuario.VENDEDOR])
+      return productoRepository.obtenerTodosDeVendedor(vendedor.username, filtros, pagina, limite)
+    })
   }
 
-  ordenar(ordenamiento, productos) {
-    if (ordenamiento.ordenPrecio) {
-      return Promise.resolve().then(() => this.ordenarPorPrecio(productos, ordenamiento.ascendente))
-    }
-    if (ordenamiento.ordenMasVendios) {
-      return this.ordenarPorVendido(productos, ordenamiento.ascendente).then((orden) => orden)
-    }
-    return productos
-  }
-
-  ordenarPorPrecio(productos, ascendente = true) {
-    let factor = 1
-    if (!ascendente) {
-      factor = -1
-    }
-    return productos.sort((a, b) => (a.precio - b.precio) * factor)
-  }
-
-  async ordenarPorVendido(productos, ascendente = true) {
-    let factor = 1
-    if (!ascendente) {
-      factor = -1
-    }
-    const cantidades = await Promise.all(productos.map((p) => pedidoService.cantidadVentasProducto(p)))
-
-    const ordenados = productos
-      .map((p, i) => ({ producto: p, ventas: cantidades[i] ?? 0 }))
-      .sort((x, y) => (x.ventas - y.ventas) * factor)
-      .map((x) => x.producto)
-
-    return ordenados
-  }
-  
   update(producto) {
-    return productoRepository.actualizar(producto._id, producto).then((productoModificadp) => productoModificadp)
+    return productoRepository.actualizar(producto._id, producto).then((productoModificado) => productoModificado)
   }
 
   actualizarCantidadVentas(items) {
-    items.forEach(item => { item.producto.cantVentas = (item.producto.cantVentas) + item.cantidad;
-                            this.update(item.producto)
-    });
-    }
+    return Promise.all(
+      items.map((item) => {
+        item.producto.cantVentas = item.producto.cantVentas + item.cantidad
+        return this.update(item.producto)
+      })
+    )
+  }
+
+  /************************** ACTUALIZAR LOS CAMPOS DE UN PRODUCTO **************************/
+  actualizar(vendedor, productoID, cambioProducto) {
+    return Promise.resolve()
+      .then(() => {
+        vendedor.validarRol([tipoUsuario.VENDEDOR])
+        return this.obtenerProducto(productoID)
+      })
+      .then((producto) => {
+        producto.validarCreador(vendedor.username)
+
+        if (cambioProducto.precio !== undefined) producto.actualizarPrecio(cambioProducto.precio)
+        if (cambioProducto.activo !== undefined) producto.actualizarActivo(cambioProducto.activo)
+        if (cambioProducto.aumentoStock !== undefined) producto.aumentarStock(cambioProducto.aumentoStock)
+
+        return this.update(producto)
+      })
+      .then((productoActualizado) => productoActualizado)
+  }
 }
 
 export default new ProductoService()

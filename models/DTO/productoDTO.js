@@ -1,6 +1,6 @@
 export class ProductoDTO {
-  constructor(vendedorID, titulo, descripcion, categoria, precio, moneda, stock, fotos, activo) {
-    this.vendedorID = vendedorID
+  constructor(titulo, descripcion, categoria, precio, moneda, stock, fotos, activo) {
+    // this.vendedorID = vendedorID
     this.titulo = titulo
     this.descripcion = descripcion
     this.categoria = categoria

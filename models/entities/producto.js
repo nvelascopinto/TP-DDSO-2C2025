@@ -18,6 +18,18 @@ export class Producto {
     this.validarMoneda()
   }
 
+  actualizarPrecio(nuevoPrecio) {
+    this.precio = nuevoPrecio
+  }
+
+  actualizarActivo(nuevoEstado) {
+    this.activo = nuevoEstado
+  }
+
+  asignarVendedor(vendedor) {
+    this.vendedor = vendedor
+  }
+
   estaDisponible(cantidad) {
     return this.stock >= cantidad && this.activo
   }

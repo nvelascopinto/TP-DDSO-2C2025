@@ -12,11 +12,5 @@ export function toUsuarioDTO(JSONUsuario) {
 }
 
 export function fromUsuarioDTO(usuarioDTO) {
-  return new Usuario(
-    usuarioDTO.username,
-    usuarioDTO.nombre,
-    usuarioDTO.email,
-    usuarioDTO.telefono,
-    usuarioDTO.tipoUsuario
-  )
+  return new Usuario(usuarioDTO.username, usuarioDTO.nombre, usuarioDTO.email, usuarioDTO.telefono, usuarioDTO.tipoUsuario)
 }

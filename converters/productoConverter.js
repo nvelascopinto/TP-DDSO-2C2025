@@ -3,7 +3,7 @@ import { Producto } from "../models/entities/producto.js"
 
 export function toProductoDTO(JSONProducto) {
   return new ProductoDTO(
-    JSONProducto.vendedor,
+    // JSONProducto.vendedor,
     JSONProducto.titulo,
     JSONProducto.descripcion,
     JSONProducto.categoria,
@@ -17,7 +17,7 @@ export function toProductoDTO(JSONProducto) {
 
 export function fromProductoDTO(productoDTO) {
   return new Producto(
-    productoDTO.vendedorID,
+    null,
     productoDTO.titulo,
     productoDTO.descripcion,
     productoDTO.categoria,

@@ -11,39 +11,31 @@ import { validarEstado } from "../validators/estadoValidador.js"
 class PedidoService {
   /************************** CREAR UN PEDIDO **************************/
   crear(pedidoDTO, comprador) {
-    const nuevoPedido = fromPedidoDTO(pedidoDTO)
+    let nuevoPedido
     return Promise.resolve()
       .then(() => {
-        rolesValidator(comprador, [tipoUsuario.COMPRADOR])
-        nuevoPedido.comprador = comprador.username
+        nuevoPedido = fromPedidoDTO(pedidoDTO)
+        comprador.validarRol([tipoUsuario.COMPRADOR])
+        nuevoPedido.asignarComprador(comprador.username)
         return Promise.all(pedidoDTO.itemsDTO.map((item) => productoService.obtenerProducto(item.productoID)))
       })
       .then((productos) => {
-        // Le asigno a cada producto del ItemPedido su respectivo Producto, respetando el orden
-        nuevoPedido.items.forEach((item, i) => {
-          const prod = productos[i]
-          item.producto = prod
-        })
+        nuevoPedido.items.forEach((item, i) => ((item.producto = productos[i]), (item.precioUnitario = productos[i].precio)))
         nuevoPedido.validarItemsConVendedor() // asigno vendedor
-        nuevoPedido.validarStock()
-        return Promise.all(
-          nuevoPedido.items.map((item) => {
-            productoService.update(item.producto)
-          })
-        ).then(() => {
-          productoService.actualizarCantidadVentas(nuevoPedido.items)
-
-          nuevoPedido.items.forEach((item) => {
-            item.producto = item.producto._id
-          })
-          
-          return pedidoRepository.crear(nuevoPedido)
-        })
+        nuevoPedido.validarStock() // modifico stock
+        return Promise.all(nuevoPedido.items.map((item) => productoService.update(item.producto)))
       })
-      .then((pedidoGuardado) => {
-
-        return notificacionService.crearSegunPedido(pedidoGuardado).then(() => pedidoGuardado) // Devuelvo el pedido que me llego de la otra promise
+      .then(() => {
+        return productoService.actualizarCantidadVentas(nuevoPedido.items)
       })
+      .then(() => {
+        return pedidoRepository.crear(nuevoPedido)
+      })
+      .then(
+        (pedidoGuardado) => {
+          return notificacionService.crearSegunPedido(pedidoGuardado).then(() => pedidoGuardado)
+        } // Devuelvo el pedido que me llego de la otra promise
+      )
   }
 
   /************************** CONSULTAR UN PEDIDO **************************/
@@ -70,13 +62,13 @@ class PedidoService {
       .then(() => {
         //pedidoId = new mongoose.Types.ObjectId(idPedido)
         console.log("CAMBIO ESTADO JSON ================", cambioEstado)
-        validarEstado(cambioEstado.estado)
-        rolesValidator(cambioEstado.usuario, autorizadosAEstado[cambioEstado.estado])
+        cambioEstado.usuario.validarRol(autorizadosAEstado[cambioEstado.estado])
         return this.consultar(idPedido, cambioEstado.usuario)
       })
       .then((pedido) => {
         console.log("ESTADO ====================", cambioEstado.estado)
         console.log("ESTADO PEDIDOOOO ===================", pedido.estado)
+        pedido.validarUsuario(cambioEstado.usuario)
         pedido.actualizarEstado(estado[cambioEstado.estado], cambioEstado.usuario.username, cambioEstado.motivo)
         return pedidoRepository.actualizar(pedido)
       })
@@ -87,14 +79,6 @@ class PedidoService {
         console.log("NOTIFICACION", notificacion)
         return notificacion.mensaje
       })
-  }
-
-  cantidadVentasProducto(producto) {
-    return pedidoRepository.cantidadVentasProducto(producto).then((cantidad) => {
-      console.log("CANTIDAD VENDIA de", producto._id)
-      console.log(cantidad)
-      return cantidad
-    })
   }
 }
 

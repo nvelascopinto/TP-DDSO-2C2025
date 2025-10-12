@@ -31,9 +31,8 @@ class ProductoRepository {
     console.log("DESPLAZAMIENTO", desplazamiento)
     console.log("LIMITE", limite)
     console.log("ORDEN", sort)
-    
-    return this.model.find(query).sort(sort).skip(desplazamiento).limit(limite)
 
+    return this.model.find(query).sort(sort).skip(desplazamiento).limit(limite)
   }
 
   mapFilter(filtros, idVendedor) {
@@ -56,19 +55,19 @@ class ProductoRepository {
     return query
   }
 
-
-mapSort(orden){
-  // valores esperados: "precioAsc", "precioDesc", "masVendido"
-  switch (orden) {
-    case "precioAsc":
-      return { precio: 1 }
-    case "precioDesc":
-      return { precio: -1 } 
-    case "masVendido":
-      return { unidadesVendidas: -1 }
-    default:
-      return {} // sin orden específico
+  mapSort(orden) {
+    // valores esperados: "precioAsc", "precioDesc", "masVendido"
+    switch (orden) {
+      case "precioAsc":
+        return { precio: 1 }
+      case "precioDesc":
+        return { precio: -1 }
+      case "masVendido":
+        return { cantVentas: -1 }
+      default:
+        return {} // sin orden específico
+    }
   }
 }
-}
+
 export default new ProductoRepository()

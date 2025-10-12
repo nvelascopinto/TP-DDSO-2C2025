@@ -3,7 +3,6 @@ import YaLeidaError from "../../errors/yaLeidaError.js"
 export class Notificacion {
   constructor(usuarioDestino, mensaje) {
     this._id = null
-
     this.usuarioDestino = usuarioDestino
     this.mensaje = mensaje
     this.fechaAlta = new Date()
