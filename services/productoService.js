@@ -4,6 +4,7 @@ import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { validarExistenciaDeProducto } from "../validators/productoValidator.js"
 import { fromProductoDTO } from "../converters/productoConverter.js"
 import { rolesValidator } from "../validators/usuarioValidator.js"
+import { estado } from "../models/entities/estadoPedido.js"
 
 class ProductoService {
   /************************** CREAR UN PRODUCTO **************************/
@@ -36,19 +37,6 @@ class ProductoService {
     })
   }
 
-  update(producto) {
-    return productoRepository.actualizar(producto._id, producto).then((productoModificado) => productoModificado)
-  }
-
-  actualizarCantidadVentas(items) {
-    return Promise.all(
-      items.map((item) => {
-        item.producto.cantVentas = item.producto.cantVentas + item.cantidad
-        return this.update(item.producto)
-      })
-    )
-  }
-
   /************************** ACTUALIZAR LOS CAMPOS DE UN PRODUCTO **************************/
   actualizar(vendedor, productoID, cambioProducto) {
     return Promise.resolve()
@@ -66,6 +54,35 @@ class ProductoService {
         return this.update(producto)
       })
       .then((productoActualizado) => productoActualizado)
+  }
+
+  /************************** FUNCIONES AUXILIARES **************************/
+  update(producto) {
+    return productoRepository.update(producto).then((productoModificado) => productoModificado)
+  }
+
+  reducirStock(items) {
+    return Promise.all(
+      items.map((item) =>
+        this.obtenerProducto(item.producto._id).then((producto) => {
+          producto.reducirStock(item.cantidad)
+          producto.aumentarVentas(item.cantidad)
+          return this.update(producto)
+        })
+      )
+    )
+  }
+
+  aumentarStock(items) {
+    return Promise.all(
+      items.map((item) =>
+        this.obtenerProducto(item.producto._id).then((producto) => {
+          producto.aumentarStock(item.cantidad)
+          producto.reducirVentas(item.cantidad)
+          return this.update(producto)
+        })
+      )
+    )
   }
 }
 

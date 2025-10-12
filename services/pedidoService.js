@@ -8,6 +8,13 @@ import { validarExistenciaDePedido, validarExistenciaDeHistorial } from "../vali
 import { rolesValidator } from "../validators/usuarioValidator.js"
 import { validarEstado } from "../validators/estadoValidador.js"
 
+// estado.PENDIENTE =>>>>>>>> verifica que haya stock suficiente
+// estado.CONFIRMADO =>>>>>>>> el vendedor lo confirma y se reduce el stock
+// estado.EN_PREPARACION =>>>>>>>> el vendedor lo prepara
+// estado.CANCELADO =>>>>>>>> se cancela y se aumenta el stock
+// estado.ENVIADO =>>>>>>>> vendedor o admin
+// estado.ENTREGADO =>>>>>>>> vendedor o admin
+
 class PedidoService {
   /************************** CREAR UN PEDIDO **************************/
   crear(pedidoDTO, comprador) {
@@ -20,15 +27,10 @@ class PedidoService {
         return Promise.all(pedidoDTO.itemsDTO.map((item) => productoService.obtenerProducto(item.productoID)))
       })
       .then((productos) => {
-        nuevoPedido.items.forEach((item, i) => ((item.producto = productos[i]), (item.precioUnitario = productos[i].precio)))
+        nuevoPedido.asignarProductos(productos)
         nuevoPedido.validarItemsConVendedor() // asigno vendedor
-        nuevoPedido.validarStock() // modifico stock
-        return Promise.all(nuevoPedido.items.map((item) => productoService.update(item.producto)))
-      })
-      .then(() => {
-        return productoService.actualizarCantidadVentas(nuevoPedido.items)
-      })
-      .then(() => {
+        nuevoPedido.validarStock() // verifico que exista stock suficiente
+        nuevoPedido.calcularTotal()
         return pedidoRepository.crear(nuevoPedido)
       })
       .then(
@@ -61,22 +63,34 @@ class PedidoService {
     return Promise.resolve()
       .then(() => {
         //pedidoId = new mongoose.Types.ObjectId(idPedido)
-        console.log("CAMBIO ESTADO JSON ================", cambioEstado)
+        // console.log("CAMBIO ESTADO JSON ================", cambioEstado)
+        validarEstado(cambioEstado.estado)
         cambioEstado.usuario.validarRol(autorizadosAEstado[cambioEstado.estado])
         return this.consultar(idPedido, cambioEstado.usuario)
       })
       .then((pedido) => {
-        console.log("ESTADO ====================", cambioEstado.estado)
-        console.log("ESTADO PEDIDOOOO ===================", pedido.estado)
-        pedido.validarUsuario(cambioEstado.usuario)
+        // console.log("ESTADO ====================", cambioEstado.estado)
+        // console.log("ESTADO PEDIDOOOO ===================", pedido.estado)
+        if (estado[cambioEstado.estado] == estado.CONFIRMADO) {
+          pedido.validarStock()
+          return productoService.reducirStock(pedido.items).then(() => pedido) // reduce stock y aumenta cantidad vendida
+        } else if (
+          estado[cambioEstado.estado] == estado.CANCELADO &&
+          (pedido.estado == estado.CONFIRMADO || pedido.estado == estado.EN_PREPARACION)
+        ) {
+          return productoService.aumentarStock(pedido.items).then(() => pedido) // aumenta stock y reduce cantidad vendidad
+        }
+        return pedido // para cuando sean otros estados
+      })
+      .then((pedido) => {
         pedido.actualizarEstado(estado[cambioEstado.estado], cambioEstado.usuario.username, cambioEstado.motivo)
-        return pedidoRepository.actualizar(pedido)
+        return pedidoRepository.update(pedido)
       })
       .then((pedidoActualizado) => {
         return notificacionService.crearSegunEstadoPedido(estado[cambioEstado.estado], pedidoActualizado)
       })
       .then((notificacion) => {
-        console.log("NOTIFICACION", notificacion)
+        // console.log("NOTIFICACION", notificacion)
         return notificacion.mensaje
       })
   }

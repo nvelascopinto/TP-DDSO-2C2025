@@ -15,7 +15,7 @@ class PedidoRepository {
     return historial
   }
 
-  actualizar(pedido) {
+  update(pedido) {
     return this.modelPedido.findByIdAndUpdate(pedido._id, pedido, {
       new: true
     })

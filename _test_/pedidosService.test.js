@@ -22,7 +22,7 @@ jest.mock("../models/repositories/pedidoRepository.js", () => ({
     findById: jest.fn(),
     consultarHistorial: jest.fn(),
     cantidadVentasProducto: jest.fn(),
-    actualizar: jest.fn()
+    update: jest.fn()
   }
 }))
 
@@ -59,11 +59,11 @@ describe("PedidosService", () => {
         itemsDTO: [
           {
             productoID: 1,
-            cantidad: 2,
-            precioUnitario: 100
+            cantidad: 2
+            //precioUnitario: 100
           }
         ],
-        total: 566,
+        // total: 566,
         moneda: "PESO_ARG",
 
         direccionEntregaDTO: {
@@ -107,8 +107,9 @@ describe("PedidosService", () => {
         -34.6037,
         -58.3816
       )
-      const itemPed = new ItemPedido(item, 2, 100)
+      const itemPed = new ItemPedido(item, 2, 15000)
       const mockPedido = new Pedido("pepa", "pepe", [itemPed], "PESO_ARG", direEntrega)
+      mockPedido.calcularTotal()
       mockPedido._id = 1
       mockNotificacionService.crearSegunPedido.mockResolvedValue("mock-notificacion")
       mockProductoService.obtenerProducto.mockReturnValue(item)
@@ -122,7 +123,7 @@ describe("PedidosService", () => {
       expect(mockNotificacionService.crearSegunPedido).toHaveBeenCalledWith(mockPedido)
       expect(mockNotificacionService.crearSegunPedido).toHaveBeenCalledTimes(1)
       expect(result).toEqual(mockPedido)
-      expect(result.total).toBe(200)
+      expect(result.total).toBe(30000)
     })
 
     it("deberia no crear el pedido por falta de stock", async () => {
@@ -130,18 +131,14 @@ describe("PedidosService", () => {
         itemsDTO: [
           {
             productoID: 1,
-            cantidad: 1,
-            precioUnitario: 566
+            cantidad: 1
           },
           {
             productoID: 2,
-            cantidad: 6,
-            precioUnitario: 100
+            cantidad: 6
           }
         ],
-        total: 566,
         moneda: "PESO_ARG",
-
         direccionEntregaDTO: {
           calle: "Avenida Siempre Viva",
           altura: 742,
@@ -186,8 +183,8 @@ describe("PedidosService", () => {
         -34.6037,
         -58.3816
       )
-      const itemPed = new ItemPedido(item1, 1, 566)
-      const itemPed2 = new ItemPedido(item2, 4, 100)
+      const itemPed = new ItemPedido(item1, 1, 15000)
+      const itemPed2 = new ItemPedido(item2, 4, 1000)
       const mockPedido = new Pedido("pepa", "pepe", [itemPed, itemPed2], "PESO_ARG", direEntrega)
       mockPedido._id = 1
       mockProductoService.obtenerProducto.mockReturnValueOnce(item1).mockReturnValueOnce(item2)
@@ -206,18 +203,14 @@ describe("PedidosService", () => {
         itemsDTO: [
           {
             productoID: 1,
-            cantidad: 1,
-            precioUnitario: 566
+            cantidad: 1
           },
           {
             productoID: 2,
-            cantidad: 4,
-            precioUnitario: 100
+            cantidad: 4
           }
         ],
-        total: 566,
         moneda: "PESO_ARG",
-
         direccionEntregaDTO: {
           calle: "Avenida Siempre Viva",
           altura: 742,
@@ -263,7 +256,7 @@ describe("PedidosService", () => {
         -34.6037,
         -58.3816
       )
-      const itemPed = new ItemPedido(item1, 1, 566)
+      const itemPed = new ItemPedido(item1, 1, 15000)
       const itemPed2 = new ItemPedido(item2, 4, 100)
       const mockPedido = new Pedido("pepa", "pepe", [itemPed, itemPed2], "PESO_ARG", direEntrega)
       mockPedido._id = 1
@@ -284,13 +277,10 @@ describe("PedidosService", () => {
         itemsDTO: [
           {
             productoID: 1,
-            cantidad: 3,
-            precioUnitario: 566
+            cantidad: 3
           }
         ],
-        total: 566,
         moneda: "PESO_ARG",
-
         direccionEntregaDTO: {
           calle: "Avenida Siempre Viva",
           altura: 742,
@@ -330,18 +320,14 @@ describe("PedidosService", () => {
         itemsDTO: [
           {
             productoID: 1,
-            cantidad: 1,
-            precioUnitario: 566
+            cantidad: 1
           },
           {
             productoID: 2,
-            cantidad: 4,
-            precioUnitario: 100
+            cantidad: 4
           }
         ],
-        total: 566,
         moneda: "PESO_ARG",
-
         direccionEntregaDTO: {
           calle: "Avenida Siempre Viva",
           altura: 742,
@@ -426,7 +412,7 @@ describe("PedidosService", () => {
       -34.6037,
       -58.3816
     )
-    const itemPed = new ItemPedido(item, 1, 566)
+    const itemPed = new ItemPedido(item, 1, 15000)
 
     it("deberia devolver el pedido solicitado", async () => {
       const mockPedido = new Pedido("juana", "juanchi", [itemPed], "PESO_ARG", direEntrega)
@@ -496,7 +482,7 @@ describe("PedidosService", () => {
       -34.6037,
       -58.3816
     )
-    const itemPed = new ItemPedido(item, 1, 566)
+    const itemPed = new ItemPedido(item, 1, 15000)
 
     it("deberia cambiar de estado de pendiente a enviado", async () => {
       const mockPedido = new Pedido("juancho", "juancito", [itemPed], "PESO_ARG", direEntrega)
@@ -513,7 +499,7 @@ describe("PedidosService", () => {
 
       mockPedidoEnviado._id = 1
       mockPedidoEnviado.estado = estado.ENVIADO
-      mockPedidoRepository.actualizar.mockResolvedValue(mockPedidoEnviado)
+      mockPedidoRepository.update.mockResolvedValue(mockPedidoEnviado)
       mockNotificacionService.crearSegunEstadoPedido.mockResolvedValue({
         mensaje: "El pedido 1 cambio a estado ENVIADO"
       })
@@ -542,7 +528,7 @@ describe("PedidosService", () => {
 
       expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
       expect(mockPedidoRepository.findById).toHaveBeenCalledWith(1)
-      expect(mockPedidoRepository.actualizar).toHaveBeenCalledTimes(0)
+      expect(mockPedidoRepository.update).toHaveBeenCalledTimes(0)
       expect(mockNotificacionService.crearSegunEstadoPedido).toHaveBeenCalledTimes(0)
     })
 
@@ -563,7 +549,7 @@ describe("PedidosService", () => {
 
       expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
       expect(mockPedidoRepository.findById).toHaveBeenCalledWith(1)
-      expect(mockPedidoRepository.actualizar).toHaveBeenCalledTimes(0)
+      expect(mockPedidoRepository.update).toHaveBeenCalledTimes(0)
       expect(mockNotificacionService.crearSegunEstadoPedido).toHaveBeenCalledTimes(0)
     })
 
@@ -581,7 +567,7 @@ describe("PedidosService", () => {
       await expect(pedidoService.cambioEstado(cambioEstadoJSON, 1)).rejects.toThrow(PedidoInexistenteError)
 
       expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
-      expect(mockPedidoRepository.actualizar).toHaveBeenCalledTimes(0)
+      expect(mockPedidoRepository.update).toHaveBeenCalledTimes(0)
       expect(mockNotificacionService.crearSegunEstadoPedido).toHaveBeenCalledTimes(0)
     })
 
@@ -598,7 +584,7 @@ describe("PedidosService", () => {
       await expect(pedidoService.cambioEstado(cambioEstadoJSON, 1)).rejects.toThrow(UsuarioSinPermisoError)
 
       expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(0)
-      expect(mockPedidoRepository.actualizar).toHaveBeenCalledTimes(0)
+      expect(mockPedidoRepository.update).toHaveBeenCalledTimes(0)
       expect(mockNotificacionService.crearSegunEstadoPedido).toHaveBeenCalledTimes(0)
     })
 
@@ -618,7 +604,7 @@ describe("PedidosService", () => {
       await expect(pedidoService.cambioEstado(cambioEstadoJSON, 1)).rejects.toThrow(UsuarioSinPermisoError)
 
       expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
-      expect(mockPedidoRepository.actualizar).toHaveBeenCalledTimes(0)
+      expect(mockPedidoRepository.update).toHaveBeenCalledTimes(0)
       expect(mockNotificacionService.crearSegunEstadoPedido).toHaveBeenCalledTimes(0)
     })
 
@@ -627,7 +613,7 @@ describe("PedidosService", () => {
       mockPedido._id = 1
 
       mockPedidoRepository.findById.mockResolvedValue(mockPedido)
-      mockPedidoRepository.actualizar.mockRejectedValue(new EstadoInvalidoError("CAMBIAR"))
+      mockPedidoRepository.update.mockRejectedValue(new EstadoInvalidoError("CAMBIAR"))
       const cambioEstadoJSON = {
         motivo: "enviar",
         estado: "CAMBIADO"
@@ -636,7 +622,7 @@ describe("PedidosService", () => {
       await expect(pedidoService.cambioEstado(cambioEstadoJSON, 1)).rejects.toThrow(EstadoInvalidoError)
 
       expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(0)
-      expect(mockPedidoRepository.actualizar).toHaveBeenCalledTimes(0)
+      expect(mockPedidoRepository.update).toHaveBeenCalledTimes(0)
       expect(mockNotificacionService.crearSegunEstadoPedido).toHaveBeenCalledTimes(0)
     })
   })

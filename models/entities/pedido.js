@@ -9,13 +9,14 @@ import CambioEstadoInvalidoError from "../../errors/cambioEstadoInvalidoError.js
 import { tipoUsuario } from "./tipoUsuario.js"
 import UsuarioSinPermisoError from "../../errors/usuarioSinPermisoError.js"
 import EstadoInvalidoError from "../../errors/estadoInvalidoError.js"
+
 export class Pedido {
   constructor(comprador, vendedor, items, moneda, direccionEntrega) {
-    this._id = null // inciialmente se pone en null hasta que es guardado en el Repo
+    //this._id = null // inciialmente se pone en null hasta que es guardado en el Repo
     this.comprador = comprador
     this.vendedor = vendedor
     this.items = items
-    this.total = this.calcularTotal()
+    this.total = 0
     this.moneda = moneda
     this.direccionEntrega = direccionEntrega
     this.estado = estado.PENDIENTE
@@ -28,8 +29,12 @@ export class Pedido {
     this.comprador = comprador
   }
 
+  asignarProductos(productos) {
+    this.items.forEach((item, i) => item.asignarProducto(productos[i]))
+  }
+
   calcularTotal() {
-    return this.items.reduce((acum, item) => acum + item.subtotal(), 0)
+    this.total = this.items.reduce((acum, item) => acum + item.subtotal(), 0)
   }
 
   actualizarEstado(nuevoEstado, quien, motivo) {
@@ -40,13 +45,9 @@ export class Pedido {
   }
 
   validarStock() {
-    if (!this.items.every((item) => item.producto.estaDisponible(item.cantidad))) {
+    if (!this.items.every((item) => item.validarStock())) {
       throw new PedidoStockInsuficienteError()
     }
-    this.items.forEach((item) => {
-      item.producto.reducirStock(item.cantidad)
-    })
-
     return true
   }
 

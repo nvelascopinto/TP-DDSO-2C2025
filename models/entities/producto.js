@@ -1,6 +1,7 @@
 import { Moneda } from "./moneda.js"
 import DatosInvalidosError from "../../errors/datosInvalidosError.js"
 import UsuarioSinPermisoError from "../../errors/usuarioSinPermisoError.js"
+import PedidoStockInsuficienteError from "../../errors/pedidoStockInsuficienteError.js"
 export class Producto {
   constructor(vendedor, titulo, descripcion, categoria, precio, moneda, stock, fotos, activo) {
     // this._id = null //lo va a escribir mongo
@@ -47,6 +48,14 @@ export class Producto {
 
   aumentarStock(cantidad) {
     this.stock += cantidad
+  }
+
+  reducirVentas(cantidad) {
+    this.cantVentas -= cantidad
+  }
+
+  aumentarVentas(cantidad) {
+    this.cantVentas += cantidad
   }
 
   mostrarProducto() {

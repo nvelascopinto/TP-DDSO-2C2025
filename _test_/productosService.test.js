@@ -9,7 +9,8 @@ jest.mock("../models/repositories/productoRepository.js", () => ({
   __esModule: true,
   default: {
     findById: jest.fn(),
-    crear: jest.fn()
+    crear: jest.fn(),
+    obtenerTodosDeVendedor: jest.fn()
   }
 }))
 
@@ -33,7 +34,6 @@ describe("ProductosService", () => {
     const vendedor = new Usuario("pepe", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
 
     let productoDTO = new ProductoDTO(
-      "pepe",
       "auriculares",
       "Auriculares bluetooth con cancelación de ruido y 20h de batería.",
       "Electrónica",
@@ -63,26 +63,24 @@ describe("ProductosService", () => {
       expect(mockProductoRepository.crear).toHaveBeenCalledTimes(1)
     })
 
-    it("No debería crearse el producto por tener un vendedor invalido", async () => {
-      productoDTO = new ProductoDTO(
-        "joseMaria",
-        "auriculares",
-        "Auriculares bluetooth con cancelación de ruido y 20h de batería.",
-        "Electrónica",
-        15000,
-        "PESO_ARG",
-        50,
-        null,
-        true
-      )
+    // it("No debería crearse el producto por tener un vendedor invalido", async () => {
+    //   productoDTO = new ProductoDTO(
+    //     "auriculares",
+    //     "Auriculares bluetooth con cancelación de ruido y 20h de batería.",
+    //     "Electrónica",
+    //     15000,
+    //     "PESO_ARG",
+    //     50,
+    //     null,
+    //     true
+    //   )
 
-      await expect(productoService.crear(productoDTO, vendedor)).rejects.toThrow(UsuarioSinPermisoError)
-      expect(mockProductoRepository.crear).not.toHaveBeenCalled()
-    })
+    //   await expect(productoService.crear(productoDTO, vendedor)).rejects.toThrow(UsuarioSinPermisoError)
+    //   expect(mockProductoRepository.crear).not.toHaveBeenCalled()
+    // })
 
     it("No debería crearse el producto por tener un vendedor que no es un vendedor", async () => {
       productoDTO = new ProductoDTO(
-        "pepe",
         "auriculares",
         "Auriculares bluetooth con cancelación de ruido y 20h de batería.",
         "Electrónica",
@@ -93,16 +91,15 @@ describe("ProductosService", () => {
         true
       )
 
-      const comprador = new Usuario("juan", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
+      const comprador = new Usuario("juan", "Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
 
       await expect(productoService.crear(productoDTO, comprador)).rejects.toThrow(UsuarioSinPermisoError)
       expect(mockProductoRepository.crear).not.toHaveBeenCalled()
     })
   })
 
-  describe("obtenerTodosDeVendedor", () => {})
-
-  describe("ordenar", () => {
+  describe("obtenerTodosDeVendedor", () => {
+    const vendedor = new Usuario("pepe", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
     const prod1 = new Producto(
       "pepe",
       "auriculares",
@@ -142,42 +139,34 @@ describe("ProductosService", () => {
     prod3._id = 3
 
     const productos = [prod1, prod2, prod3]
+
     it("deberia ordenar los productos por precio ascendentemente ", async () => {
-      const ordenamiento = {
-        ordenPrecio: true,
-        ascendente: true
-      }
-      const ordenados = await productoService.ordenar(ordenamiento, productos)
-      expect(ordenados).toEqual([prod2, prod1, prod3])
+      mockProductoRepository.obtenerTodosDeVendedor.mockResolvedValue([prod2, prod1, prod3])
+      const filtros = { orden: "precioAsc" }
+      const resultado = await productoService.obtenerTodosDeVendedor(vendedor, filtros, 1, 10)
+      expect(resultado).toEqual([prod2, prod1, prod3])
+      expect(mockProductoRepository.obtenerTodosDeVendedor).toHaveBeenCalledWith("pepe", filtros, 1, 10)
     })
 
     it("deberia ordenar los productos por precio desendentemente ", async () => {
-      const ordenamiento = {
-        ordenPrecio: true,
-        ascendente: false
-      }
-      const ordenados = await productoService.ordenar(ordenamiento, productos)
-      expect(ordenados).toEqual([prod3, prod1, prod2])
+      mockProductoRepository.obtenerTodosDeVendedor.mockResolvedValue([prod3, prod1, prod2])
+      const filtros = { orden: "precioDesc" }
+      const resultado = await productoService.obtenerTodosDeVendedor(vendedor, filtros, 1, 10)
+      expect(resultado).toEqual([prod3, prod1, prod2])
     })
     it("deberia ordenar los productos por precio ascendente por default  ", async () => {
-      const ordenamiento = {
-        ordenPrecio: true
-      }
-      const ordenados = await productoService.ordenar(ordenamiento, productos)
-      expect(ordenados).toEqual([prod2, prod1, prod3])
+      const filtros = {} // sin orden explícito
+      mockProductoRepository.obtenerTodosDeVendedor.mockResolvedValue([prod2, prod1, prod3])
+
+      const resultado = await productoService.obtenerTodosDeVendedor(vendedor, filtros, 1, 10)
+      expect(resultado).toEqual([prod2, prod1, prod3])
+      expect(mockProductoRepository.obtenerTodosDeVendedor).toHaveBeenCalledWith("pepe", filtros, 1, 10)
     })
     it("deberia ordenar los productos por mas vendido ascendente", async () => {
-      const ordenamiento = {
-        ordenMasVendios: true,
-        ascendente: true
-      }
-      mockPedidoService.cantidadVentasProducto.mockImplementation((valor) => {
-        if (valor === prod1) return 7
-        if (valor === prod2) return 5
-        if (valor === prod3) return 6
-      })
-      const ordenados = await productoService.ordenar(ordenamiento, productos)
-      expect(ordenados).toEqual([prod2, prod3, prod1])
+      mockProductoRepository.obtenerTodosDeVendedor.mockResolvedValue([prod1, prod3, prod2])
+      const filtros = { orden: "masVendido" }
+      const resultado = await productoService.obtenerTodosDeVendedor(vendedor, filtros, 1, 10)
+      expect(resultado).toEqual([prod1, prod3, prod2])
     })
   })
 })
