@@ -1,13 +1,18 @@
 openapi: 3.0.1
 info:
-  title: API Usuarios (TP)
+  title: API Usuarios
   version: "1.0.0"
-  description: Documentación de endpoints de usuarios (adaptada al TP). Usa el esquema PedidoResumen definido en docs/pedidos.yaml
+  description: >
+    Documentación de los endpoints de usuarios.    
+    El parámetro **id** representa el **username** del usuario
+
 servers:
   - url: http://localhost:3000
+
 tags:
   - name: Usuarios
     description: Operaciones sobre usuarios y su historial
+
 paths:
   /usuarios:
     post:
@@ -36,7 +41,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Usuario"
         "400":
-          description: Datos inválidos
+          description: Datos inválidos (validación fallida)
           content:
             application/json:
               schema:
@@ -48,19 +53,21 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /usuarios/{id}:
+  /usuarios/:id:
     get:
       tags:
         - Usuarios
-      summary: Obtener un usuario por su id
+      summary: Obtener un usuario por su username
+      description: >
+        Retorna los datos del usuario identificado por su username.
       parameters:
         - name: id
           in: path
-          description: Id del usuario
+          description: Username del usuario
           required: true
           schema:
             type: string
-            example: "64a8f0c3e8f9b0a1d2c3e4f5"
+            example: "jose50"
       responses:
         "200":
           description: Usuario encontrado
@@ -68,37 +75,45 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Usuario"
-        "404":
-          description: Usuario no encontrado
+        "401":
+          description: Usuario inexistente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Usuario sin permiso
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /usuarios/{id}/historial:
+  /usuarios/:id/pedidos:
     get:
       tags:
         - Usuarios
-      summary: Consultar historial de pedidos de un usuario (comprador)
-      description: Retorna los pedidos donde el usuario fue comprador. Puede requerir autenticación (header X-User).
+      summary: Consultar historial de pedidos de un usuario comprador
+      description: >
+        Retorna los pedidos asociados al usuario identificado por su username.  
+        Requiere autenticación mediante el header **X-User**.
       parameters:
         - name: id
           in: path
-          description: Id del usuario cuyo historial se consulta
+          description: Username perteneciente al usuario cuyo historial se consulta
           required: true
           schema:
             type: string
-            example: "64a8f0c3e8f9b0a1d2c3e4f5"
+            example: "jose50"
         - name: X-User
           in: header
-          description: Username del requester (si su middleware lo requiere)
-          required: false
+          description: Username del usuario autenticado desde el middleware
+          required: true
           schema:
             type: string
             example: "jose50"
       responses:
         "200":
-          description: Lista de pedidos del usuario (resumen)
+          description: Lista de pedidos del usuario
           content:
             application/json:
               schema:
@@ -118,8 +133,26 @@ paths:
                       moneda: "ARS"
                       estado: "ENVIADO"
                       fechaCreacion: "2025-09-15T09:10:00Z"
+        "401":
+          description: Usuario inexistente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Usuario sin permiso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
         "404":
           description: No hay historial para el usuario
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "400":
+          description: Username inválido o ausente en el header
           content:
             application/json:
               schema:
@@ -139,9 +172,11 @@ components:
         username:
           type: string
           example: "jose50"
+          description: Debe ser único. No puede estar vacío.
         nombre:
           type: string
           example: "Jose"
+          description: Nombre del usuario no puede estar vacío.
         email:
           type: string
           format: email
@@ -165,7 +200,7 @@ components:
             _id:
               type: string
               example: "64a8f0c3e8f9b0a1d2c3e4f5"
-            fechaCreacion:
+            fechaAlta:
               type: string
               format: date-time
               example: "2025-10-01T12:00:00Z"
@@ -173,6 +208,15 @@ components:
     Error:
       type: object
       properties:
+        name:
+          type: string
+          example: "DatosInvalidos"
         message:
           type: string
           example: "Detalle del error"
+        details:
+          type: object
+          nullable: true
+          example:
+          campo: "username"
+          mensaje: "El username no puede estar vacío"
