@@ -1,7 +1,7 @@
 import notificacionRepository from "../models/repositories/notificacionRepository.js"
 import { Notificacion } from "../models/entities/notificacion.js"
 import { estado } from "../models/entities/estadoPedido.js"
-import { notificacionExisteValidator } from "../validators/notificacionValidator.js"
+import { NotificacionInexistenteError } from "../errors/NotFoundError.js"
 
 class NotificacionService {
   crearSegunPedido(pedido) {
@@ -38,14 +38,15 @@ class NotificacionService {
   }
 
   getNotificacion(idNotificacion) {
-    return notificacionRepository.getById(idNotificacion).then((notificacion) => notificacion)
+    return notificacionRepository.getById(idNotificacion).then((notificacion) => {
+      if (!notificacion) throw new NotificacionInexistenteError(idNotificacion)
+      return notificacion
+    })
   }
 
   marcarComoLeida(idNotificacion, usuario) {
-    return notificacionRepository
-      .getById(idNotificacion)
+    return this.getNotificacion(idNotificacion)
       .then((notificacion) => {
-        notificacionExisteValidator(notificacion, idNotificacion)
         notificacion.marcarComoleida(usuario) //valida al marcar como leida
         return notificacionRepository.update(notificacion)
       })

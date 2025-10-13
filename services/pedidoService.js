@@ -4,16 +4,8 @@ import notificacionService from "./notificacionService.js"
 import { fromPedidoDTO } from "../converters/pedidoConverter.js"
 import { autorizadosAEstado, estado } from "../models/entities/estadoPedido.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
-import { validarExistenciaDePedido, validarExistenciaDeHistorial } from "../validators/pedidoValidator.js"
-import { rolesValidator } from "../validators/usuarioValidator.js"
+import { PedidoInexistenteError } from "../errors/NotFoundError.js"
 import { validarEstado } from "../validators/estadoValidador.js"
-
-// estado.PENDIENTE =>>>>>>>> verifica que haya stock suficiente
-// estado.CONFIRMADO =>>>>>>>> el vendedor lo confirma y se reduce el stock
-// estado.EN_PREPARACION =>>>>>>>> el vendedor lo prepara
-// estado.CANCELADO =>>>>>>>> se cancela y se aumenta el stock
-// estado.ENVIADO =>>>>>>>> vendedor o admin
-// estado.ENTREGADO =>>>>>>>> vendedor o admin
 
 class PedidoService {
   /************************** CREAR UN PEDIDO **************************/
@@ -43,7 +35,7 @@ class PedidoService {
   /************************** CONSULTAR UN PEDIDO **************************/
   consultar(id, usuario) {
     return pedidoRepository.findById(id).then((pedidoBuscado) => {
-      validarExistenciaDePedido(pedidoBuscado, id)
+      if (!pedidoBuscado) throw new PedidoInexistenteError(id)
       pedidoBuscado.validarUsuario(usuario)
       return pedidoBuscado
     })
@@ -52,7 +44,6 @@ class PedidoService {
   /************************** CONSULTAR EL HISTORIAL DE UN USUARIO **************************/
   consultarHistorial(id, usuario) {
     return pedidoRepository.consultarHistorial(id).then((historial) => {
-      validarExistenciaDeHistorial(historial, id)
       historial.forEach((pedido) => pedido.validarUsuario(usuario))
       return historial
     })

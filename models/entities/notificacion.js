@@ -1,5 +1,5 @@
-import UsuarioSinPermisoError from "../../errors/usuarioSinPermisoError.js"
-import YaLeidaError from "../../errors/yaLeidaError.js"
+import { UsuarioSinPermisoError } from "../../errors/authorizationError.js"
+import { YaLeidaError } from "../../errors/conflicError.js"
 export class Notificacion {
   constructor(usuarioDestino, mensaje) {
     this._id = null

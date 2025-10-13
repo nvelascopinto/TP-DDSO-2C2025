@@ -1,6 +1,5 @@
 import mongoose from "mongoose"
 import { ItemPedido } from "../entities/itemPedido.js"
-import { productoSchema } from "./productoSchema.js"
 
 export const itemPedidoSchema = new mongoose.Schema({
   producto: {

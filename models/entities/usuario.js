@@ -1,4 +1,4 @@
-import UsuarioSinPermisoError from "../../errors/usuarioSinPermisoError.js"
+import { UsuarioSinPermisoError } from "../../errors/authorizationError.js"
 
 export class Usuario {
   constructor(username, nombre, email, telefono, tipoUsuario) {

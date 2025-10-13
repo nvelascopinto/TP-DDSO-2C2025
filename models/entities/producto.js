@@ -1,7 +1,7 @@
 import { Moneda } from "./moneda.js"
-import DatosInvalidosError from "../../errors/datosInvalidosError.js"
-import UsuarioSinPermisoError from "../../errors/usuarioSinPermisoError.js"
-import PedidoStockInsuficienteError from "../../errors/pedidoStockInsuficienteError.js"
+import {MonedaInvalidaError} from "../../errors/domainValidationError.js"
+import {UsuarioSinPermisoError} from "../../errors/authorizationError.js"
+
 export class Producto {
   constructor(vendedor, titulo, descripcion, categoria, precio, moneda, stock, fotos, activo) {
     // this._id = null //lo va a escribir mongo
@@ -81,7 +81,7 @@ export class Producto {
 
   validarMoneda() {
     if (!Object.values(Moneda).includes(this.moneda)) {
-      throw new DatosInvalidosError("La moneda ingresada no esta dentro de las opciones ofrecidas")
+      throw new MonedaInvalidaError(this.moneda)
     }
   }
 }

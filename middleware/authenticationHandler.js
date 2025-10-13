@@ -1,19 +1,20 @@
 import usuarioRepository from "../models/repositories/usuarioRepository.js"
-import DatosInvalidosError from "../errors/datosInvalidosError.js"
-import { validarExistenciaDeUsuario } from "../validators/usuarioValidator.js"
+import { ValidationError } from "../errors/validationError.js"
+import { UsuarioInexistenteError } from "../errors/NotFoundError.js"
+
 export const authenticateUser = (fieldName) => (req, _res, next) => {
   Promise.resolve()
     .then(() => {
       //header X-User
       const idUser = req.get(fieldName.toLowerCase()) || req.body[fieldName] || req.params[fieldName] || req.query[fieldName]
       if (idUser == null) {
-        throw new DatosInvalidosError("Username es requerido")
+        throw new ValidationError("Username es requerido")
       }
 
       return usuarioRepository.findById(idUser)
     })
     .then((user) => {
-      validarExistenciaDeUsuario(user)
+      if(!user) throw new UsuarioInexistenteError(user)
       let key = fieldName
       if (fieldName == "X-User") {
         key = "user"

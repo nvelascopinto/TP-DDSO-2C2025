@@ -24,19 +24,17 @@ export function errorHandler(error, _req, res, _next) {
       message: "Error en la base de datos, datos invalidos",
       details: error.message
     })
+  } else if (error instanceof MongoError) {
+    return res.status(400).json({
+      name: "DatabaseError",
+      message: "Error en la base de datos, datos invalidos",
+      details: error.message
+    })
   } else {
-    if (error instanceof MongoError) {
-      return res.status(400).json({
-        name: "DatabaseError",
-        message: "Error en la base de datos, datos invalidos",
-        details: error.message
-      })
-    } else {
-      return res.status(500).json({
-        name: "ServerError",
-        message: "Algo salio mal en el Servidor",
-        details: null
-      })
-    }
+    return res.status(500).json({
+      name: "ServerError",
+      message: "Algo salio mal en el Servidor",
+      details: null
+    })
   }
 }

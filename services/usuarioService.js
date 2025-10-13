@@ -1,7 +1,7 @@
 import usuarioRepository from "../models/repositories/usuarioRepository.js"
 import pedidoService from "./pedidoService.js"
-import { validarExistenciaDeUsuario } from "../validators/usuarioValidator.js"
 import { fromUsuarioDTO } from "../converters/usuarioConverter.js"
+import { UsuarioInexistenteError } from "../errors/NotFoundError.js"
 
 class UsuarioService {
   /************************** CREAR UN USUARIO **************************/
@@ -17,7 +17,7 @@ class UsuarioService {
   /************************** CONSULTAR UN USUARIO **************************/
   buscar(id) {
     return usuarioRepository.findById(id).then((usuarioBuscado) => {
-      validarExistenciaDeUsuario(usuarioBuscado, id)
+      if (!usuarioBuscado) throw new UsuarioInexistenteError(id)
       return usuarioBuscado
     })
   }

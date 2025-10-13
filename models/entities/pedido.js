@@ -2,13 +2,10 @@ import { estado } from "./estadoPedido.js"
 import { CambioEstadoPedido } from "./cambioEstadoPedido.js"
 import { Moneda } from "./moneda.js"
 import { ordenEstados } from "./estadoPedido.js"
-import YaEnEstadoError from "../../errors/yaEnEstadoError.js"
-import PedidoStockInsuficienteError from "../../errors/pedidoStockInsuficienteError.js"
-import DatosInvalidosError from "../../errors/datosInvalidosError.js"
-import CambioEstadoInvalidoError from "../../errors/cambioEstadoInvalidoError.js"
 import { tipoUsuario } from "./tipoUsuario.js"
-import UsuarioSinPermisoError from "../../errors/usuarioSinPermisoError.js"
-import EstadoInvalidoError from "../../errors/estadoInvalidoError.js"
+import { YaEnEstadoError, PedidoStockInsuficienteError, CambioEstadoInvalidoError } from "../../errors/conflicError.js"
+import { MonedaInvalidaError, ProductosDiferentesVendedorError } from "../../errors/domainValidationError.js"
+import { UsuarioSinPermisoError } from "../../errors/authorizationError.js"
 
 export class Pedido {
   constructor(comprador, vendedor, items, moneda, direccionEntrega) {
@@ -61,14 +58,14 @@ export class Pedido {
     const vendedorUnico = this.items[0].producto.vendedor
     if (!this.items.every((item) => item.producto.vendedor === vendedorUnico)) {
       // ver si son id o no????
-      throw new DatosInvalidosError("Los productos del pedido deben ser todos del mismo vendedor")
+      throw new ProductosDiferentesVendedorError()
     }
     this.vendedor = vendedorUnico
   }
 
   validarMoneda() {
     if (!Object.values(Moneda).includes(this.moneda)) {
-      throw new DatosInvalidosError("La moneda ingresada no esta dentro de las opciones ofrecidas")
+      throw new MonedaInvalidaError(this.moneda)
     }
   }
 

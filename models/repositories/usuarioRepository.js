@@ -1,3 +1,4 @@
+import { YaExisteUsuarioError } from "../../errors/conflicError.js"
 import { UsuarioModel } from "../schemas/usuarioSchema.js"
 class UsuarioRepository {
   constructor() {
@@ -6,7 +7,9 @@ class UsuarioRepository {
 
   crear(usuario) {
     const nuevoUsuario = new this.model(usuario)
-    return nuevoUsuario.save()
+    return nuevoUsuario.save().catch((error) => {
+      if (error.code == 11000) throw new YaExisteUsuarioError(usuario.username)
+    })
   }
 
   findById(id) {

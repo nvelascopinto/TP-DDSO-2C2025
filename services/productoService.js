@@ -1,10 +1,7 @@
 import productoRepository from "../models/repositories/productoRepository.js"
-import pedidoService from "./pedidoService.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
-import { validarExistenciaDeProducto } from "../validators/productoValidator.js"
 import { fromProductoDTO } from "../converters/productoConverter.js"
-import { rolesValidator } from "../validators/usuarioValidator.js"
-import { estado } from "../models/entities/estadoPedido.js"
+import { ProductoInexistenteError } from "../errors/NotFoundError.js"
 
 class ProductoService {
   /************************** CREAR UN PRODUCTO **************************/
@@ -24,7 +21,7 @@ class ProductoService {
   /************************** CONSULTAR UN PRODUCTO **************************/
   obtenerProducto(id) {
     return productoRepository.findById(id).then((producto) => {
-      validarExistenciaDeProducto(producto, id)
+      if (!producto) throw new ProductoInexistenteError()
       return producto
     })
   }
