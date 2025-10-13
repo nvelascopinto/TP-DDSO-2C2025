@@ -28,3 +28,15 @@ export function fromProductoDTO(productoDTO) {
     productoDTO.activo
   )
 }
+
+export function toPaginadoResponse({ productos, total, pagina, limite }) {
+  return {
+    _embedded: { productos },
+    pagina: {
+      tamanio: limite,
+      totalElementos: total,
+      totalPaginas: Math.ceil(total / limite),
+      numero: pagina
+    }
+  }
+}

@@ -18,10 +18,10 @@ const options = {
   explorer: true,
   swaggerOptions: {
     urls: [
-        { url: "/docs/notificaciones.yaml", name: "Notificaciones" },
-        { url: "/docs/pedidos.yaml", name: "Pedidos" },
-        { url: "/docs/productos.yaml", name: "Productos" },
-        { url: "/docs/usuarios.yaml", name: "Usuarios" },
+      { url: "/docs/notificaciones.yaml", name: "Notificaciones" },
+      { url: "/docs/pedidos.yaml", name: "Pedidos" },
+      { url: "/docs/productos.yaml", name: "Productos" },
+      { url: "/docs/usuarios.yaml", name: "Usuarios" }
     ]
   }
 }

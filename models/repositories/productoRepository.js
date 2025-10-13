@@ -24,15 +24,21 @@ class ProductoRepository {
     const query = this.mapFilter(filtros, idVendedor)
     const sort = this.mapSort(filtros.orden)
 
-    if (!limite) {
-      limite = 5
-    }
-    const desplazamiento = pagina && limite ? (pagina - 1) * limite : 0
+    const desplazamiento = (pagina - 1) * limite
     console.log("DESPLAZAMIENTO", desplazamiento)
     console.log("LIMITE", limite)
     console.log("ORDEN", sort)
 
-    return this.model.find(query).sort(sort).skip(desplazamiento).limit(limite)
+    return this.model.countDocuments(query).then((total) => {
+      return this.model
+        .find(query)
+        .sort(sort)
+        .skip(desplazamiento)
+        .limit(limite)
+        .then((productos) => {
+          return { productos, total, pagina, limite }
+        })
+    })
   }
 
   mapFilter(filtros, idVendedor) {

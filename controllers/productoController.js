@@ -1,5 +1,5 @@
 import productoService from "../services/productoService.js"
-import { toProductoDTO } from "../converters/productoConverter.js"
+import { toPaginadoResponse, toProductoDTO } from "../converters/productoConverter.js"
 import { productoValidator } from "../validators/productoValidator.js"
 import { cambioProductoValidator } from "../validators/productoValidator.js"
 
@@ -32,9 +32,11 @@ class ProductoController {
           descripcion: descripcion,
           orden: orden
         }
-        return productoService.obtenerTodosDeVendedor(vendedor, filtros, pagina, limite)
+        const paginaNum = parseInt(pagina) || 1
+        const limiteNum = parseInt(limite) || 5
+        return productoService.obtenerTodosDeVendedor(vendedor, filtros, paginaNum, limiteNum)
       })
-      .then((productos) => res.status(200).json(productos))
+      .then((resultado) => res.status(200).json(toPaginadoResponse(resultado)))
   }
 
   actualizar(req, res) {
