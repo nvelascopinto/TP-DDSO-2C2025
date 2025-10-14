@@ -5,22 +5,26 @@ info:
   description: Endpoints para consultar y marcar notificaciones
 servers:
   - url: http://localhost:3000
+
 tags:
   - name: Notificaciones
     description: Operaciones sobre notificaciones de usuarios
+
 paths:
-  /notificaciones/no-leidas/{idUsuario}:
+  /notificaciones/noleidas:
     get:
       tags:
         - Notificaciones
-      summary: Obtener notificaciones no leídas de un usuario
+      summary: Obtener notificaciones no leídas del usuario autenticado
+      description: Retorna las notificaciones no leídas del usuario que hace la consulta
       parameters:
-        - name: idUsuario
-          in: path
+        - name: X-User
+          in: header
           required: true
+          description: Username del usuario
           schema:
             type: string
-          description: Id o username del usuario
+            example: "jose50"
       responses:
         "200":
           description: Lista de notificaciones no leídas
@@ -29,34 +33,36 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/NotificacionResumen"
+                  $ref: "#/components/schemas/Notificacion"
               examples:
                 ejemplo:
                   value:
                     - _id: "654a8f0c3e8f9b0a1d2c3e00"
-                      destinatario: "jose50"
+                      usuarioDestino: "jose50"
                       mensaje: "El pedido 123 cambió a estado ENVIADO"
                       leida: false
-                      fecha: "2025-10-01T12:34:56Z"
-        "404":
-          description: Usuario no encontrado o sin notificaciones
+                      fechaAlta: "2025-10-01T12:34:56Z"
+        "401":
+          description: Usuario no autenticado
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /notificaciones/leidas/{idUsuario}:
+  /notificaciones/leidas:
     get:
       tags:
         - Notificaciones
-      summary: Obtener notificaciones leídas de un usuario
+      summary: Obtener notificaciones leídas del usuario
+      description: Retorna las notificaciones ya leídas del usuario.
       parameters:
-        - name: idUsuario
-          in: path
+        - name: X-User
+          in: header
           required: true
+          description: Username del usuario
           schema:
             type: string
-          description: Id o username del usuario
+            example: "jose50"
       responses:
         "200":
           description: Lista de notificaciones leídas
@@ -65,48 +71,45 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/NotificacionResumen"
-        "404":
-          description: Usuario no encontrado o sin notificaciones
+                  $ref: "#/components/schemas/Notificacion"
+        "401":
+          description: Usuario no autenticado
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /notificaciones/{id}/marcar-como-leida:
-    post:
+  /notificaciones/{id}:
+    patch:
       tags:
         - Notificaciones
       summary: Marcar una notificación como leída
+      description: Marca la notificación indicada como leída por el usuario.
       parameters:
         - name: id
           in: path
           required: true
+          description: ID de la notificación a marcar como leída
           schema:
             type: string
-          description: Id de la notificación
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                usuario:
-                  type: object
-                  properties:
-                    username:
-                      type: string
-                      example: "jose50"
+            example: "654a8f0c3e8f9b0a1d2c3e00"
+        - name: X-User
+          in: header
+          required: true
+          description: Username del usuario
+          schema:
+            type: string
+            example: "jose50"
       responses:
         "200":
-          description: Notificación marcada como leída
+          description: Notificación marcada como leída correctamente
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Notificacion"
+                type: string
+                example: "La notificacion fue leida"
         "403":
-          description: Usuario no autorizado para marcar la notificación
+          description: Usuario sin permiso para marcar la notificación
           content:
             application/json:
               schema:
@@ -120,42 +123,13 @@ paths:
 
 components:
   schemas:
-    NotificacionDTO:
-      type: object
-      required:
-        - destinatario
-        - mensaje
-      properties:
-        destinatario:
-          type: string
-          example: "vendedor01"
-        mensaje:
-          type: string
-          example: "Nuevo pedido creado: 123"
-        leida:
-          type: boolean
-          example: false
-
     Notificacion:
-      allOf:
-        - $ref: "#/components/schemas/NotificacionDTO"
-        - type: object
-          properties:
-            _id:
-              type: string
-              example: "654a8f0c3e8f9b0a1d2c3e00"
-            fecha:
-              type: string
-              format: date-time
-              example: "2025-10-01T12:34:56Z"
-
-    NotificacionResumen:
       type: object
       properties:
         _id:
           type: string
           example: "654a8f0c3e8f9b0a1d2c3e00"
-        destinatario:
+        usuarioDestino:
           type: string
           example: "jose50"
         mensaje:
@@ -164,14 +138,25 @@ components:
         leida:
           type: boolean
           example: false
-        fecha:
+        fechaAlta:
           type: string
           format: date-time
           example: "2025-10-01T12:34:56Z"
+        fechaLeida:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
 
     Error:
       type: object
       properties:
+        name:
+          type: string
+          example: "UsuarioSinPermisoError"
         message:
           type: string
-          example: "Detalle del error"
+          example: "El usuario no tiene permiso"
+        details:
+          type: object
+          nullable: true

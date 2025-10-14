@@ -1,63 +1,69 @@
 openapi: 3.0.1
 info:
-  title: API Pedidos
+  title: API de Pedidos
   version: "1.0.0"
-  description: Endpoints para gestionar pedidos (creación, consulta, cambio de estado e historial)
+  description: Endpoints para crear, consultar y actualizar el estado de pedidos.
 servers:
   - url: http://localhost:3000
 tags:
   - name: Pedidos
     description: Operaciones sobre pedidos
+
 paths:
   /pedidos:
     post:
       tags: [Pedidos]
-      summary: Crear un pedido
+      summary: Crear un nuevo pedido
+      description: El comprador autenticado crea un pedido. El vendedor se asigna automáticamente según los productos.
+      security:
+        - X-User: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PedidoDTO'
-            examples:
-              ejemplo:
-                value:
-                  comprador: "jose50"
-                  vendedor: "vendedor01"
-                  moneda: "ARS"
-                  items:
-                    - productoId: "64a8f0..."
-                      cantidad: 2
-                    - productoId: "64a8f1..."
-                      cantidad: 1
-                  direccionEntrega:
-                    calle: "Av. Siempre Viva 123"
-                    ciudad: "CABA"
-                    codigoPostal: "1000"
+              $ref: "#/components/schemas/PedidoDTO"
+            example:
+              itemsDTO:
+                - productoID: "64a8f0c3e8f9b0a1d2c3e4f5"
+                  cantidad: 2
+                - productoID: "64a8f1d2c3e8f9b0a1d2c3e6"
+                  cantidad: 1
+              moneda: "PESO_ARG"
+              direccionEntregaDTO:
+                calle: "Av. Siempre Viva"
+                altura: 742
+                codigoPostal: 1000
+                ciudad: "CABA"
+                provincia: "Buenos Aires"
+                pais: "Argentina"
       responses:
-        '201':
-          description: Pedido creado
+        "201":
+          description: Pedido creado correctamente
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pedido'
-        '400':
+                $ref: "#/components/schemas/Pedido"
+        "400":
           description: Datos inválidos
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: Stock insuficiente
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Stock insuficiente o conflicto de validación
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /pedidos/{id}:
     get:
       tags: [Pedidos]
-      summary: Obtener un pedido por id
+      summary: Consultar un pedido por ID
+      description: Solo pueden verlo el comprador, el vendedor o un administrador.
+      security:
+        - X-User: []
       parameters:
         - name: id
           in: path
@@ -66,200 +72,178 @@ paths:
             type: string
             example: "654a8f0c3e8f9b0a1d2c3e00"
       responses:
-        '200':
+        "200":
           description: Pedido encontrado
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pedido'
-        '404':
+                $ref: "#/components/schemas/Pedido"
+        "403":
+          description: Usuario sin permiso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
           description: Pedido no encontrado
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
-  /pedidos/{id}/cambioDeEstado:
-    post:
+    patch:
       tags: [Pedidos]
-      summary: Cambiar el estado de un pedido (ej: marcar como ENVIADO)
+      summary: Cambiar el estado de un pedido
+      description: Permite cambiar el estado del pedido (por ejemplo, Confirmado, Enviado, Cancelado). Solo roles autorizados.
+      security:
+        - X-User: []
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: string
+            example: "654a8f0c3e8f9b0a1d2c3e00"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CambioEstadoDTO'
-            examples:
-              ejemplo:
-                value:
-                  usuario:
-                    username: "vendedor01"
-                    tipoUsuario: "Vendedor"
-                  nuevoEstado: "ENVIADO"
-                  motivo: "Despachado por logística"
+              $ref: "#/components/schemas/CambioEstado"
+            example:
+              estado: "Confirmado"
+              motivo: "Pago aprobado"
       responses:
-        '200':
-          description: Estado actualizado
+        "200":
+          description: Estado actualizado correctamente
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pedido'
-        '400':
-          description: Cambio inválido
+                type: string
+                example: "El pedido fue confirmado correctamente."
+        "400":
+          description: Cambio de estado inválido
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '403':
+                $ref: "#/components/schemas/Error"
+        "403":
           description: Usuario no autorizado
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-
-  /pedidos/historial/{id}:
-    get:
-      tags: [Pedidos]
-      summary: Consultar historial de pedidos de un usuario (comprador)
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            example: "64a8f0c3e8f9b0a1d2c3e4f5"
-      responses:
-        '200':
-          description: Lista de pedidos
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Pedido no encontrado
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PedidoResumen'
-        '404':
-          description: No hay historial
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
 components:
+
   schemas:
     ItemDTO:
       type: object
-      required: [productoId, cantidad]
+      required: [productoID, cantidad]
       properties:
-        productoId:
+        productoID:
           type: string
           example: "64a8f0c3e8f9b0a1d2c3e4f5"
         cantidad:
           type: integer
           example: 2
 
-    Direccion:
+    DireccionEntregaDTO:
       type: object
-      required: [calle, ciudad, codigoPostal]
+      required: [calle, altura, codigoPostal, ciudad, provincia, pais]
       properties:
         calle:
           type: string
-          example: "Av. Siempre Viva 123"
+          example: "Av. Siempre Viva"
+        altura:
+          type: integer
+          example: 742
+        piso:
+          type: integer
+          example: 2
+        departamento:
+          type: string
+          example: "B"
+        codigoPostal:
+          type: integer
+          example: 1000
         ciudad:
           type: string
           example: "CABA"
-        codigoPostal:
+        provincia:
           type: string
-          example: "1000"
+          example: "Buenos Aires"
+        pais:
+          type: string
+          example: "Argentina"
+        latitud:
+          type: number
+          example: -34.6037
+        longitud:
+          type: number
+          example: -58.3816
 
     PedidoDTO:
       type: object
-      required: [comprador, vendedor, items, direccionEntrega]
+      required: [itemsDTO, moneda, direccionEntregaDTO]
       properties:
-        comprador:
-          type: string
-          example: "jose50"
-        vendedor:
-          type: string
-          example: "vendedor01"
-        items:
+        itemsDTO:
           type: array
           items:
-            $ref: '#/components/schemas/ItemDTO'
+            $ref: "#/components/schemas/ItemDTO"
         moneda:
           type: string
-          example: "ARS"
-        direccionEntrega:
-          $ref: '#/components/schemas/Direccion'
-
-    CambioEstadoDTO:
-      type: object
-      required: [usuario, nuevoEstado]
-      properties:
-        usuario:
-          type: object
-          properties:
-            username:
-              type: string
-              example: "vendedor01"
-            tipoUsuario:
-              type: string
-              example: "Vendedor"
-        nuevoEstado:
-          type: string
-          enum: [PENDIENTE, CONFIRMADO, ENVIADO, CANCELADO]
-          example: "ENVIADO"
-        motivo:
-          type: string
-          example: "Despachado"
+          enum: [PESO_ARG, DOLAR_USA, REAL]
+          example: "PESO_ARG"
+        direccionEntregaDTO:
+          $ref: "#/components/schemas/DireccionEntregaDTO"
 
     Pedido:
       allOf:
-        - $ref: '#/components/schemas/PedidoDTO'
+        - $ref: "#/components/schemas/PedidoDTO"
         - type: object
           properties:
             _id:
               type: string
               example: "654a8f0c3e8f9b0a1d2c3e00"
+            comprador:
+              type: string
+              example: "jose50"
+            vendedor:
+              type: string
+              example: "vendedor01"
             total:
               type: number
-              example: 3500
+              example: 4500
             estado:
               type: string
-              example: "PENDIENTE"
+              example: "Pendiente"
             fechaCreacion:
               type: string
               format: date-time
-              example: "2025-10-01T12:34:56Z"
+              example: "2025-10-13T10:00:00Z"
 
-    PedidoResumen:
+    CambioEstado:
       type: object
+      required: [estado]
       properties:
-        _id:
-          type: string
-          example: "654a8f0c3e8f9b0a1d2c3e00"
-        total:
-          type: number
-          example: 3500
-        moneda:
-          type: string
-          example: "ARS"
         estado:
           type: string
-          example: "ENVIADO"
-        fechaCreacion:
+          enum: [Pendiente, Confirmado, En_Preparacion, Enviado, Entregado, Cancelado]
+          example: "Confirmado"
+        motivo:
           type: string
-          format: date-time
-          example: "2025-10-01T12:34:56Z"
+          example: "Pago confirmado por el comprador"
 
     Error:
       type: object
       properties:
         message:
           type: string
-          example: "Detalle del error"
+          example: "El pedido no existe o el usuario no tiene permiso"

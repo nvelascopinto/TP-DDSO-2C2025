@@ -47,19 +47,18 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
         "409":
-          description: Usuario ya existe
+          description: Ya existe un usuario con ese username
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /usuarios/:id:
+  /usuarios/{id}:
     get:
       tags:
         - Usuarios
       summary: Obtener un usuario por su username
-      description: >
-        Retorna los datos del usuario identificado por su username.
+      description: Retorna los datos del usuario identificado por su username
       parameters:
         - name: id
           in: path
@@ -75,7 +74,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Usuario"
-        "401":
+        "404":
           description: Usuario inexistente
           content:
             application/json:
@@ -88,7 +87,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /usuarios/:id/pedidos:
+  /usuarios/{id}/pedidos:
     get:
       tags:
         - Usuarios
@@ -99,7 +98,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: Username perteneciente al usuario cuyo historial se consulta
+          description: Username del usuario cuyo historial se consulta
           required: true
           schema:
             type: string
@@ -133,8 +132,8 @@ paths:
                       moneda: "ARS"
                       estado: "ENVIADO"
                       fechaCreacion: "2025-09-15T09:10:00Z"
-        "401":
-          description: Usuario inexistente
+        "400":
+          description: Username inválido o ausente en el header
           content:
             application/json:
               schema:
@@ -146,13 +145,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
         "404":
-          description: No hay historial para el usuario
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-        "400":
-          description: Username inválido o ausente en el header
+          description: No existe el usuario o no hay historial
           content:
             application/json:
               schema:
@@ -210,7 +203,7 @@ components:
       properties:
         name:
           type: string
-          example: "DatosInvalidos"
+          example: "ValidationError"
         message:
           type: string
           example: "Detalle del error"
@@ -218,5 +211,5 @@ components:
           type: object
           nullable: true
           example:
-          campo: "username"
-          mensaje: "El username no puede estar vacío"
+            campo: "username"
+            mensaje: "El username no puede estar vacío"
