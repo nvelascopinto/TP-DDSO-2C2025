@@ -8,13 +8,19 @@ class DomainValidationError extends AppError {
 
 export class EstadoInvalidoError extends DomainValidationError {
   constructor(estado) {
-    super("El estado ingresado no esta dentro de las opciones ofrecidas", { estado })
+    super("El tipo de estado ingresado no esta dentro de las opciones validas", { estado })
   }
 }
 
 export class MonedaInvalidaError extends DomainValidationError {
   constructor(moneda) {
-    super("La moneda ingresada no esta dentro de las opciones ofrecidas", { moneda })
+    super("La tipo de moneda ingresada no esta dentro de las opciones validas", { moneda })
+  }
+}
+
+export class UsuarioInvalidoError extends DomainValidationError {
+  constructor(usuario) {
+    super("El tipo de usuario ingresado no esta dentro de las opciones validas", {usuario})
   }
 }
 

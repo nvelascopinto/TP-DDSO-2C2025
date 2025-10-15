@@ -1,7 +1,8 @@
 import { z } from "zod"
+import { idValidator } from "./idValidator.js"
 
 export const filtrosValidator = z.object({
-  vendedor: z.any(),
+  vendedor: idValidator,
   minPrecio: z.number().nonnegative().optional(),
   maxPrecio: z.number().nonnegative().optional(),
   pagina: z.number().nonnegative().optional(),

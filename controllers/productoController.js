@@ -1,6 +1,7 @@
 import productoService from "../services/productoService.js"
 import { toPaginadoResponse, toProductoDTO } from "../converters/productoConverter.js"
 import { productoValidator } from "../validators/productoValidator.js"
+import { idMongoValidator } from "../validators/idValidator.js"
 import { cambioProductoValidator } from "../validators/productoValidator.js"
 
 class ProductoController {
@@ -43,7 +44,7 @@ class ProductoController {
     return Promise.resolve()
       .then(() => {
         const vendedor = req.user
-        const productoID = req.params.id
+        const productoID = idMongoValidator.parse(req.params.id)
         const cambioProducto = cambioProductoValidator.parse(req.body)
 
         return productoService.actualizar(vendedor, productoID, cambioProducto)

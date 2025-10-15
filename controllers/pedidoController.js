@@ -1,7 +1,7 @@
 import pedidoService from "../services/pedidoService.js"
 import { toPedidoDTO } from "../converters/pedidoConverter.js"
 import { pedidoValidator } from "../validators/pedidoValidator.js"
-import { idValidator } from "../validators/idValidator.js"
+import { idMongoValidator } from "../validators/idValidator.js"
 import { cambioEstadoPedidoValidator } from "../validators/cambioEstadoPedidoValidator.js"
 
 class PedidoController {
@@ -19,7 +19,7 @@ class PedidoController {
   consultar(req, res) {
     return Promise.resolve()
       .then(() => {
-        const id = idValidator.parse(req.params.id)
+        const id = idMongoValidator.parse(req.params.id)
         const usuario = req.user
         return pedidoService.consultar(id, usuario)
       })
@@ -29,7 +29,7 @@ class PedidoController {
   cambioEstado(req, res) {
     return Promise.resolve()
       .then(() => {
-        const id = idValidator.parse(req.params.id)
+        const id = idMongoValidator.parse(req.params.id)
         const cambioEstado = cambioEstadoPedidoValidator.parse(req.body)
         cambioEstado.usuario = req.user
         return pedidoService.cambioEstado(cambioEstado, id)

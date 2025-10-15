@@ -1,4 +1,6 @@
 import { UsuarioSinPermisoError } from "../../errors/authorizationError.js"
+import { UsuarioInvalidoError } from "../../errors/domainValidationError.js"
+import { tipoUsuario } from "./tipoUsuario.js"
 
 export class Usuario {
   constructor(username, nombre, email, telefono, tipoUsuario) {
@@ -8,6 +10,7 @@ export class Usuario {
     this.telefono = telefono
     this.tipoUsuario = tipoUsuario
     this.fechaAlta = new Date() // ver si debe ir con el tmespam true en la base
+    this.validarTipoUsuario()
   }
 
   agregarNotificacion(notificacion) {
@@ -19,5 +22,11 @@ export class Usuario {
       throw new UsuarioSinPermisoError(this.username)
     }
     return true
+  }
+
+  validarTipoUsuario() {
+    if (!Object.values(tipoUsuario).includes(this.tipoUsuario)) {
+      throw new UsuarioInvalidoError(this.tipoUsuario)
+    }
   }
 }

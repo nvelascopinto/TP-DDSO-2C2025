@@ -2,11 +2,11 @@ import { z } from "zod"
 
 export const productoValidator = z.object({
   categoria: z.string(),
-  titulo: z.string().min(1, "El titulo no puede estar vacío"),
+  titulo: z.string().min(1, "El titulo no puede estar vacio"),
   descripcion: z.string(),
-  precio: z.number().nonnegative("Precio no puede ser negativo"),
+  precio: z.number().nonnegative("El precio no puede ser negativo"),
   moneda: z.string(),
-  stock: z.number().positive("Stock debe ser un numero mayor a 0"),
+  stock: z.number().positive("El stock debe ser un numero mayor a 0"),
   fotos: z.array(z.string()).optional(),
   activo: z.boolean()
 })

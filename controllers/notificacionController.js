@@ -1,11 +1,11 @@
 import notificacionService from "../services/notificacionService.js"
-import { idValidator } from "../validators/idValidator.js"
+import { idMongoValidator } from "../validators/idValidator.js"
 
 class notificacionController {
   marcarComoLeida(req, res) {
     return Promise.resolve()
       .then(() => {
-        const idNotificacion = idValidator.parse(req.params.id)
+        const idNotificacion = idMongoValidator.parse(req.params.id)
         const usuario = req.user.username
         return notificacionService.marcarComoLeida(idNotificacion, usuario)
       })

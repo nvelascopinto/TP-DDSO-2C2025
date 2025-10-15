@@ -1,13 +1,9 @@
 import { z } from "zod"
+import mongoose from "mongoose";
 
-export const idValidator = z.string()
-// .transform((val, ctx) => {
-//   if (!/^[a-f\d]{24}$/i.test(val)) {
-//     ctx.addIssue({
-//       code: "INVALID_ID",
-//       message: "id must be a valid MongoDB ObjectId",
-//     });
-//     return z.NEVER;
-//   }
-//   return val;
-// });
+export const idValidator = z.string("El username ingresado es invalido")
+
+export const idMongoValidator = z.string().refine(
+  (val) => mongoose.Types.ObjectId.isValid(val),
+  { message: "El ID ingresado es invalido" }
+);
