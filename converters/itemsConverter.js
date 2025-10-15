@@ -6,7 +6,8 @@ export function toItemsDTO(nuevoJSONItems) {
   return items
 }
 
-export function fromItemsDTO(itemsDTO) {
-  const items = itemsDTO.map((item) => new ItemPedido(item.productoID, item.cantidad, null))
-  return items
+export function fromItemsDTO(itemsDTO, productos) {
+  return itemsDTO.map((itemDTO,i) => {
+    new ItemPedido(productos[i], itemDTO.cantidad)
+  })
 }

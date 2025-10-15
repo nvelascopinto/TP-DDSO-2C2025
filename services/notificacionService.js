@@ -1,7 +1,7 @@
 import notificacionRepository from "../models/repositories/notificacionRepository.js"
 import { Notificacion } from "../models/entities/notificacion.js"
 import { estado } from "../models/entities/estadoPedido.js"
-import { NotificacionInexistenteError } from "../errors/NotFoundError.js"
+import { NotificacionInexistenteError } from "../errors/notFoundError.js"
 
 class NotificacionService {
   crearSegunPedido(pedido) {

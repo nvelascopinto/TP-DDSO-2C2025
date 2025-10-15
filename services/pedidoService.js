@@ -4,7 +4,7 @@ import notificacionService from "./notificacionService.js"
 import { fromPedidoDTO } from "../converters/pedidoConverter.js"
 import { autorizadosAEstado, estado } from "../models/entities/estadoPedido.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
-import { PedidoInexistenteError } from "../errors/NotFoundError.js"
+import { PedidoInexistenteError } from "../errors/notFoundError.js"
 import { validarEstado } from "../validators/estadoValidador.js"
 
 class PedidoService {
@@ -13,16 +13,12 @@ class PedidoService {
     let nuevoPedido
     return Promise.resolve()
       .then(() => {
-        nuevoPedido = fromPedidoDTO(pedidoDTO)
-        comprador.validarRol([tipoUsuario.COMPRADOR])
-        nuevoPedido.asignarComprador(comprador.username)
+    
         return Promise.all(pedidoDTO.itemsDTO.map((item) => productoService.obtenerProducto(item.productoID)))
       })
       .then((productos) => {
-        nuevoPedido.asignarProductos(productos)
-        nuevoPedido.validarItemsConVendedor() // asigno vendedor
-        nuevoPedido.validarStock() // verifico que exista stock suficiente
-        nuevoPedido.calcularTotal()
+        nuevoPedido = fromPedidoDTO(pedidoDTO, comprador, productos)
+        nuevoPedido.validarStock() 
         return pedidoRepository.crear(nuevoPedido)
       })
       .then(

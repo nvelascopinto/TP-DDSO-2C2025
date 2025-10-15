@@ -1,6 +1,6 @@
 import usuarioRepository from "../models/repositories/usuarioRepository.js"
 import { ValidationError } from "../errors/validationError.js"
-import { UsuarioInexistenteError } from "../errors/NotFoundError.js"
+import { UsuarioInexistenteError } from "../errors/notFoundError.js"
 
 export const authenticateUser = (fieldName) => (req, _res, next) => {
   Promise.resolve()

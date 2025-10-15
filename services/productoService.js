@@ -1,7 +1,7 @@
 import productoRepository from "../models/repositories/productoRepository.js"
 import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { fromProductoDTO } from "../converters/productoConverter.js"
-import { ProductoInexistenteError } from "../errors/NotFoundError.js"
+import { ProductoInexistenteError } from "../errors/notFoundError.js"
 
 class ProductoService {
   /************************** CREAR UN PRODUCTO **************************/

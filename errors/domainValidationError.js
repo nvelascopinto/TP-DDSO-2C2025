@@ -1,8 +1,14 @@
-import AppError from "./appError.js"
+import AppError, { AppMultipleErrors } from "./appError.js"
 
 class DomainValidationError extends AppError {
   constructor(message, details) {
     super(message, 422, "DomainValidationError", details)
+  }
+}
+
+export class DomainMultipleErrors extends AppMultipleErrors {
+  constructor(message, errors) {
+    super(message, 422, errors, "DomainMultipleErrors")
   }
 }
 

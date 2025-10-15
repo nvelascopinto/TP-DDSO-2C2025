@@ -8,7 +8,7 @@ class PedidoController {
   crear(req, res) {
     return Promise.resolve()
       .then(() => {
-        const body = pedidoValidator.parse(req.body)
+        const body = pedidoValidator.parse(req.body) 
         const pedido = toPedidoDTO(body)
         const comprador = req.user
         return pedidoService.crear(pedido, comprador)

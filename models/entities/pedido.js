@@ -13,13 +13,12 @@ export class Pedido {
     this.comprador = comprador
     this.vendedor = vendedor
     this.items = items
-    this.total = 0
+    this.total = this.calcularTotal()
     this.moneda = moneda
     this.direccionEntrega = direccionEntrega
     this.estado = estado.PENDIENTE
     this.fechaCreacion = new Date()
     this.historialCambioPedidos = []
-    this.validarMoneda()
   }
 
   asignarComprador(comprador) {
@@ -57,17 +56,16 @@ export class Pedido {
   validarItemsConVendedor() {
     const vendedorUnico = this.items[0].producto.vendedor
     if (!this.items.every((item) => item.producto.vendedor === vendedorUnico)) {
-      // ver si son id o no????
       throw new ProductosDiferentesVendedorError()
     }
     this.vendedor = vendedorUnico
   }
 
-  validarMoneda() {
-    if (!Object.values(Moneda).includes(this.moneda)) {
-      throw new MonedaInvalidaError(this.moneda)
-    }
-  }
+  // validarMoneda() {
+  //   if (!Object.values(Moneda).includes(this.moneda)) {
+  //     throw new MonedaInvalidaError(this.moneda)
+  //   }
+  // }
 
   validarCambioEstado(nuevoEstado) {
     const indiceActual = ordenEstados.indexOf(this.estado)

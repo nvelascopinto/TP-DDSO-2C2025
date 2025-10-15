@@ -4,8 +4,8 @@ import { direccionEntregaValidator } from "./direccionEntregaValidator.js"
 import { idValidator } from "./idValidator.js"
 
 export const pedidoValidator = z.object({
-  comprador: idValidator, // ver si esto funciona
-  vendedor: idValidator,
+  // comprador: idValidator, // ver si esto funciona
+  // vendedor: idValidator,
   items: z.array(itemPedidoValidator).min(1),
   moneda: z.string(),
   direccionEntrega: direccionEntregaValidator

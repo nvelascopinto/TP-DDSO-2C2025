@@ -1,7 +1,7 @@
 import usuarioRepository from "../models/repositories/usuarioRepository.js"
 import pedidoService from "./pedidoService.js"
 import { fromUsuarioDTO } from "../converters/usuarioConverter.js"
-import { UsuarioInexistenteError } from "../errors/NotFoundError.js"
+import { UsuarioInexistenteError } from "../errors/notFoundError.js"
 
 class UsuarioService {
   /************************** CREAR UN USUARIO **************************/
