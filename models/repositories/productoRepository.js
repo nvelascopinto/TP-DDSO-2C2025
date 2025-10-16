@@ -10,9 +10,7 @@ class ProductoRepository {
   }
 
   update(productoModificado) {
-    return this.model.findByIdAndUpdate(productoModificado._id, productoModificado, {
-      new: true
-    })
+    return this.model.findByIdAndUpdate(productoModificado._id, productoModificado, { new: true })
   }
 
   findById(id) {
@@ -20,43 +18,36 @@ class ProductoRepository {
   }
 
   obtenerTodosDeVendedor(idVendedor, filtros = {}, pagina, limite) {
-    console.log("FILTROS EN REPO", filtros)
     const query = this.mapFilter(filtros, idVendedor)
     const sort = this.mapSort(filtros.orden)
-
     const desplazamiento = (pagina - 1) * limite
-    console.log("DESPLAZAMIENTO", desplazamiento)
-    console.log("LIMITE", limite)
-    console.log("ORDEN", sort)
 
-    return this.model.countDocuments(query).then((total) => {
-      return this.model
-        .find(query)
-        .sort(sort)
-        .skip(desplazamiento)
-        .limit(limite)
-        .then((productos) => {
-          return { productos, total, pagina, limite }
-        })
-    })
+    return this.model.countDocuments(query)
+      .then((total) => {
+        return this.model
+          .find(query)
+          .sort(sort)
+          .skip(desplazamiento)
+          .limit(limite)
+          .then((productos) => ({ productos, total, pagina, limite }))
+      })
   }
 
   mapFilter(filtros, idVendedor) {
     const query = { vendedor: idVendedor }
-    const { nombre, categoria, descripcion, minPrecio, maxPrecio } = filtros
-    if (minPrecio || maxPrecio) {
+    if (filtros.minPrecio || filtros.maxPrecio) {
       query.precio = {}
-      if (minPrecio) query.precio.$gte = minPrecio
-      if (maxPrecio) query.precio.$lte = maxPrecio
+      if (filtros.minPrecio) query.precio.$gte = filtros.minPrecio
+      if (filtros.maxPrecio) query.precio.$lte = filtros.maxPrecio
     }
-    if (nombre != null) {
-      query.nombre = { $regex: nombre, $options: "i" }
+    if (filtros.nombre != null) {
+      query.nombre = { $regex: filtros.nombre, $options: "i" }
     }
-    if (categoria != null) {
-      query.categoria = { $regex: categoria, $options: "i" }
+    if (filtros.categoria != null) {
+      query.categoria = { $regex: filtros.categoria, $options: "i" }
     }
-    if (descripcion != null) {
-      query.descripcion = { $regex: descripcion, $options: "i" }
+    if (filtros.descripcion != null) {
+      query.descripcion = { $regex: filtros.descripcion, $options: "i" }
     }
     return query
   }

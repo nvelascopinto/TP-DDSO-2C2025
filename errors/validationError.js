@@ -6,8 +6,8 @@ export class ValidationError extends AppError {
   }
 }
 
-// export class ZodValidationError extends ValidationError {
-//   constructor(zodErrors) {
-//     super("Los datos ingresados no son correctos", zodErrors)
-//   }
-// }
+export class ZodValidationError extends ValidationError {
+  constructor(zodError) {
+    super("Los datos ingresados no son correctos", zodError.issues.map(i => i.message))
+  }
+}

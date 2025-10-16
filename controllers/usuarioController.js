@@ -2,42 +2,56 @@ import usuarioService from "../services/usuarioService.js"
 import { toUsuarioDTO } from "../converters/usuarioConverter.js"
 import { usuarioValidator } from "../validators/usuarioValidator.js"
 import { idValidator } from "../validators/idValidator.js"
+import { ZodValidationError } from "../errors/validationError.js"
 
 class UsuarioController {
   crearUsuario(req, res) {
     return Promise.resolve()
-      .then(() => {
-        const body = usuarioValidator.parse(req.body)
-        const usuario = toUsuarioDTO(body)
-
+      .then(() => 
+        usuarioValidator.parse(req.body)
+      )
+      .catch((e) => {
+        throw new ZodValidationError(e)
+      })        
+      .then((bodyUsuario) => { 
+        const usuario = toUsuarioDTO(bodyUsuario)
         return usuarioService.crearUsuario(usuario)
       })
-      .then((nuevoUsuario) => {
-        return res.status(201).json(nuevoUsuario)
-      })
+      .then((nuevoUsuario) =>
+        res.status(201).json(nuevoUsuario)
+      )
   }
 
   verUsuario(req, res) {
     return Promise.resolve()
-      .then(() => {
-        const id = idValidator.parse(req.params.id)
-        return usuarioService.buscar(id)
-      })
-      .then((usuario) => {
+      .then(() => 
+        idValidator.parse(req.params.id)
+      )
+      .catch((e) => {
+        throw new ZodValidationError(e)
+      })     
+      .then((idUsuario) =>
+        usuarioService.buscar(idUsuario)
+      )
+      .then((usuario) =>
         res.status(200).json(usuario)
-      })
+      )
   }
 
   verHistorialUsuario(req, res) {
     return Promise.resolve()
-      .then(() => {
-        const usuario = req.user
-        const id = idValidator.parse(req.params.id)
-        return usuarioService.consultarHistorial(id, usuario)
-      })
-      .then((pedidos) => {
+      .then(() => 
+        idValidator.parse(req.params.id)
+      )
+      .catch((e) => {
+        throw new ZodValidationError(e)
+      })    
+      .then((idUsuario) => 
+        usuarioService.consultarHistorial(idUsuario, req.user)
+      )
+      .then((pedidos) =>
         res.status(200).json(pedidos)
-      })
+      )
   }
 }
 

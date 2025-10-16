@@ -26,7 +26,7 @@ export class MonedaInvalidaError extends DomainValidationError {
 
 export class UsuarioInvalidoError extends DomainValidationError {
   constructor(usuario) {
-    super("El tipo de usuario ingresado no esta dentro de las opciones validas", {usuario})
+    super("El tipo de usuario ingresado no esta dentro de las opciones validas", { usuario })
   }
 }
 

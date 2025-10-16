@@ -7,7 +7,7 @@ class NotificacionService {
   crearSegunPedido(pedido) {
     const mensaje = "ID NUEVO PEDIDO REALIZADO: " + pedido._id
     const notificacion = new Notificacion(pedido.vendedor, mensaje)
-    return notificacionRepository.crear(notificacion).then((notiCreada) => notiCreada)
+    return notificacionRepository.crear(notificacion)
   }
 
   crearSegunEstadoPedido(estadoActual, pedido) {
@@ -21,20 +21,20 @@ class NotificacionService {
     } else {
       return destinatario
     }
-    return this.notificarEstadoPedido(estadoActual, destinatario, pedido._id).then((creado) => creado)
+    return this.notificarEstadoPedido(estadoActual, destinatario, pedido._id)
   }
 
   notificarEstadoPedido(estado, destinatario, idPedido) {
     const notificacion = new Notificacion(destinatario, "El pedido " + idPedido + " cambio a estado " + estado)
-    return notificacionRepository.crear(notificacion).then((notificacion) => notificacion)
+    return notificacionRepository.crear(notificacion)
   }
 
   getNotificacionesLeidas(idUsuario) {
-    return notificacionRepository.getNotificacionesLeidas(idUsuario).then((notificacionesLeidas) => notificacionesLeidas)
+    return notificacionRepository.getNotificacionesLeidas(idUsuario)
   }
 
   getNotificacionesNoLeidas(idUsuario) {
-    return notificacionRepository.getNotificacionesNoLeidas(idUsuario).then((notificacionesNoLeidas) => notificacionesNoLeidas)
+    return notificacionRepository.getNotificacionesNoLeidas(idUsuario)
   }
 
   getNotificacion(idNotificacion) {
@@ -50,7 +50,6 @@ class NotificacionService {
         notificacion.marcarComoleida(usuario) //valida al marcar como leida
         return notificacionRepository.update(notificacion)
       })
-      .then((notificacionLeida) => notificacionLeida)
   }
 }
 

@@ -9,7 +9,6 @@ import { UsuarioSinPermisoError } from "../../errors/authorizationError.js"
 
 export class Pedido {
   constructor(comprador, vendedor, items, moneda, direccionEntrega) {
-    //this._id = null // inciialmente se pone en null hasta que es guardado en el Repo
     this.comprador = comprador
     this.vendedor = vendedor
     this.items = items
@@ -30,7 +29,7 @@ export class Pedido {
   }
 
   calcularTotal() {
-    this.total = this.items.reduce((acum, item) => acum + item.subtotal(), 0)
+    return this.items.reduce((acum, item) => acum + item.subtotal(), 0)
   }
 
   actualizarEstado(nuevoEstado, quien, motivo) {

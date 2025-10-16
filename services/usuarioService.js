@@ -11,21 +11,21 @@ class UsuarioService {
         const usuario = fromUsuarioDTO(usuarioDTO)
         return usuarioRepository.crear(usuario)
       })
-      .then((usuarioCreado) => usuarioCreado)
   }
 
   /************************** CONSULTAR UN USUARIO **************************/
   buscar(id) {
-    return usuarioRepository.findById(id).then((usuarioBuscado) => {
-      if (!usuarioBuscado) throw new UsuarioInexistenteError(id)
-      return usuarioBuscado
-    })
+    return usuarioRepository.findById(id)
+      .then((usuarioBuscado) => {
+        if (!usuarioBuscado) throw new UsuarioInexistenteError(id)
+        return usuarioBuscado
+      })
   }
 
   /************************** CONSULTAR EL HISTORIAL DE UN USUARIO **************************/
 
   consultarHistorial(id, usuario) {
-    return pedidoService.consultarHistorial(id, usuario).then((historial) => historial)
+    return pedidoService.consultarHistorial(id, usuario)
   }
 }
 

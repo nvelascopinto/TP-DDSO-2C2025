@@ -1,16 +1,17 @@
 import { z } from "zod"
-import { idValidator } from "./idValidator.js"
 
 export const filtrosValidator = z.object({
-  vendedor: idValidator,
-  minPrecio: z.number().nonnegative().optional(),
-  maxPrecio: z.number().nonnegative().optional(),
-  pagina: z.number().nonnegative().optional(),
-  limite: z.number().nonnegative().optional(),
+  // Agregar al vendedor como queryparam ¿? 
+  minPrecio: z.string().optional()
+    .transform(val => val ? parseFloat(val) : undefined),
+  maxPrecio: z.string().optional()
+    .transform(val => val ? parseFloat(val) : undefined),
+  pagina: z.string().optional()
+    .transform(val => val ? parseInt(val) : 1),
+  limite: z.string().optional()
+    .transform(val => val ? parseInt(val) : 5),
   nombre: z.string().optional(),
   categoria: z.string().optional(),
   descripcion: z.string().optional(),
-  ordenVentas: z.boolean().optional(),
-  ordenMasVendios: z.boolean().optional(),
-  ascendente: z.boolean().optional()
+  orden: z.string().optional()
 })

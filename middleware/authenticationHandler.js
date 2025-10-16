@@ -14,7 +14,7 @@ export const authenticateUser = (fieldName) => (req, _res, next) => {
       return usuarioRepository.findById(idUser)
     })
     .then((user) => {
-      if(!user) throw new UsuarioInexistenteError(user)
+      if (!user) throw new UsuarioInexistenteError(user)
       let key = fieldName
       if (fieldName == "X-User") {
         key = "user"

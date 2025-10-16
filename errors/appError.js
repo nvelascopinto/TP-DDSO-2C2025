@@ -1,6 +1,6 @@
 import { de } from "zod/locales"
 
-class AppError extends Error{
+class AppError extends Error {
   constructor(message, statusCode, name, details = null) {
     super(message)
     this.statusCode = statusCode
@@ -9,7 +9,7 @@ class AppError extends Error{
   }
 }
 
-class AppMultipleErrors extends AggregateError{
+class AppMultipleErrors extends AggregateError {
   constructor(message, statusCode, errors, name) {
     super(errors, message)
     this.statusCode = statusCode

@@ -1,6 +1,6 @@
 import { Moneda } from "./moneda.js"
-import {MonedaInvalidaError} from "../../errors/domainValidationError.js"
-import {UsuarioSinPermisoError} from "../../errors/authorizationError.js"
+import { MonedaInvalidaError } from "../../errors/domainValidationError.js"
+import { UsuarioSinPermisoError } from "../../errors/authorizationError.js"
 
 export class Producto {
   constructor(vendedor, titulo, descripcion, categoria, precio, moneda, stock, fotos, activo) {

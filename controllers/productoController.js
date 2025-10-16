@@ -3,53 +3,62 @@ import { toPaginadoResponse, toProductoDTO } from "../converters/productoConvert
 import { productoValidator } from "../validators/productoValidator.js"
 import { idMongoValidator } from "../validators/idValidator.js"
 import { cambioProductoValidator } from "../validators/productoValidator.js"
+import { filtrosValidator } from "../validators/filtrosValidator.js"
+import { ZodValidationError } from "../errors/validationError.js"
 
 class ProductoController {
   crear(req, res) {
     return Promise.resolve()
-      .then(() => {
-        const body = productoValidator.parse(req.body)
+      .then(() =>
+        productoValidator.parse(req.body)
+      )
+      .catch((e) => {
+        throw new ZodValidationError(e)
+      })
+      .then((bodyProducto) => {
         const usuario = req.user
-        const producto = toProductoDTO(body)
+        const producto = toProductoDTO(bodyProducto)
         return productoService.crear(producto, usuario)
       })
-      .then((nuevoProducto) => {
+      .then((nuevoProducto) =>
         res.status(201).json(nuevoProducto)
-      })
+      )
   }
 
   obtenerTodosDeVendedor(req, res) {
     return Promise.resolve()
-      .then(() => {
+      .then(() => 
+        filtrosValidator.parse(req.query)
+      )
+      .catch((e) => {
+        throw new ZodValidationError(e)
+      })      
+      .then((query) => {
         const vendedor = req.user
-        const query = req.query
-        console.log(query)
-        const { minPrecio, maxPrecio, pagina, limite, nombre, categoria, descripcion, orden } = query
-        const filtros = {
-          minPrecio: parseFloat(minPrecio),
-          maxPrecio: parseFloat(maxPrecio),
-          nombre: nombre,
-          categoria: categoria,
-          descripcion: descripcion,
-          orden: orden
-        }
-        const paginaNum = parseInt(pagina) || 1
-        const limiteNum = parseInt(limite) || 5
-        return productoService.obtenerTodosDeVendedor(vendedor, filtros, paginaNum, limiteNum)
+        const { pagina, limite, ...filtros } = query // Cualquier filtro que vayamos a agregar entra automáticamente a "filtros"
+        return productoService.obtenerTodosDeVendedor(vendedor, filtros, pagina, limite)
       })
-      .then((resultado) => res.status(200).json(toPaginadoResponse(resultado)))
+      .then((productos) => 
+        res.status(200).json(toPaginadoResponse(productos))
+      )
   }
 
   actualizar(req, res) {
     return Promise.resolve()
       .then(() => {
-        const vendedor = req.user
-        const productoID = idMongoValidator.parse(req.params.id)
+        const idProducto = idMongoValidator.parse(req.params.id)
         const cambioProducto = cambioProductoValidator.parse(req.body)
-
-        return productoService.actualizar(vendedor, productoID, cambioProducto)
+        return { idProducto, cambioProducto }
       })
-      .then((productoActualizado) => res.status(200).json(productoActualizado))
+      .catch((e) => {
+        throw new ZodValidationError(e)
+      })      
+      .then(({ idProducto, cambioProducto }) =>
+        productoService.actualizar(req.user, idProducto, cambioProducto)
+      )
+      .then((productoActualizado) => 
+        res.status(200).json(productoActualizado)
+      )
   }
 }
 

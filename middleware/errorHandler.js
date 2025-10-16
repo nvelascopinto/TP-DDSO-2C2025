@@ -6,13 +6,7 @@ import { MongoError } from "mongodb"
 export function errorHandler(error, _req, res, _next) {
   console.log(error.message)
 
-  if (error instanceof ZodError) {
-    return res.status(400).json({
-      name: "DatosInvalidos",
-      message: "Datos ingresados invalidos",
-      details: error.issues
-    })
-  } else if (error instanceof AppError) {
+  if (error instanceof AppError) {
     return res.status(error.statusCode).json({
       name: error.name,
       message: error.message,

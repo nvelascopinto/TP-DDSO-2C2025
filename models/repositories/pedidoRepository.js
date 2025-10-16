@@ -16,13 +16,10 @@ class PedidoRepository {
   }
 
   update(pedido) {
-    return this.modelPedido.findByIdAndUpdate(pedido._id, pedido, {
-      new: true
-    })
+    return this.modelPedido.findByIdAndUpdate(pedido._id, pedido, { new: true })
   }
 
   findById(id) {
-    console.log(id)
     return this.modelPedido.findById(id).populate("items.producto")
   }
 }

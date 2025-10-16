@@ -15,23 +15,27 @@ class ProductoService {
         console.log(producto)
         return productoRepository.crear(producto)
       })
-      .then((productoGuardado) => productoGuardado)
+      .then((productoGuardado) => 
+        productoGuardado
+      )
   }
 
   /************************** CONSULTAR UN PRODUCTO **************************/
   obtenerProducto(id) {
-    return productoRepository.findById(id).then((producto) => {
-      if (!producto) throw new ProductoInexistenteError()
-      return producto
-    })
+    return productoRepository.findById(id)
+      .then((producto) => {
+        if (!producto) throw new ProductoInexistenteError()
+        return producto
+      })
   }
 
   /************************** CONSULTAR TODOS LOS PRODUCTOS DE UN VENDEDOR **************************/
   obtenerTodosDeVendedor(vendedor, filtros, pagina, limite) {
-    return Promise.resolve().then(() => {
-      vendedor.validarRol([tipoUsuario.VENDEDOR])
-      return productoRepository.obtenerTodosDeVendedor(vendedor.username, filtros, pagina, limite)
-    })
+    return Promise.resolve()
+      .then(() => {
+        vendedor.validarRol([tipoUsuario.VENDEDOR])
+        return productoRepository.obtenerTodosDeVendedor(vendedor.username, filtros, pagina, limite)
+      })
   }
 
   /************************** ACTUALIZAR LOS CAMPOS DE UN PRODUCTO **************************/
@@ -50,36 +54,31 @@ class ProductoService {
 
         return this.update(producto)
       })
-      .then((productoActualizado) => productoActualizado)
   }
 
   /************************** FUNCIONES AUXILIARES **************************/
   update(producto) {
-    return productoRepository.update(producto).then((productoModificado) => productoModificado)
+    return productoRepository.update(producto)
   }
 
   reducirStock(items) {
-    return Promise.all(
-      items.map((item) =>
-        this.obtenerProducto(item.producto._id).then((producto) => {
-          producto.reducirStock(item.cantidad)
-          producto.aumentarVentas(item.cantidad)
-          return this.update(producto)
-        })
-      )
-    )
+    return Promise.all(items.map((item) => this.obtenerProducto(item.producto._id)
+      .then((producto) => {
+        producto.reducirStock(item.cantidad)
+        producto.aumentarVentas(item.cantidad)
+        return this.update(producto)
+      })
+    ))
   }
 
   aumentarStock(items) {
-    return Promise.all(
-      items.map((item) =>
-        this.obtenerProducto(item.producto._id).then((producto) => {
-          producto.aumentarStock(item.cantidad)
-          producto.reducirVentas(item.cantidad)
-          return this.update(producto)
-        })
-      )
-    )
+    return Promise.all(items.map((item) => this.obtenerProducto(item.producto._id)
+      .then((producto) => {
+        producto.aumentarStock(item.cantidad)
+        producto.reducirVentas(item.cantidad)
+        return this.update(producto)
+      })
+    ))
   }
 }
 

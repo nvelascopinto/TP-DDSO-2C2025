@@ -141,7 +141,6 @@ paths:
                 $ref: "#/components/schemas/Error"
 
 components:
-
   schemas:
     ItemDTO:
       type: object
