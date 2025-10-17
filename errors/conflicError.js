@@ -6,11 +6,29 @@ class ConflictError extends AppError {
   }
 }
 
-export class PedidoStockInsuficienteError extends ConflictError {
+// export class PedidoStockInsuficienteError extends ConflictError {
+//   constructor(idProducto) {
+//     super(
+//       "El stock es insuficiente para uno o más productos del pedido.",
+//       "Intento de crear un pedido con stock insuficiente del PRODUCTO " + idProducto + "."
+//     )
+//   }
+// }
+
+export class ProductoInactivoError extends ConflictError {
   constructor(idProducto) {
     super(
-      "El stock es insuficiente para uno o más productos del pedido.",
-      "Intento de crear un pedido con stock insuficiente del PRODUCTO " + idProducto + "."
+      "El estado es inactivo para uno o más productos del pedido",
+      "Intento de crear un pedido con el PRODUCTO " + idProducto + " inactivo."
+    )
+  }
+}
+
+export class ProductoStockInsuficienteError extends ConflictError {
+  constructor(idProducto) {
+    super(
+      "El stock es insuficiente para uno o más productos del pedido",
+      "Intento de crear un pedido con el PRODUCTO " + idProducto + " sin stock."
     )
   }
 }

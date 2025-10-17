@@ -1,6 +1,7 @@
 import { Moneda } from "./moneda.js"
 import { MonedaInvalidaError } from "../../errors/domainValidationError.js"
 import { UsuarioSinPermisoError } from "../../errors/authorizationError.js"
+import { ProductoInactivoError, ProductoStockInsuficienteError } from "../../errors/conflicError.js"
 
 export class Producto {
   constructor(vendedor, titulo, descripcion, categoria, precio, moneda, stock, fotos, activo) {
@@ -31,8 +32,12 @@ export class Producto {
     this.vendedor = vendedor
   }
 
-  estaDisponible(cantidad) {
-    return this.stock >= cantidad && this.activo
+  estaDisponible() {
+    if(!this.activo) throw new ProductoInactivoError(this._id)
+  }
+
+  tieneStock(cantidad) {
+    if(this.stock < cantidad) throw new ProductoStockInsuficienteError(this._id)
   }
 
   validarCreador(idUsuario) {

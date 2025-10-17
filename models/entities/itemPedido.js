@@ -17,8 +17,7 @@ export class ItemPedido {
   // }
 
   validarStock() {
-    const disponible = this.producto.estaDisponible(this.cantidad)
-    if(!disponible) throw new PedidoStockInsuficienteError(this.producto._id)
-    return disponible
+    this.producto.estaDisponible() 
+    this.producto.tieneStock(this.cantidad)
   }
 }

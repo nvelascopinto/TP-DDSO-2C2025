@@ -3,8 +3,8 @@ import { CambioEstadoPedido } from "./cambioEstadoPedido.js"
 import { Moneda } from "./moneda.js"
 import { ordenEstados } from "./estadoPedido.js"
 import { tipoUsuario } from "./tipoUsuario.js"
-import { YaEnEstadoError, PedidoStockInsuficienteError, CambioEstadoInvalidoError } from "../../errors/conflicError.js"
-import { MonedaInvalidaError, ProductosDiferentesVendedorError } from "../../errors/domainValidationError.js"
+import { YaEnEstadoError, CambioEstadoInvalidoError } from "../../errors/conflicError.js"
+import { ProductosDiferentesVendedorError } from "../../errors/domainValidationError.js"
 import { UsuarioSinPermisoError } from "../../errors/authorizationError.js"
 
 export class Pedido {
@@ -40,7 +40,7 @@ export class Pedido {
   }
 
   validarStock() {
-    return this.items.every((item) => item.validarStock())
+    this.items.forEach((item) => item.validarStock())
   }
 
   mostrarItems() {

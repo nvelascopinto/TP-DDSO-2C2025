@@ -1,19 +1,13 @@
-import { PedidoInexistenteError } from "../errors/pedidoInexistenteError.js"
-import { PedidoStockInsuficienteError } from "../errors/pedidoStockInsuficienteError.js"
-import ProductoInexistenteError from "../errors/productoInexistenteError.js"
-import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js"
 import { DireccionEntrega } from "../models/entities/direccionEntrega.js"
 import { ItemPedido } from "../models/entities/itemPedido.js"
 import { Pedido } from "../models/entities/pedido.js"
 import { Producto } from "../models/entities/producto.js"
 import { Usuario } from "../models/entities/usuario.js"
 import { estado } from "../models/entities/estadoPedido.js"
-import { CambioEstadoInvalidoError } from "../errors/cambioEstadoInvalidoError.js"
-import DatosInvalidosError from "../errors/datosInvalidosError.js"
-import UsuarioSinPermisoError from "../errors/usuarioSinPermisoError.js"
-import { MongooseError } from "mongoose"
-import EstadoInvalidoError from "../errors/estadoInvalidoError.js"
-import HistorialInexistenteError from "../errors/historialInexistenteError.js"
+import { UsuarioSinPermisoError } from "../errors/authorizationError.js"
+import { DomainMultipleErrors, EstadoInvalidoError } from "../errors/domainValidationError.js"
+import { PedidoInexistenteError, ProductoInexistenteError } from "../errors/notFoundError.js"
+import { ProductoStockInsuficienteError, CambioEstadoInvalidoError, ProductoInactivoError } from "../errors/conflicError.js"
 
 jest.mock("../models/repositories/pedidoRepository.js", () => ({
   __esModule: true,
@@ -190,7 +184,7 @@ describe("PedidosService", () => {
       mockProductoService.obtenerProducto.mockReturnValueOnce(item1).mockReturnValueOnce(item2)
 
       mockPedidoRepository.crear.mockReturnValue(mockPedido)
-      await expect(() => pedidoService.crear(pedidoDTO, comprador)).rejects.toThrow(PedidoStockInsuficienteError)
+      await expect(() => pedidoService.crear(pedidoDTO, comprador)).rejects.toThrow(ProductoStockInsuficienteError)
       expect(mockPedidoRepository.crear).toHaveBeenCalledTimes(0)
       expect(mockProductoService.obtenerProducto).toHaveBeenNthCalledWith(1, 1)
       expect(mockProductoService.obtenerProducto).toHaveBeenNthCalledWith(2, 2)
@@ -263,7 +257,7 @@ describe("PedidosService", () => {
       mockProductoService.obtenerProducto.mockReturnValueOnce(item1).mockReturnValueOnce(item2)
       mockPedidoRepository.crear.mockReturnValue(mockPedido)
 
-      await expect(() => pedidoService.crear(pedidoDTO, comprador)).rejects.toThrow(PedidoInexistenteError)
+      await expect(() => pedidoService.crear(pedidoDTO, comprador)).rejects.toThrow(ProductoInactivoError)
 
       expect(mockPedidoRepository.crear).toHaveBeenCalledTimes(0)
       expect(mockProductoService.obtenerProducto).toHaveBeenNthCalledWith(1, 1)
@@ -375,7 +369,7 @@ describe("PedidosService", () => {
         -58.3816
       )
       mockProductoService.obtenerProducto.mockReturnValueOnce(item1).mockReturnValueOnce(item2)
-      await expect(() => pedidoService.crear(pedidoDTO, comprador)).rejects.toThrow(DatosInvalidosError)
+      await expect(() => pedidoService.crear(pedidoDTO, comprador)).rejects.toThrow(DomainMultipleErrors)
       expect(mockPedidoRepository.crear).toHaveBeenCalledTimes(0)
       expect(mockProductoService.obtenerProducto).toHaveBeenNthCalledWith(1, 1)
       expect(mockProductoService.obtenerProducto).toHaveBeenNthCalledWith(2, 2)
@@ -670,9 +664,10 @@ describe("PedidosService", () => {
       expect(mockPedidoRepository.consultarHistorial).toHaveBeenCalledWith("juancito")
     })
 
-    it("no deberia devolver el historial  por no existir ", async () => {
+    it("deberia devolver el historial vacio por no haber hecho pedidos ", async () => {
       mockPedidoRepository.consultarHistorial.mockResolvedValue([])
-      await expect(pedidoService.consultarHistorial("juancito", comprador)).rejects.toThrow(HistorialInexistenteError)
+      const historial = await pedidoService.consultarHistorial("juancito", comprador)
+      expect(historial).toEqual([])
       expect(mockPedidoRepository.consultarHistorial).toHaveBeenCalledTimes(1)
       expect(mockPedidoRepository.consultarHistorial).toHaveBeenCalledWith("juancito")
     })

@@ -1,11 +1,6 @@
-import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js"
 import { UsuarioDTO } from "../models/DTO/usuarioDTO.js"
 import { Usuario } from "../models/entities/usuario.js"
-import { Producto } from "../models/entities/producto.js"
-import { DireccionEntrega } from "../models/entities/direccionEntrega.js"
-import { ItemPedido } from "../models/entities/itemPedido.js"
-import { Pedido } from "../models/entities/pedido.js"
-import UsuarioSinPermisoError from "../errors/usuarioSinPermisoError.js"
+import { UsuarioInexistenteError } from "../errors/notFoundError.js"
 
 jest.mock("../models/repositories/usuarioRepository.js", () => ({
   __esModule: true,

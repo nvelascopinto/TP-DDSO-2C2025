@@ -1,9 +1,7 @@
-import { DatosInvalidos } from "../errors/datosInvalidosError.js"
 import { ProductoDTO } from "../models/DTO/productoDTO.js"
 import { Producto } from "../models/entities/producto.js"
 import { Usuario } from "../models/entities/usuario.js"
-import { UsuarioInexistenteError } from "../errors/usuarioInexistenteError.js"
-import UsuarioSinPermisoError from "../errors/usuarioSinPermisoError.js"
+import { UsuarioSinPermisoError } from "../errors/authorizationError.js"
 
 jest.mock("../models/repositories/productoRepository.js", () => ({
   __esModule: true,

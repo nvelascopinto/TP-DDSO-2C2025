@@ -1,9 +1,8 @@
 import { estado } from "../models/entities/estadoPedido.js"
-import NotificacionInexistenteError from "../errors/notificacionInexistenteError.js"
-import UsuarioSinPermisoError from "../errors/usuarioSinPermisoError.js"
-import YaLeidaError from "../errors/yaLeidaError.js"
+import { NotificacionInexistenteError } from "../errors/notFoundError.js"
+import { UsuarioSinPermisoError } from "../errors/authorizationError.js"
+import { YaLeidaError } from "../errors/conflicError.js"
 import { Notificacion } from "../models/entities/notificacion.js"
-//import { Notificacion } from "../models/entities/notificacion"
 
 jest.mock("../models/repositories/notificacionRepository.js", () => ({
   __esModule: true,
