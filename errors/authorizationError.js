@@ -1,13 +1,16 @@
-import AppError from "./appError.js"
+import { AppError } from "./appError.js"
 
 class AuthorizationError extends AppError {
-  constructor(message, details) {
-    super(message, 403, "AuthorizationError", details)
+  constructor(message, logInfo) {
+    super(message, 403, "AuthorizationError", logInfo)
   }
 }
 
 export class UsuarioSinPermisoError extends AuthorizationError {
-  constructor(usuarioId) {
-    super("El usuario no tiene permiso", { usuarioId })
+  constructor(idUsuario) {
+    super(
+      "No se tiene permiso para realizar esta acción.", 
+      "Intento de acceso del USUARIO " + idUsuario + " sin permiso."
+    )
   }
 }

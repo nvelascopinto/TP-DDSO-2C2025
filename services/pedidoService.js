@@ -3,7 +3,6 @@ import productoService from "./productoService.js"
 import notificacionService from "./notificacionService.js"
 import { fromPedidoDTO } from "../converters/pedidoConverter.js"
 import { autorizadosAEstado, estado } from "../models/entities/estadoPedido.js"
-import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { PedidoInexistenteError } from "../errors/notFoundError.js"
 import { validarEstado } from "../validators/estadoValidador.js"
 

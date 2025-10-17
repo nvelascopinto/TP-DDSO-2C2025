@@ -40,10 +40,7 @@ export class Pedido {
   }
 
   validarStock() {
-    if (!this.items.every((item) => item.validarStock())) {
-      throw new PedidoStockInsuficienteError()
-    }
-    return true
+    return this.items.every((item) => item.validarStock())
   }
 
   mostrarItems() {
@@ -55,7 +52,7 @@ export class Pedido {
   validarItemsConVendedor() {
     const vendedorUnico = this.items[0].producto.vendedor
     if (!this.items.every((item) => item.producto.vendedor === vendedorUnico)) {
-      throw new ProductosDiferentesVendedorError()
+      throw new ProductosDiferentesVendedorError(this.comprador)
     }
     this.vendedor = vendedorUnico
   }
@@ -71,10 +68,10 @@ export class Pedido {
     const indiceNuevo = ordenEstados.indexOf(nuevoEstado)
 
     if (indiceNuevo === indiceActual) {
-      throw new YaEnEstadoError(nuevoEstado)
+      throw new YaEnEstadoError(this._id, nuevoEstado)
     }
     if (indiceNuevo < indiceActual || this.estado === estado.CANCELADO) {
-      throw new CambioEstadoInvalidoError(this.estado, nuevoEstado)
+      throw new CambioEstadoInvalidoError(this._id, this.estado, nuevoEstado)
     }
   }
   //usuario que puede acceder a ver el pedido

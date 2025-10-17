@@ -1,37 +1,52 @@
-import AppError from "./appError.js"
+import { AppError } from "./appError.js"
 
 class ConflictError extends AppError {
-  constructor(message, details) {
-    super(message, 409, "ConflictError", details)
+  constructor(message, logInfo) {
+    super(message, 409, "ConflictError", logInfo)
   }
 }
 
 export class PedidoStockInsuficienteError extends ConflictError {
-  constructor() {
-    super("Stock insuficiente para uno o más productos del pedido")
+  constructor(idProducto) {
+    super(
+      "El stock es insuficiente para uno o más productos del pedido.",
+      "Intento de crear un pedido con stock insuficiente del PRODUCTO " + idProducto + "."
+    )
   }
 }
 
 export class YaLeidaError extends ConflictError {
-  constructor(notificacionId) {
-    super("La notificacion ya fue leida", { notificacionId })
+  constructor(idNotificacion, idUsuario) {
+    super(
+      "La notificación ya fue leída.", 
+      "Intento de leer la NOTIFICACIÓN " + idNotificacion + ", que ya estaba leída, por parte del USUARIO " + idUsuario + "."
+    )
   }
 }
 
 export class YaEnEstadoError extends ConflictError {
-  constructor(nuevoEstado) {
-    super("El pedido ya está en ese estado", { nuevoEstado })
+  constructor(idPedido, nuevoEstado) {
+    super(
+      "El pedido ya está en ese estado.", 
+      "Intento de cambiar el PEDIDO " + idPedido + " al ESTADO " + nuevoEstado + ", pero ya se encuentra en ese estado."
+    )
   }
 }
 
 export class CambioEstadoInvalidoError extends ConflictError {
-  constructor(estadoActual, nuevoEstado) {
-    super("El pedido no puede pasar a ese estado", { estadoActual, nuevoEstado })
+  constructor(idPedido, estadoActual, nuevoEstado) {
+    super(
+      "El pedido no puede pasar a ese estado.", 
+      "Intento de cambiar el PEDIDO " + idPedido + " del ESTADO " + estadoActual + " al ESTADO " + nuevoEstado + ", transición inválida."
+    )
   }
 }
 
 export class YaExisteUsuarioError extends ConflictError {
   constructor(username) {
-    super("El username ingresado ya existe", { username })
+    super(
+      "El username ingresado ya existe.", 
+      "Intento de registrar un usuario con USERNAME " + username + ", que ya existe en la base de datos."
+    )
   }
 }

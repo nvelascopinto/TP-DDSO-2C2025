@@ -24,7 +24,7 @@ class ProductoService {
   obtenerProducto(id) {
     return productoRepository.findById(id)
       .then((producto) => {
-        if (!producto) throw new ProductoInexistenteError()
+        if (!producto) throw new ProductoInexistenteError(id)
         return producto
       })
   }

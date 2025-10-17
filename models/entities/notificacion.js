@@ -15,7 +15,7 @@ export class Notificacion {
       throw new UsuarioSinPermisoError(usuarioId)
     }
     if (this.leida) {
-      throw new YaLeidaError(this._id)
+      throw new YaLeidaError(this._id, usuarioId)
     }
     this.leida = true
     this.fechaLeida = new Date()

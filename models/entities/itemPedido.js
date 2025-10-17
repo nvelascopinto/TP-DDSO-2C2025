@@ -1,3 +1,5 @@
+import { PedidoStockInsuficienteError } from "../../errors/conflicError.js"
+
 export class ItemPedido {
   constructor(producto, cantidad) {
     this.producto = producto
@@ -15,6 +17,8 @@ export class ItemPedido {
   // }
 
   validarStock() {
-    return this.producto.estaDisponible(this.cantidad)
+    const disponible = this.producto.estaDisponible(this.cantidad)
+    if(!disponible) throw new PedidoStockInsuficienteError(this.producto._id)
+    return disponible
   }
 }

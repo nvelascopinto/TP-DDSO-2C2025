@@ -1,31 +1,43 @@
-import AppError from "./appError.js"
+import { AppError } from "./appError.js"
 
 class NotFoundError extends AppError {
-  constructor(message, details) {
-    super(message, 404, "NotFoundError", details)
+  constructor(message, logInfo) {
+    super(message, 404, "NotFoundError", logInfo)
   }
 }
 
 export class PedidoInexistenteError extends NotFoundError {
-  constructor(pedidoId) {
-    super("No existe un pedido con ese ID", { pedidoId })
+  constructor(idPedido) {
+    super(
+      "El pedido solicitado no existe.", 
+      "Intento de acceder al PEDIDO " + idPedido + " inexistente."
+    )
   }
 }
 
 export class ProductoInexistenteError extends NotFoundError {
-  constructor(productoId) {
-    super("No existe un producto con ese ID", { productoId })
+  constructor(idProducto) {
+    super(
+      "El producto solicitado no existe.", 
+      "Intento de acceder al PRODUCTO " + idProducto + " inexistente."
+    )
   }
 }
 
 export class UsuarioInexistenteError extends NotFoundError {
-  constructor(usuarioId) {
-    super("No existe un usuario con el ID enviado", { usuarioId })
+  constructor(idUsuario) {
+    super(
+      "El usuario solicitado no existe.", 
+      "Intento de acceder al USUARIO " + idUsuario + " inexistente."
+    )
   }
 }
 
 export class NotificacionInexistenteError extends NotFoundError {
-  constructor(notificacionId) {
-    super("No existe una notificacion con ese ID", { notificacionId })
+  constructor(idNotificacion) {
+    super(
+      "La notificación solicitada no existe.", 
+      "Intento de acceder a la NOTIFICACIÓN " + idNotificacion + " inexistente."
+    )
   }
 }

@@ -19,7 +19,6 @@ export const authenticateUser = (fieldName) => (req, _res, next) => {
       if (fieldName == "X-User") {
         key = "user"
       }
-      console.log("KEYYY", key)
       req[key] = user
       next()
     })
