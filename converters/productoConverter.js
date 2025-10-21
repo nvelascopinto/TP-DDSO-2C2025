@@ -1,6 +1,7 @@
 import { ProductoDTO } from "../models/DTO/productoDTO.js"
 import { Producto } from "../models/entities/producto.js"
-
+import { validarMoneda } from "../validators/monedaAnalayzer.js"
+import { DomainMultipleErrors } from "../errors/domainValidationError.js"
 export function toProductoDTO(JSONProducto) {
   return new ProductoDTO(
     // JSONProducto.vendedor,
@@ -15,18 +16,28 @@ export function toProductoDTO(JSONProducto) {
   )
 }
 
-export function fromProductoDTO(productoDTO) {
-  return new Producto(
-    null,
-    productoDTO.titulo,
-    productoDTO.descripcion,
-    productoDTO.categoria,
-    productoDTO.precio,
-    productoDTO.moneda,
-    productoDTO.stock,
-    productoDTO.fotos,
-    productoDTO.activo
-  )
+export function fromProductoDTO(productoDTO, vendedor) {
+  return Promise.resolve()
+    .then(() => {
+      let errores = [] 
+        errores.push(validarMoneda(productoDTO.moneda))
+        errores = errores.filter((e) => e != null)
+              if (errores.length > 0) {
+                throw new DomainMultipleErrors("Se encontraron varios errores", errores)
+              }
+      }).then(()=> {
+        return new Producto(
+          vendedor.username,
+          productoDTO.titulo,
+          productoDTO.descripcion,
+          productoDTO.categoria,
+          productoDTO.precio,
+          productoDTO.moneda,
+          productoDTO.stock,
+          productoDTO.fotos,
+          productoDTO.activo
+        )
+      })
 }
 
 export function toPaginadoResponse({ productos, total, pagina, limite }) {

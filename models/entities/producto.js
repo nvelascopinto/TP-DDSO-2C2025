@@ -6,7 +6,7 @@ import { ProductoInactivoError, ProductoStockInsuficienteError } from "../../err
 export class Producto {
   constructor(vendedor, titulo, descripcion, categoria, precio, moneda, stock, fotos, activo) {
     // this._id = null //lo va a escribir mongo
-    this.vendedor = vendedor // debe ser el id
+    this.vendedor = vendedor 
     this.titulo = titulo
     this.descripcion = descripcion
     this.categoria = categoria
@@ -28,9 +28,6 @@ export class Producto {
     this.activo = nuevoEstado
   }
 
-  asignarVendedor(vendedor) {
-    this.vendedor = vendedor
-  }
 
   estaDisponible() {
     if(!this.activo) throw new ProductoInactivoError(this._id)

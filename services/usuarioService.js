@@ -2,6 +2,7 @@ import usuarioRepository from "../models/repositories/usuarioRepository.js"
 import pedidoService from "./pedidoService.js"
 import { fromUsuarioDTO } from "../converters/usuarioConverter.js"
 import { UsuarioInexistenteError } from "../errors/notFoundError.js"
+import { YaExisteUsuarioError } from "../errors/conflicError.js"
 
 class UsuarioService {
   /************************** CREAR UN USUARIO **************************/
@@ -10,6 +11,8 @@ class UsuarioService {
       .then(() => {
         const usuario = fromUsuarioDTO(usuarioDTO)
         return usuarioRepository.crear(usuario)
+      }).catch(error.name === "MongoServerError" && error.code === 11000).then(() =>{
+          throw new YaExisteUsuarioError(usuarioDTO.username)
       })
   }
 

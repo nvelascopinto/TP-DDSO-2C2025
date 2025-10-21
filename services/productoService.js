@@ -9,12 +9,10 @@ class ProductoService {
     return Promise.resolve()
       .then(() => {
         vendedor.validarRol([tipoUsuario.VENDEDOR])
-        const producto = fromProductoDTO(productoDTO)
-        producto.asignarVendedor(vendedor.username)
-        // producto.validarCreador(vendedor.username)
+        return fromProductoDTO(productoDTO, vendedor)
+      }).then((producto)=>{
         return productoRepository.crear(producto)
-      })
-      .then((productoGuardado) => 
+      }).then((productoGuardado) => 
         productoGuardado
       )
   }
