@@ -33,9 +33,8 @@ export class Pedido {
   }
 
   actualizarEstado(nuevoEstado, quien, motivo) {
-    this.validarCambioEstado(nuevoEstado)
-    this.estado = nuevoEstado
-    const cambio = new CambioEstadoPedido(nuevoEstado, this._id, quien, motivo)
+    this.estado.cambiarEstadoA(nuevoEstado, quien, this)
+    const cambio = new CambioEstadoPedido(nuevoEstado.nombre, this._id, quien.username, motivo)
     this.historialCambioPedidos.push(cambio)
   }
 
@@ -63,17 +62,17 @@ export class Pedido {
   //   }
   // }
 
-  validarCambioEstado(nuevoEstado) {
-    const indiceActual = ordenEstados.indexOf(this.estado)
-    const indiceNuevo = ordenEstados.indexOf(nuevoEstado)
+  // validarCambioEstado(nuevoEstado) {
+  //   const indiceActual = ordenEstados.indexOf(this.estado)
+  //   const indiceNuevo = ordenEstados.indexOf(nuevoEstado)
 
-    if (indiceNuevo === indiceActual) {
-      throw new YaEnEstadoError(this._id, nuevoEstado)
-    }
-    if (indiceNuevo < indiceActual || this.estado === estado.CANCELADO) {
-      throw new CambioEstadoInvalidoError(this._id, this.estado, nuevoEstado)
-    }
-  }
+  //   if (indiceNuevo === indiceActual) {
+  //     throw new YaEnEstadoError(this._id, nuevoEstado)
+  //   }
+  //   if (indiceNuevo < indiceActual || this.estado === estado.CANCELADO) {
+  //     throw new CambioEstadoInvalidoError(this._id, this.estado, nuevoEstado)
+  //   }
+  // }
   //usuario que puede acceder a ver el pedido
   validarUsuario(usuario) {
     if (usuario.username != this.vendedor && usuario.username != this.comprador && usuario.tipoUsuario != tipoUsuario.ADMIN) {

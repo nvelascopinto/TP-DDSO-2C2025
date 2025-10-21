@@ -2,10 +2,8 @@ import pedidoRepository from "../models/repositories/pedidoRepository.js"
 import productoService from "./productoService.js"
 import notificacionService from "./notificacionService.js"
 import { fromPedidoDTO } from "../converters/pedidoConverter.js"
-import { autorizadosAEstado, estado } from "../models/entities/estadoPedido.js"
 import { PedidoInexistenteError } from "../errors/notFoundError.js"
-import { validarEstado } from "../validators/estadoValidador.js"
-
+import { estadoConverter } from "../converters/estadoConverter.js"
 class PedidoService {
   /************************** CREAR UN PEDIDO **************************/
   crear(pedidoDTO, comprador) {
@@ -45,34 +43,24 @@ class PedidoService {
   }
 
   /************************** CAMBIAR EL ESTADO DE UN PEDIDO **************************/
-  cambioEstado(cambioEstado, idPedido) {
+  cambioEstado(estado, usuario, motivo, idPedido) {
+    let estadoNuevo = estado
     return Promise.resolve()
       .then(() => {
-        validarEstado(cambioEstado.estado)
-        cambioEstado.usuario.validarRol(autorizadosAEstado[cambioEstado.estado])
-        return this.consultar(idPedido, cambioEstado.usuario)
+        estadoNuevo = estadoConverter(estado)
+      }).then(() => {
+        estadoNuevo.validarUsuario(usuario)
+        return this.consultar(idPedido,usuario)
       })
       .then((pedido) => {
-        if (estado[cambioEstado.estado] == estado.CONFIRMADO) {
-          pedido.validarStock()
-          return productoService.reducirStock(pedido.items).then(() => pedido) // reduce stock y aumenta cantidad vendida
-        } else if (
-          estado[cambioEstado.estado] == estado.CANCELADO &&
-          (pedido.estado == estado.CONFIRMADO || pedido.estado == estado.EN_PREPARACION)
-        ) {
-          return productoService.aumentarStock(pedido.items).then(() => pedido) // aumenta stock y reduce cantidad vendidad
-        }
-        return pedido // para cuando sean otros estados
-      })
-      .then((pedido) => {
-        pedido.actualizarEstado(estado[cambioEstado.estado], cambioEstado.usuario.username, cambioEstado.motivo)
+        pedido.actualizarEstado(estadoNuevo, usuario, motivo)
         return pedidoRepository.update(pedido)
       })
       .then((pedidoActualizado) =>
-        notificacionService.crearSegunEstadoPedido(estado[cambioEstado.estado], pedidoActualizado)
+        notificacionService.crearSegunEstadoPedido(estadoNuevo.nombre, pedidoActualizado)
       )
-      .then((notificacion) =>
-        notificacion.mensaje
+      .then(() =>
+        "El pedido cambio a estado " + estadoNuevo.nombre + " correctamente."
       )
   }
 }

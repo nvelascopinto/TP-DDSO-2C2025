@@ -4,6 +4,7 @@ import { pedidoValidator } from "../validators/pedidoValidator.js"
 import { idMongoValidator } from "../validators/idValidator.js"
 import { cambioEstadoPedidoValidator } from "../validators/cambioEstadoPedidoValidator.js"
 import { ZodValidationError } from "../errors/validationError.js"
+import { estados } from "../models/entities/estadosPedido.js"
 
 class PedidoController {
   crear(req, res) {
@@ -51,8 +52,7 @@ class PedidoController {
         throw new ZodValidationError(e)
       })
       .then(({ idPedido, cambioEstado }) => {
-        cambioEstado.usuario = req.user
-        return pedidoService.cambioEstado(cambioEstado, idPedido)
+        return pedidoService.cambioEstado(cambioEstado.estado, cambioEstado.usuario, cambioEstado.motivo, idPedido)
       })
       .then((mensaje) => res.status(200).json(mensaje))
   }

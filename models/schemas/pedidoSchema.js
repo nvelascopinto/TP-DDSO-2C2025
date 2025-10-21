@@ -3,7 +3,7 @@ import { Pedido } from "../entities/pedido.js"
 import { cambioEstadoPedidoSchema } from "./cambioEstadoPedidoSchema.js"
 import { direccionEntregaSchema } from "./direccionEntregaSchema.js"
 import { itemPedidoSchema } from "./itemPedidoSchema.js"
-
+import { estados } from "../entities/estadosPedido.js"
 const pedidoSchema = new mongoose.Schema(
   {
     comprador: {
@@ -30,7 +30,7 @@ const pedidoSchema = new mongoose.Schema(
       enum: ["PESO_ARG", "DOLAR_USA", "REAL"],
       required: true
     },
-    estado: {
+    estadoNombre: {
       type: String,
       enum: ["Pendiente", "Confirmado", "En_Preparacion", "Enviado", "Entregado", "Cancelado"],
       required: true
@@ -53,6 +53,9 @@ const pedidoSchema = new mongoose.Schema(
   }
 )
 
+pedidoSchema.virtual("estado").get(function () {
+  return estados[this.estadoNombre]
+})
 pedidoSchema.loadClass(Pedido)
 
 export const PedidoModel = mongoose.model("Pedido", pedidoSchema)

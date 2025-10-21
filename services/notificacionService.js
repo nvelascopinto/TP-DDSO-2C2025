@@ -1,6 +1,5 @@
 import notificacionRepository from "../models/repositories/notificacionRepository.js"
 import { Notificacion } from "../models/entities/notificacion.js"
-import { estado } from "../models/entities/estadoPedido.js"
 import { NotificacionInexistenteError } from "../errors/notFoundError.js"
 
 class NotificacionService {
@@ -11,17 +10,8 @@ class NotificacionService {
   }
 
   crearSegunEstadoPedido(estadoActual, pedido) {
-    let destinatario = null
-    if (estadoActual == estado.CONFIRMADO) {
-      destinatario = pedido.comprador
-    } else if (estadoActual == estado.CANCELADO) {
-      destinatario = pedido.vendedor
-    } else if (estadoActual == estado.ENVIADO) {
-      destinatario = pedido.comprador
-    } else {
-      return destinatario
-    }
-    return this.notificarEstadoPedido(estadoActual, destinatario, pedido._id)
+    return this.notificarEstadoPedido(estadoActual, pedido.comprador, pedido._id)
+      .then(() => this.notificarEstadoPedido(estadoActual, pedido.vendedor, pedido._id))
   }
 
   notificarEstadoPedido(estado, destinatario, idPedido) {
