@@ -8,14 +8,15 @@ class PedidoService {
   /************************** CREAR UN PEDIDO **************************/
   crear(pedidoDTO, comprador) {
     return Promise.resolve()
-      .then(() =>
-        Promise.all(pedidoDTO.itemsDTO.map((item) => productoService.obtenerProducto(item.productoID)))
-      )
+      .then(() => {
+        comprador.validarRol([tipoUsuario.COMPRADOR])
+        return Promise.all(pedidoDTO.itemsDTO.map((item) => productoService.obtenerProducto(item.productoID)))
+      })
       .then((productos) =>
         fromPedidoDTO(pedidoDTO, comprador, productos)
       )
       .then((nuevoPedido) => {
-        nuevoPedido.validarStock()
+        nuevoPedido.actualizarStock()
         return pedidoRepository.crear(nuevoPedido)
       })
       .then((pedidoGuardado) =>

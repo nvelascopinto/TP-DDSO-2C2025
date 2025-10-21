@@ -16,8 +16,9 @@ export class ItemPedido {
   //   this.precioUnitario = producto.precio
   // }
 
-  validarStock() {
+  actualizarStock() {
     this.producto.estaDisponible() 
     this.producto.tieneStock(this.cantidad)
+    this.producto.reducirStock(this.cantidad)
   }
 }

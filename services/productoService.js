@@ -8,11 +8,10 @@ class ProductoService {
   crear(productoDTO, vendedor) {
     return Promise.resolve()
       .then(() => {
-        const producto = fromProductoDTO(productoDTO)
         vendedor.validarRol([tipoUsuario.VENDEDOR])
+        const producto = fromProductoDTO(productoDTO)
         producto.asignarVendedor(vendedor.username)
         // producto.validarCreador(vendedor.username)
-        console.log(producto)
         return productoRepository.crear(producto)
       })
       .then((productoGuardado) => 
@@ -52,15 +51,11 @@ class ProductoService {
         if (cambioProducto.activo !== undefined) producto.actualizarActivo(cambioProducto.activo)
         if (cambioProducto.aumentoStock !== undefined) producto.aumentarStock(cambioProducto.aumentoStock)
 
-        return this.update(producto)
+        return productoRepository.update(producto)
       })
   }
 
-  /************************** FUNCIONES AUXILIARES **************************/
-  update(producto) {
-    return productoRepository.update(producto)
-  }
-
+ 
   reducirStock(items) {
     return Promise.all(items.map((item) => this.obtenerProducto(item.producto._id)
       .then((producto) => {

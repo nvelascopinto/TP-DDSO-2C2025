@@ -21,7 +21,6 @@ export function fromPedidoDTO(pedidoDTO, comprador, productos) {
   return Promise.resolve()
     .then(() => {
       let errores = []
-      comprador.validarRol([tipoUsuario.COMPRADOR])
       errores.push(validarMoneda(pedidoDTO.moneda))
       errores.push(vendedorAnalyser(productos))
       errores = errores.filter((e) => e != null)
