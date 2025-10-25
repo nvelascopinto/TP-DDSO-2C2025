@@ -1,0 +1,55 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: var(--color-white);
+  border-radius: 0.75rem; /* 12px */
+  box-shadow: var(--shadow-2xl);
+  width: 100%;
+  max-width: 28rem; /* 448px */
+  margin: 1rem;
+  transform: scale(1);
+  transition: all 0.2s ease-in-out;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.modal-title {
+  font-size: 1.5rem; /* 24px */
+  font-weight: 700;
+  color: var(--color-text-secondary);
+}
+
+.modal-close-button {
+  color: var(--color-gray-400);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.modal-close-button:hover {
+  color: var(--color-gray-700);
+}
+
+.modal-close-button .icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.modal-body {
+  /* Padding is handled by the form inside */
+}

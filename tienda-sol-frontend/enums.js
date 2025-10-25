@@ -1,0 +1,21 @@
+
+export const TipoUsuario = {
+  COMPRADOR: 'COMPRADOR',
+  VENDEDOR: 'VENDEDOR',
+  ADMIN: 'ADMIN',
+};
+
+export const Moneda = {
+  PESO_ARG: 'ARS',
+  DOLAR_USA: 'USD',
+  REAL: 'BRL',
+};
+
+export const EstadoPedido = {
+  PENDIENTE: 'PENDIENTE',
+  CONFIRMADO: 'CONFIRMADO',
+  EN_PREPARACION: 'EN PREPARACION',
+  ENVIADO: 'ENVIADO',
+  ENTREGADO: 'ENTREGADO',
+  CANCELADO: 'CANCELADO',
+};

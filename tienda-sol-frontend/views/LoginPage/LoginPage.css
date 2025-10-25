@@ -1,0 +1,85 @@
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2.5rem 0;
+}
+
+.login-form__container {
+  width: 100%;
+  max-width: 28rem;
+  background-color: var(--color-white);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-2xl);
+  overflow: hidden;
+}
+
+.login-form__tabs {
+  display: flex;
+}
+
+.login-form__tab {
+  width: 50%;
+  padding: 1rem 0.25rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.125rem;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+  border: none;
+  background: none;
+  border-bottom: 2px solid var(--color-gray-200);
+  color: var(--color-gray-400);
+}
+
+.login-form__tab:hover {
+  background-color: var(--color-gray-100);
+}
+
+.login-form__tab--active {
+  border-bottom-width: 4px;
+}
+
+.login-form__tab--comprador.login-form__tab--active {
+    border-color: var(--color-accent-primary);
+    color: var(--color-accent-primary);
+}
+.login-form__tab--vendedor.login-form__tab--active {
+    border-color: var(--color-accent-secondary);
+    color: var(--color-accent-secondary);
+}
+
+.login-form__body {
+  padding: 2rem;
+}
+
+.login-form__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.login-form__subtitle {
+  text-align: center;
+  color: var(--color-gray-500);
+  margin-bottom: 2rem;
+}
+
+.login-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.login-form__actions {
+  margin-top: 2rem;
+}
+
+.login-form__demo-note {
+  font-size: 0.75rem;
+  color: var(--color-gray-400);
+  text-align: center;
+  margin-top: 1rem;
+}

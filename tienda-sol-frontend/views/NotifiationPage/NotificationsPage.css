@@ -1,0 +1,118 @@
+.notifications-page {
+  background-color: var(--color-white);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-xl);
+  max-width: 56rem; /* 896px */
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .notifications-page {
+    padding: 2rem;
+  }
+}
+
+.notifications-page__header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-gray-200);
+  padding-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+  .notifications-page__header {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.notifications-page__title {
+  font-size: 1.875rem; /* 30px */
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.notifications-page__filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 640px) {
+  .notifications-page__filter {
+    margin-top: 0;
+  }
+}
+
+.notifications-page__filter label {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.notifications-page__empty-message {
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.notification-item {
+  background-color: rgba(68, 179, 151, 0.1); /* accent-primary/10 */
+  padding: 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.notification-item--read {
+  background-color: var(--color-gray-100);
+  opacity: 0.7;
+}
+
+.notification-item__content {
+  flex-grow: 1;
+}
+
+.notification-item__message {
+  color: var(--color-text-primary);
+}
+
+.notification-item__date {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.25rem;
+}
+
+.notification-item__action {
+  font-size: 0.875rem;
+  color: var(--color-accent-primary);
+  font-weight: 600;
+  margin-left: 1rem;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.notification-item__action:hover {
+  text-decoration: underline;
+}
+
+.notifications-page__footer {
+  margin-top: 2rem;
+  text-align: center;
+}

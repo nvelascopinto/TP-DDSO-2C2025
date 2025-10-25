@@ -1,0 +1,113 @@
+.store-page {
+  /* Main container */
+}
+
+.store-page__header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.store-page__title {
+  font-size: 2.25rem; /* 36px */
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.store-page__subtitle {
+  font-size: 1.125rem; /* 18px */
+  color: var(--color-text-secondary);
+}
+
+.store-page__filters-bar {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-white);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+@media (min-width: 768px) {
+  .store-page__filters-bar {
+    flex-direction: row;
+  }
+}
+
+.filter-input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 0.375rem;
+  outline: none;
+}
+
+.filter-input:focus {
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 2px rgba(68, 179, 151, 0.2);
+}
+
+@media (min-width: 768px) {
+  .filter-input {
+    width: 33.333%;
+  }
+}
+
+.filter-controls {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .filter-controls {
+    flex-direction: row;
+    width: auto;
+  }
+}
+
+.filter-select {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 0.375rem;
+  background-color: white;
+  outline: none;
+}
+
+.filter-select:focus {
+    border-color: var(--color-accent-primary);
+    box-shadow: 0 0 0 2px rgba(68, 179, 151, 0.2);
+}
+
+@media (min-width: 640px) {
+  .filter-select {
+    width: auto;
+  }
+}
+
+.store-page__product-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .store-page__product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 768px) {
+  .store-page__product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .store-page__product-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
