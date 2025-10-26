@@ -1,7 +1,6 @@
-import { estado } from "./estadoPedido.js"
+import  {estados} from "./estadosPedido.js"
 import { CambioEstadoPedido } from "./cambioEstadoPedido.js"
 import { Moneda } from "./moneda.js"
-import { ordenEstados } from "./estadoPedido.js"
 import { tipoUsuario } from "./tipoUsuario.js"
 import { YaEnEstadoError, CambioEstadoInvalidoError } from "../../errors/conflicError.js"
 import { ProductosDiferentesVendedorError } from "../../errors/domainValidationError.js"
@@ -15,7 +14,7 @@ export class Pedido {
     this.total = this.calcularTotal()
     this.moneda = moneda
     this.direccionEntrega = direccionEntrega
-    this.estado = estado.PENDIENTE
+    this.estado = estados.PENDIENTE
     this.fechaCreacion = new Date()
     this.historialCambioPedidos = []
   }

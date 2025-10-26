@@ -11,8 +11,11 @@ class UsuarioService {
       .then(() => {
         const usuario = fromUsuarioDTO(usuarioDTO)
         return usuarioRepository.crear(usuario)
-      }).catch(error.name === "MongoServerError" && error.code === 11000).then(() =>{
-          throw new YaExisteUsuarioError(usuarioDTO.username)
+      }).catch((error) => {
+          if (error.name === "MongoServerError" && error.code === 11000) {
+              throw new YaExisteUsuarioError(usuarioDTO.username)
+          }
+          throw error
       })
   }
 
@@ -30,6 +33,10 @@ class UsuarioService {
   consultarHistorial(id, usuario) {
     return pedidoService.consultarHistorial(id, usuario)
   }
+
+  consultarTiendas() {
+    return usuarioRepository.findTiendas()
+    }
 }
 
 export default new UsuarioService()

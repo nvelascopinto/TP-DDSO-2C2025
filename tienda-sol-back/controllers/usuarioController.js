@@ -53,6 +53,16 @@ class UsuarioController {
         res.status(200).json(pedidos)
       )
   }
+
+  verTiendas(req, res) {
+    return Promise.resolve()
+      .then(() => 
+        usuarioService.consultarTiendas()
+      )
+      .then((tiendas) =>
+        res.status(200).json(tiendas)
+      )
+  }
 }
 
 export default new UsuarioController()

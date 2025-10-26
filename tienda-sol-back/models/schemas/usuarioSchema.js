@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 import { Usuario } from "../entities/usuario.js"
+import { tiendaSchema } from "./tiendaSchema.js"
 
 const usuarioSchema = new mongoose.Schema(
   {
@@ -32,10 +33,15 @@ const usuarioSchema = new mongoose.Schema(
     fechaAlta: {
       type: Date,
       required: true
+    },
+    tienda : {
+      type: tiendaSchema,
+      required: false
     }
+    
   },
   {
-    collection: "usuarios"
+    collection: "usuarios",
   }
 )
 

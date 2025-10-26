@@ -1,4 +1,3 @@
-import { PedidoStockInsuficienteError } from "../../errors/conflicError.js"
 
 export class ItemPedido {
   constructor(producto, cantidad) {

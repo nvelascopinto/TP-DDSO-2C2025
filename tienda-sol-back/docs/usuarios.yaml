@@ -150,6 +150,75 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+        /tiendas:
+    get:
+      tags:
+        - Tiendas
+      summary: Listar tiendas
+      description: Retorna una lista de tiendas registradas
+      responses:
+        "200":
+          description: Lista de tiendas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Tienda"
+              examples:
+                ejemplo:
+                  value:
+                    - _id: "64b8f0c3e8f9b0a1d2c3e111"
+                      nombre: "Tienda Central"
+                      direccion: "Av. Siempreviva 742"
+                      telefono: "+54 11 4444 4444"
+                      email: "contacto@tiendacentral.com"
+                      ropietario: "vendedor1"
+                      abierto: true
+                      categorias:
+                        - "Electrónica"
+                        - "Hogar"
+                      fechaAlta: "2025-09-01T10:00:00Z"
+    post:
+      tags:
+        - Tiendas
+      summary: Crear una nueva tienda
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TiendaDTO"
+            examples:
+              ejemplo:
+                value:
+                  nombre: "Mi Tienda"
+                  direccion: "Calle Falsa 123"
+                  telefono: "+54 11 5555 5555"
+                  email: "mitienda@ejemplo.com"
+                  propietario: "vendedor1"
+                  abierto: true
+                  categorias:
+                    - "Ropa"
+      responses:
+        "201":
+          description: Tienda creada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tienda"
+        "400":
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Usuario sin permiso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
 components:
   schemas:
