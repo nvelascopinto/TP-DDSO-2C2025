@@ -1,0 +1,146 @@
+
+.register-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2.5rem 0;
+}
+
+.login-form__tabs {
+  display: flex;
+}
+
+.register-form__tab{
+ width: 50%;
+  padding: 1rem 0.25rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.125rem;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+  border: none;
+  background: none;
+  border-bottom: 2px solid var(--color-gray-200);
+  color: var(--color-gray-400);
+}
+
+.register-form__tab:hover {
+  background-color: var(--color-gray-100);
+}
+
+.register-form__tab--active {
+  border-bottom-width: 4px;
+}
+
+.register-form__tab--comprador.register-form__tab--active {
+    border-color: var(--color-accent-primary);
+    color: var(--color-accent-primary);
+}
+.register-form__tab--vendedor.register-form__tab--active {
+    border-color: var(--color-accent-secondary);
+    color: var(--color-accent-secondary);
+}
+
+.register-form__body {
+  padding: 1rem;
+}
+
+.register-form__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.register-form__subtitle {
+  text-align: center;
+  color: var(--color-gray-700);
+  margin-bottom: 2rem;
+}
+
+.register-form__text {
+  text-align: left;
+  color: var(--color-gray-700);
+  
+}
+
+.register-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.register-form___actions {
+  margin-top: 2rem;
+}
+
+.register-button__user-type {
+ display: flex;
+  flex-direction: column;
+  align-items: center;      /* centra horizontalmente */
+  justify-content: center;  /* centra verticalmente si tiene altura */
+  text-align: center;
+  width: 100%;
+  padding: 0px;
+  margin-top: 0rem;
+}
+
+.register-form__container {
+  width: 100%;
+  max-width: 40rem;
+  background-color: var(--color-white);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-2xl);
+  overflow: hidden;
+}
+.form-group {
+  display: flex;               /* pone label e input en la misma línea */
+  align-items: left;         /* los centra verticalmente */
+  margin-bottom: 1rem;
+}
+
+/* Cuando está seleccionado */
+.form-radio {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;              /* espacio entre círculo y texto */
+  font-size: 1rem;
+  color: var(--color-gray-700);
+  cursor: pointer;
+}
+
+.form-radio input[type="radio"] {
+    appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #999;         /* gris por defecto */
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.25s ease;
+} 
+.form-radio input[type="radio"]:checked {
+  border-color: var(--color-accent-secondary);          
+  background-color: var(--color-accent-secondary);      
+}
+
+.form-radio input[type="radio"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;              /* puntito blanco al centro */
+}
+
+.form-horizontal {
+  display: flex;
+  flex-direction: row;    /* título arriba, opciones abajo */
+  align-items: center;       /* centra todo */
+  gap: 0.75rem;
+}
+

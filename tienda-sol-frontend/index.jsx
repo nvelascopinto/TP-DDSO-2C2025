@@ -1,8 +1,8 @@
 // FIX: Replaced placeholder content with a valid React application entry point.
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.jsx';
-import { AppProvider } from './contexts/AppContext.jsx';
+import App from './src/App.jsx';
+import { AppProvider } from './src/contexts/AppContext.jsx';
 import './styles.css';
 
 const rootElement = document.getElementById('root');

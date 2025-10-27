@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Moneda } from '../../enums.js';
+import { Moneda } from '../../../enums.js';
 import Button from '../Button/Button.jsx';
 import './ProductForm.css';
 

@@ -68,7 +68,7 @@ const SellerDashboard = () => {
 
   return (
     <div className="dashboard">
-      <h1 className="dashboard__title">Panel de Vendedor</h1>
+      <h1 className="dashboard__title">Productos de Vendedor</h1>
       <p className="dashboard__welcome">Bienvenido, {currentUser.nombre}.</p>
 
       <div className="dashboard__content-box">

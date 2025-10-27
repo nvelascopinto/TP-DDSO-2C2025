@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AppContext.jsx';
 import { api } from '../../services/mockService.js';
-import { EstadoPedido } from '../../enums.js';
+import { EstadoPedido } from '../../../enums.js';
 import Spinner from '../../components/Spinner/Spinner.jsx';
 import './OrderHistoryPage.css';
 

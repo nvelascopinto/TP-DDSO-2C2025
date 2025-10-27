@@ -50,7 +50,7 @@
 }
 
 .products-table thead {
-  background-color: var(--color-gray-100);
+  background-color: var(--color-gray-200);
   color: var(--color-text-secondary);
 }
 
