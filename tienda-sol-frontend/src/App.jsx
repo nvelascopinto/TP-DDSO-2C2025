@@ -5,13 +5,14 @@ import Header from './components/Header/Header.jsx';
 import Footer from './components/Footer/Footer.jsx';
 import HomePage from './views/HomePage/HomePage.jsx';
 import StorePage from './views/StorePage/StorePage.jsx';
-import CartPage from './views/CartPage/CartPage.jsx';
+import CarritoPage from './views/CarritoPage/CarritoPage.jsx';
 import SellerDashboard from './views/SellerDashboard/SellerDashboard.jsx';
 import NotificationsPage from './views/NotifiationPage/NotificationsPage.jsx';
 import OrderHistoryPage from './views/OrderHistory/OrderHistoryPage.jsx';
 import LoginPage from './views/LoginPage/LoginPage.jsx';
 import RegisterPage from './views/RegisterPage/RegisterPage.jsx';
 import './App.css';
+import DetailsPedido from './views/DetailsPedido/DetailsPedido.jsx';
 
 // Componente interno que usa los hooks de routing
 const AppContent = () => {
@@ -42,7 +43,7 @@ const AppContent = () => {
 
   return (
     <div className="app-container">
-      <Header navigateTo={navigateTo} currentRoute={currentRoute} />
+      <Header navigateTo= {navigateTo} currentRoute={currentRoute} />
       <main className="main-content container">
         <Routes>
           {/* Ruta principal - Home */}
@@ -64,7 +65,7 @@ const AppContent = () => {
           {/* Ruta del carrito */}
           <Route 
             path="/carrito" 
-            element={<CartPage onLoginRequest={() => navigateTo('login')} navigateTo={navigateTo} />} 
+            element={<CarritoPage onLoginRequest={() => navigateTo('login')} navigateTo={navigateTo} />} 
           />
 
           {/* Dashboard del vendedor - protegida */}
@@ -81,11 +82,13 @@ const AppContent = () => {
           <Route 
             path="/pedidos" 
             element={
-              currentUser?.tipo === 'VENDEDOR' 
-                ? <SellerDashboard />
-                : <Navigate to="/" replace />
+             
+                 <OrderHistoryPage />
+                
             } 
           />
+
+          
 
           {/* Notificaciones - requiere autenticación */}
           <Route 
@@ -102,7 +105,15 @@ const AppContent = () => {
             path="/historial-pedidos" 
             element={
               currentUser?.tipo === 'COMPRADOR' 
-                ? <OrderHistoryPage />
+                ? <OrderHistoryPage navigateTo={navigateTo} />
+                : <Navigate to="/" replace />
+            } 
+          />
+          <Route 
+            path="/historial-pedidos/:id" 
+            element={
+              currentUser?.tipo === 'COMPRADOR' 
+                ? <DetailsPedido />
                 : <Navigate to="/" replace />
             } 
           />

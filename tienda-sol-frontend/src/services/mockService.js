@@ -11,6 +11,8 @@ export const Moneda = {
 };
 
 export const EstadoPedido = {
+  EN_PREPARACION: 'EN_PREPARACION',
+  ENTREGADO: 'ENTREGADO',
   PENDIENTE: 'PENDIENTE',
   CONFIRMADO: 'CONFIRMADO',
   ENVIADO: 'ENVIADO',
@@ -52,6 +54,8 @@ let mockNotificaciones = [
 let mockPedidos = [
   { id: 'order-1', compradorId: 'user-1', vendedorId: 'user-2', items: [{ productoId: 'prod-1', cantidad: 2, precioUnitario: 25.00 }], total: 50.00, moneda: Moneda.DOLAR_USA, direccionEntrega: { calle: 'Av. Siempreviva', altura: '742', ciudad: 'Springfield', provincia: 'Bs As', pais: 'Argentina', codigoPostal: '1234' }, estado: EstadoPedido.ENVIADO, fechaCreacion: new Date().toISOString() },
   { id: 'order-2', compradorId: 'user-3', vendedorId: 'user-4', items: [{ productoId: 'prod-5', cantidad: 1, precioUnitario: 45.00 }], total: 45.00, moneda: Moneda.DOLAR_USA, direccionEntrega: { calle: 'Calle Falsa', altura: '123', ciudad: 'Capital', provincia: 'CABA', pais: 'Argentina', codigoPostal: '1001'}, estado: EstadoPedido.CONFIRMADO, fechaCreacion: new Date(Date.now() - 86400000).toISOString() },
+   { id: 'order-3', compradorId: 'user-1', vendedorId: 'user-2', items: [{ productoId: 'prod-1', cantidad: 2, precioUnitario: 25.00 }], total: 50.00, moneda: Moneda.DOLAR_USA, direccionEntrega: { calle: 'Av. Siempreviva', altura: '742', ciudad: 'Springfield', provincia: 'Bs As', pais: 'Argentina', codigoPostal: '1234' }, estado: EstadoPedido.PENDIENTE, fechaCreacion: new Date().toISOString() },
+  { id: 'order-4', compradorId: 'user-1', vendedorId: 'user-2', items: [{ productoId: 'prod-5', cantidad: 1, precioUnitario: 45.00 }], total: 45.00, moneda: Moneda.DOLAR_USA, direccionEntrega: { calle: 'Calle Falsa', altura: '123', ciudad: 'Capital', provincia: 'CABA', pais: 'Argentina', codigoPostal: '1001'}, estado: EstadoPedido.EN_PREPARACION, fechaCreacion: new Date(Date.now() - 86400000).toISOString() },
 ];
 
 // --- MOCK API FUNCTIONS ---
@@ -126,6 +130,11 @@ export const api = {
       mockPedidos
         .filter(p => p.compradorId === compradorId)
         .sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion))
+    );
+  },
+  getPedidos: async () => {
+    return simulateDelay(
+      mockPedidos
     );
   },
 

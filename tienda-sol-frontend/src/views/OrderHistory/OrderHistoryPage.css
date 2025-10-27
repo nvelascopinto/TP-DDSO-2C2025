@@ -129,6 +129,11 @@
     background-color: #ebf8ff; /* blue-100 */
     color: #3182ce; /* blue-800 */
 }
+
+.status-badge--confirm{
+    background-color: #ebf8ff; /* blue-100 */
+    color: #24a4ab; /* blue-800 */
+}
 .status-badge--preparing {
     background-color: #fefcbf; /* yellow-100 */
     color: #b7791f; /* yellow-800 */

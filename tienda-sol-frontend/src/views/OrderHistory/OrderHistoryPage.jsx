@@ -1,16 +1,19 @@
 
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../../contexts/AppContext.jsx';
+import { useAuth, usePedidos } from '../../contexts/AppContext.jsx';
 import { api } from '../../services/mockService.js';
 import { EstadoPedido } from '../../../enums.js';
 import Spinner from '../../components/Spinner/Spinner.jsx';
 import './OrderHistoryPage.css';
+import PedidoAcciones from '@/src/components/StateButton/StateButton.jsx';
+import Button from '../../components/Button/Button.jsx';
 
 const getStatusClass = (status) => {
     switch (status) {
         case EstadoPedido.PENDIENTE:
+            return 'status-badge--pending'
         case EstadoPedido.CONFIRMADO:
-            return 'status-badge--pending';
+            return 'status-badge--confirm';
         case EstadoPedido.EN_PREPARACION:
             return 'status-badge--preparing';
         case EstadoPedido.ENVIADO:
@@ -24,48 +27,29 @@ const getStatusClass = (status) => {
     }
 }
 
-const OrderHistoryPage = () => {
+const OrderHistoryPage = ({ navigateTo }) => {
     const { currentUser } = useAuth();
-    const [pedidos, setPedidos] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { pedidos, getPedidosUser, updatePedido} = usePedidos();
 
     useEffect(() => {
-        const fetchPedidos = async () => {
-            if (currentUser) {
-                try {
-                    setLoading(true);
-                    const data = await api.getPedidosByComprador(currentUser.id);
-                    setPedidos(data);
-                } catch (error) {
-                    console.error("Error fetching order history:", error);
-                } finally {
-                    setLoading(false);
-                }
-            }
-        };
-        fetchPedidos();
-    }, [currentUser]);
+        getPedidosUser();
+        console.log(pedidos)
+    }, [getPedidosUser]);
 
-    const handleCancelarPedido = async (pedidoId) => {
-        if (window.confirm("¿Estás seguro de que deseas cancelar este pedido?")) {
-            try {
-                const pedidoActualizado = await api.cancelarPedido(pedidoId);
-                setPedidos(prevPedidos =>
-                    prevPedidos.map(p =>
-                        p.id === pedidoId ? pedidoActualizado : p
-                    )
-                );
-                alert("Pedido cancelado exitosamente.");
-            } catch (error) {
-                console.error("Error al cancelar el pedido:", error);
-                alert("No se pudo cancelar el pedido. Por favor, intenta de nuevo.");
-            }
-        }
-    };
+    // const handleCancelarPedido = async (pedidoId) => {
+    //     if (window.confirm("¿Estás seguro de que deseas cancelar este pedido?")) {
+    //         try {
+    //             const pedidoActualizado = await api.cancelarPedido(pedidoId);
+    //            updatePedido(pedidoActualizado)
+    //             alert("Pedido cancelado exitosamente.");
+    //         } catch (error) {
+    //             console.error("Error al cancelar el pedido:", error);
+    //             alert("No se pudo cancelar el pedido. Por favor, intenta de nuevo.");
+    //         }
+    //     }
+    // };
 
-    if (loading) {
-        return <Spinner />;
-    }
+    
 
     return (
         <div className="order-history-page">
@@ -75,17 +59,12 @@ const OrderHistoryPage = () => {
             ) : (
                 <div className="order-list">
                     {pedidos.map((pedido) => {
-                        const isCancelable = [
-                            EstadoPedido.PENDIENTE,
-                            EstadoPedido.CONFIRMADO,
-                            EstadoPedido.EN_PREPARACION
-                        ].includes(pedido.estado);
-
                         return (
-                            <div key={pedido.id} className="order-item">
+                            <div key={pedido.id}  >
                                 <div className="order-item__header">
                                     <h2 className="order-item__id">Pedido #{pedido.id}</h2>
                                     <p className="order-item__date">
+                                    
                                         Realizado el: {new Date(pedido.fechaCreacion).toLocaleDateString()}
                                     </p>
                                 </div>
@@ -97,16 +76,16 @@ const OrderHistoryPage = () => {
                                         <span className={`status-badge ${getStatusClass(pedido.estado)}`}>
                                             {pedido.estado}
                                         </span>
-                                        {isCancelable && (
-                                            <button
-                                                onClick={() => handleCancelarPedido(pedido.id)}
-                                                className="order-item__cancel-button"
-                                            >
-                                                Cancelar Pedido
-                                            </button>
-                                        )}
+                                         <PedidoAcciones
+                                            pedido={pedido}
+                                           
+                                            />
+                                        
                                     </div>
                                 </div>
+                                <Button onClick={() =>  navigateTo(`historial-pedidos/${pedido.id}`)}>
+                                    Ver Pedido
+                                </Button>
                             </div>
                         );
                     })}

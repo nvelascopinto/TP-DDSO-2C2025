@@ -4,9 +4,9 @@ import { useCart, useAuth } from '../../contexts/AppContext.jsx';
 import CartItem from '../../components/CartItem/CartItem.jsx';
 import Button from '../../components/Button/Button.jsx';
 import { api } from '../../services/mockService.js';
-import './CartPage.css';
+import './CarritoPage.css';
 
-const CartPage = ({ onLoginRequest, navigateTo }) => {
+const CarritoPage = ({ onLoginRequest, navigateTo }) => {
   const { cartItems, getCartTotal, clearCart } = useCart();
   const { currentUser } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -21,7 +21,7 @@ const CartPage = ({ onLoginRequest, navigateTo }) => {
 
     setIsProcessing(true);
     try {
-      const vendedorId = cartItems[0].producto.vendedorId; // Assuming all items from same vendor
+      const vendedorId = cartItems[0].producto.vendedorId;
       const items = cartItems.map(item => ({
         productoId: item.producto.id,
         cantidad: item.cantidad,
@@ -34,7 +34,7 @@ const CartPage = ({ onLoginRequest, navigateTo }) => {
       setOrderPlaced(true);
       clearCart();
     } catch (error) {
-      console.error("Error creating order:", error);
+      console.error("Error creando la orden: ", error);
       alert("Hubo un error al procesar tu pedido. Intenta de nuevo.");
     } finally {
       setIsProcessing(false);
@@ -85,4 +85,4 @@ const CartPage = ({ onLoginRequest, navigateTo }) => {
   );
 };
 
-export default CartPage;
+export default CarritoPage;

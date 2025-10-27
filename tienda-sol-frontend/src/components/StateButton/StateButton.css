@@ -1,0 +1,47 @@
+.order-item__cancel-button {
+    background-color: transparent;
+    color: var(--color-red-500);
+    border: 1px solid var(--color-red-500);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.order-item__confirm-button {
+    background-color: transparent;
+    color: var(--color-green-500);
+    border: 1px solid var(--color-green-500);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.order-item__send-button{
+    background-color: transparent;
+    color: var(--color-blue-500);
+    border: 1px solid var(--color-blue-500);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.order-item__preparar-button{
+    background-color: transparent;
+    color: var(--color-teal-500, #00bfa6);
+    border: 1px solid var(--color-teal-500, #00bfa6);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}

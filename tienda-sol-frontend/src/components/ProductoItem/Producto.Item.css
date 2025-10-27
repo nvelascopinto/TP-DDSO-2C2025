@@ -1,0 +1,30 @@
+.producto {
+  background-color: var(--color-white);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  transform: scale(1);
+  transition: transform 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+}
+.product__details {
+  font-size: 1.25rem; /* 20px */
+  font-weight: 700;
+  color: var(--color-accent-primary);
+}
+
+.producto__title {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 700;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product__price {
+  font-size: 1.25rem; /* 20px */
+  font-weight: 700;
+  color: var(--color-accent-primary);
+}
