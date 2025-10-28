@@ -15,11 +15,12 @@ class UsuarioController {
       })        
       .then((bodyUsuario) => { 
         const usuario = toUsuarioDTO(bodyUsuario)
-        usuarioService.crearUsuario(usuario)
+        return usuarioService.crearUsuario(usuario)
       })
-      .then((nuevoUsuario) =>
+      .then((nuevoUsuario) => {
+        console.log(nuevoUsuario)
         res.status(201).json(nuevoUsuario)
-      )
+      })
   }
 
   verUsuario(req, res) {

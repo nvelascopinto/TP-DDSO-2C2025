@@ -4,17 +4,18 @@ import { fromUsuarioDTO } from "../converters/usuarioConverter.js"
 import { UsuarioInexistenteError } from "../errors/notFoundError.js"
 import { YaExisteUsuarioError } from "../errors/conflicError.js"
 import { UsuarioWrongPassword } from "../errors/authorizationError.js"
+import { create } from "domain"
+import { UserDTO } from "../models/DTO/userDTO.js"
 class UsuarioService {
   /************************** CREAR UN USUARIO **************************/
   crearUsuario(usuarioDTO) {
     return Promise.resolve()
       .then(() => {
-        const usuario = fromUsuarioDTO(usuarioDTO)
-        const createdUser = usuarioRepository.crear(usuario)
-        return {
-          username : createdUser.username,
-          tipo : createdUser.tipoUsuario
-        }
+         return fromUsuarioDTO(usuarioDTO)
+      }).then((user)=>{
+          return usuarioRepository.crear({ ...user })
+        }).then((createdUser)=>{
+        return new UserDTO(createdUser.username, createdUser.tipoUsuario)
       }).catch((error) => {
           if (error.name === "MongoServerError" && error.code === 11000) {
               throw new YaExisteUsuarioError(usuarioDTO.username)

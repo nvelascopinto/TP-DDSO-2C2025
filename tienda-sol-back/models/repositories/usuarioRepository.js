@@ -9,7 +9,10 @@ class UsuarioRepository {
     const nuevoUsuario = new this.model(usuario)
     return nuevoUsuario.save()
       .catch((error) => {
-        if (error.code == 11000) throw new YaExisteUsuarioError(usuario.username)
+        if (error.code == 11000){
+           throw new YaExisteUsuarioError(usuario.username)
+        }
+        throw error
       })
   }
 

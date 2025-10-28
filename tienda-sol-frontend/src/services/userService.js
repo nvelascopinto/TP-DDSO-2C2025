@@ -11,7 +11,7 @@ export function authenticate(user, password) {
 }
 
 export function registerUser(userData) {
-  return apiBack.post('/usuarios/', userData)
+  return apiBack.post('/usuarios', userData)
     .then((response) => {
       return response.data;
     })

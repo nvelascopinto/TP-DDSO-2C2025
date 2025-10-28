@@ -3,9 +3,11 @@ import { Usuario } from "../models/entities/usuario.js"
 import { Vendedor } from "../models/entities/vendedor.js"
 import { Tienda } from "../models/entities/tienda.js"
 import { toTiendaDTO } from "./tiendaConverter.js"
+import { tipoUserValidator } from "../validators/tipoUserValidator.js"
 export function toUsuarioDTO(JSONUsuario) {
   return new UsuarioDTO(
     JSONUsuario.username,
+    JSONUsuario.password,
     JSONUsuario.nombre,
     JSONUsuario.email,
     JSONUsuario.telefono,
@@ -15,9 +17,12 @@ export function toUsuarioDTO(JSONUsuario) {
 }
 
 export function fromUsuarioDTO(usuarioDTO) {
-  if (usuarioDTO.tipoUsuario === "Vendedor") {
+  return Promise.resolve().then(() => {
+      tipoUserValidator(usuarioDTO.tipoUsuario)
+      if (usuarioDTO.tipoUsuario === "Vendedor") {
     return new Vendedor(
       usuarioDTO.username,
+      usuarioDTO.password,
       usuarioDTO.nombre,
       usuarioDTO.email,
       usuarioDTO.telefono,
@@ -25,7 +30,9 @@ export function fromUsuarioDTO(usuarioDTO) {
       new Tienda(usuarioDTO.tienda.nombre, usuarioDTO.tienda.descripcion, usuarioDTO.tienda.logo) // por cada vendedor al crear su usuario crea su tienda a la que se asocia el
     )
   }
-  return new Usuario(usuarioDTO.username, usuarioDTO.nombre, usuarioDTO.email, usuarioDTO.telefono, usuarioDTO.tipoUsuario)
+    return new Usuario(usuarioDTO.username, usuarioDTO.password, usuarioDTO.nombre, usuarioDTO.email, usuarioDTO.telefono, usuarioDTO.tipoUsuario)
+  })
+  
 }
 
 
