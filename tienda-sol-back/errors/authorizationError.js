@@ -14,3 +14,12 @@ export class UsuarioSinPermisoError extends AuthorizationError {
     )
   }
 }
+
+export class UsuarioWrongPassword extends AuthorizationError { 
+  constructor(idUsuario) {
+    super(
+      "La contraseña igresada fue inforrecta", 
+      "Contraseña incorrecta de USUARIO " + idUsuario + "."
+    )
+  }
+}

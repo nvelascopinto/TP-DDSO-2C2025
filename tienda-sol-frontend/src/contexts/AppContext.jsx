@@ -3,6 +3,8 @@ import React, { createContext, useState, useContext, useCallback, useEffect} fro
 import { TipoUsuario } from '@/enums';
 import Toast from '../components/Toast/Toast';
 import {api} from '../services/mockService.js'
+import {authenticate} from '../services/userService.js'
+
 
 // --- MOCK USERS FOR LOGIN ---
 const mockComprador = { id: 'user-1', nombre: 'Ana (Compradora)', email: 'ana@example.com', telefono: '123456789', tipo: TipoUsuario.COMPRADOR, fechaAlta: new Date().toISOString() };
@@ -44,12 +46,19 @@ export const AppProvider = ({ children }) => {
 
   // Auth methods
 
-  const login = (userType) => {
-    if (userType === TipoUsuario.COMPRADOR) {
-      setCurrentUser(mockComprador);
-    } else if (userType === TipoUsuario.VENDEDOR) {
-      setCurrentUser(mockVendedor);
-    }
+  const login = (user, passwrord) => {
+    return authenticate(user, password).then((user) => {
+      setCurrentUser(user)
+    }).catch((error) => {
+      console.log("Ocurrio un error al autenticarse")
+      throw error
+    })
+  };
+
+   const register = (user) => {
+  
+      setCurrentUser(user)
+    
   };
 
   const logout = () => {
@@ -134,7 +143,7 @@ export const AppProvider = ({ children }) => {
     );
   }, []);
   return (
-    <AuthContext.Provider value={{ currentUser, login, logout }}>
+    <AuthContext.Provider value={{ currentUser, login, logout, register }}>
       <CartContext.Provider
         value={{
           cartItems,

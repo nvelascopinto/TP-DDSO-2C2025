@@ -3,14 +3,15 @@ import { UsuarioInvalidoError } from "../../errors/domainValidationError.js"
 import { tipoUsuario } from "./tipoUsuario.js"
 
 export class Usuario {
-  constructor(username, nombre, email, telefono, tipoUsuario) {
+  constructor(username, password, nombre, email, telefono, tipoUsuario) {
     this.username = username
     this.nombre = nombre
+    this.password = password
     this.email = email
     this.telefono = telefono
     this.tipoUsuario = tipoUsuario
     this.fechaAlta = new Date() // ver si debe ir con el tmespam true en la base
-    this.validarTipoUsuario()
+    //this.validarTipoUsuario()
   }
 
   agregarNotificacion(notificacion) {

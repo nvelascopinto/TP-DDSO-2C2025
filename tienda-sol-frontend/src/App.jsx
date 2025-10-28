@@ -14,12 +14,15 @@ import RegisterPage from './views/RegisterPage/RegisterPage.jsx';
 import './App.css';
 import DetailsPedido from './views/DetailsPedido/DetailsPedido.jsx';
 import ErrorPage from './views/Errors/Errors';
+import { authenticate, registerUser } from './services/userService.js';
+
+
 // Componente interno que usa los hooks de routing
 const AppContent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedStore, setSelectedStore] = useState(null);
-  const { currentUser, login } = useAuth();
+  const { currentUser, login, register } = useAuth();
   const [appError, setAppError] = useState(null);
 
   // Obtener la ruta actual sin el "/"
@@ -44,14 +47,57 @@ const AppContent = () => {
   };
 
 
-  const handleLogin = (userType) => {
-    login(userType);
-    if (userType === 'VENDEDOR') {
-      navigate('/productos');
-    } else {
-      navigate('/');
-    }
+  const handleLogin = (user, password) => {
+    login(user, password).then(((user) => {
+        if (user.tipo === 'VENDEDOR') {
+         navigate('/productos');
+        } else {
+        navigate('/');
+        }
+    })).catch((error) =>{
+      if(!error.response) {
+          navigate('/error')
+      } else {
+        if(error.response.status >= 500 && error.response.status > 600)
+        {
+          navigate('/error', {
+          state :  {
+            status : error.response.status
+          }})
+        } else {
+          throw error
+        }
+      }
+    })
   };
+
+  const handleRegister = (tipoUsuario, userData) => {
+  const payload = { ...userData, tipo: tipoUsuario }
+
+  return registerUser(payload)
+    .then((result) => {
+      if (result?.error) {
+        return { error: result.error };
+      }
+      register(result)
+      navigate('/login'); // cambiar: que me mande a la página que me corresponde
+    })
+    .catch((error) => {
+      if (!error.response) {
+        navigate('/error');
+      } else {
+        if (error.response.status >= 500 && error.response.status < 600) {
+          navigate('/error', {
+            state: {
+              status: error.response.status,
+            },
+          });
+        } else {
+          throw error; 
+        }
+      }
+    });
+};
 
   return (
     <div className="app-container">
@@ -106,8 +152,6 @@ const AppContent = () => {
             } 
           />
 
-          
-
           {/* Notificaciones - requiere autenticación */}
           <Route 
             path="/notificaciones" 
@@ -152,7 +196,7 @@ const AppContent = () => {
             element={
               currentUser 
                 ? <Navigate to="/" replace />
-                : <RegisterPage onRegister={handleLogin} />
+                : <RegisterPage onRegister={handleRegister} />
             } 
           />
 
@@ -165,7 +209,6 @@ const AppContent = () => {
   );
 };
 
-// Componente principal con BrowserRouter
 const App = () => {
   return (
     <BrowserRouter>

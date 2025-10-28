@@ -15,7 +15,7 @@ class UsuarioController {
       })        
       .then((bodyUsuario) => { 
         const usuario = toUsuarioDTO(bodyUsuario)
-        return usuarioService.crearUsuario(usuario)
+        usuarioService.crearUsuario(usuario)
       })
       .then((nuevoUsuario) =>
         res.status(201).json(nuevoUsuario)
@@ -62,6 +62,18 @@ class UsuarioController {
       .then((tiendas) =>
         res.status(200).json(tiendas)
       )
+  }
+
+  login(req,res) {
+    return Promise.resolve()
+      .then(()=>{
+        loginValidator.parse(req.body)
+        
+      }).then((userData)=> {
+        usuarioService.autenticarUser(userData.username, userData.password)
+      }).then((usuarioObtenido) =>{
+        res.status(200).json(usuarioObtenido)
+      })
   }
 }
 

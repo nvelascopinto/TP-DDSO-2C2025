@@ -182,4 +182,8 @@ export const api = {
     }
     throw new Error("Producto no encontrado");
   },
+  isAuthorized : async(user) => {
+      const index = mockUsuarios.findIndex(p => p.user === user.username);
+
+  }
 };

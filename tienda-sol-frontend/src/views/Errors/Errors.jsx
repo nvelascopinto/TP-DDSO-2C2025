@@ -1,9 +1,12 @@
 import React from 'react';
 import './Errors.css';
+import { errorMessages } from '../../services/errorMessage.js';
 
 // Usaremos valores por defecto por si se accede sin props
-const ErrorPage = ({ status = '500', message = 'Error desconocido en el servidor.', details = 'No se pudo cargar la información requerida. Por favor, inténtalo de nuevo más tarde.' }) => {
+const ErrorPage = ({ status = '500'}) => {
   
+  const { title, message } = errorMessages[status] || errorMessages.default;
+
   return (
     <div className="error-page" role="status" aria-live="polite">
       {/* Reutilizamos la estructura del banner para mantener la consistencia */}
@@ -15,12 +18,12 @@ const ErrorPage = ({ status = '500', message = 'Error desconocido en el servidor
           ¡Vaya! Ha ocurrido un error {status} 
         </h1>
         <p className="error-page__message homepage__banner-subtitle">
-          {message}
+          {title}
         </p>
         
       </div>
       <div className="error-page__details">
-        <p className="error-page__text">{details}</p>
+        <p className="error-page__text">{message}</p>
         <div className="error-page__actions">
             <button className="error-page__button error-page__button--secondary" onClick={() => window.history.back()}>
                 Volver
