@@ -1,14 +1,59 @@
+/* En tu CSS global (index.css o App.css) */
+html {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box; /* ← Esto es CLAVE */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  /* NO pongas overflow-x: hidden acá */
+}
+
 .app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  width: 100%;
+  max-width: 100vw;
+  /* overflow-x: hidden; ← SACÁ ESTO */
   background-color: var(--color-background);
   font-family: var(--font-family-sans);
   color: var(--color-text-primary);
+  margin: 0;
+  padding: 0;
 }
 
 .main-content {
   flex-grow: 1;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding: 1rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  /* overflow-x: hidden; ← SACÁ ESTO también */
+}
+
+/* Prevenir overflow sin cortarlo */
+img, video, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Para tablas */
+table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+/* Para textos largos */
+.main-content * {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }

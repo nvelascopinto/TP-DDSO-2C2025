@@ -14,13 +14,13 @@ const LoginPage = ({ onLogin }) => {
 
     
     return (
-        <div className="login-page">    
-            <div className="login-form__container">
-                <div className="login-form__tab">
+        <div className="login-page" role="main">    
+            <div className="login-form__container" role="form" aria-label="Formulario de inicio de sesión">
+                <div className="login-form__tab" role="heading">
                     Ingreso
                 </div>
 
-                <form onSubmit={handleLogin} className="login-form__body">
+                <form onSubmit={handleLogin} className="login-form__body" aria-describedby="login-instructions">
                     <h2 className="login-form__title">
                         Bienvenido de vuelta
                     </h2>
@@ -37,6 +37,8 @@ const LoginPage = ({ onLogin }) => {
                                 className="form-input"
                                 placeholder="tu@email.com"
                                 required
+                                aria-label="Correo electrónico"
+                                aria-required="true"
                             />
                         </div>
                         <div className="form-group">
@@ -47,11 +49,13 @@ const LoginPage = ({ onLogin }) => {
                                 className="form-input"
                                 placeholder="••••••••"
                                 required
+                                aria-required="true"
+                                aria-label="Contraseña"
                             />
                         </div>
                     </div>
 
-                    <div className="login-form__actions">
+                    <div className="login-form__actions"  role="group" aria-label="Acciones del formulario">
                         <Button type="submit" variant={activeTab === 'comprador' ? 'primary' : 'secondary'} className="button--full-width">
                             Ingresar
                         </Button>

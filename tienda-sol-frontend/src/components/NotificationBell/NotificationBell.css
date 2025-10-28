@@ -1,16 +1,19 @@
 .notification-bell {
   position: relative;
   cursor: pointer;
+  color: var(--color-white);
 }
 
 .notification-bell .icon {
-  color: var(--color-white);
+  color: var(--color-accent-secondary);
   opacity: 0.9;
   transition: color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+
 }
 
 .notification-bell:hover .icon {
   opacity: 1;
+  
 }
 
 .notification-bell__badge {

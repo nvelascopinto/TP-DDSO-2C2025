@@ -55,15 +55,18 @@ const NotificationsPage = ({ navigateTo }) => {
   }, [notifications, filter]);
 
   if (loading) {
-    return <Spinner />;
+    return <Spinner role="status"
+        aria-busy="true"
+        aria-live="polite"
+        aria-label="Cargando notificaciones"/>;
   }
 
   return (
-    <div className="notifications-page">
+    <div className="notifications-page" role="main">
       <div className="notifications-page__header">
         <h1 className="notifications-page__title">Notificaciones</h1>
-        <div className="notifications-page__filter">
-          <label htmlFor="notif-filter">Mostrar:</label>
+        <div className="notifications-page__filter"  aria-label="Filtro de notificaciones">
+          <label htmlFor="notif-filter"  value={filter}>Mostrar:</label>
           <select
             id="notif-filter"
             value={filter}

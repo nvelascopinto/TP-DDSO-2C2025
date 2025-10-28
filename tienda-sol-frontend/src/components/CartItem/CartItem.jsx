@@ -7,7 +7,7 @@ const CartItem = ({ item }) => {
   const { updateQuantity, removeFromCart } = useCart();
 
   return (
-    <div className="cart-item">
+    <div className="cart-item" role='listitem'>
       <div className="cart-item__details">
         <img src={item.producto.fotos[0]} alt={item.producto.titulo} className="cart-item__image" />
         <div>

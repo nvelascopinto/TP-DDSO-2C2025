@@ -35,20 +35,6 @@ const OrderHistoryPage = ({ navigateTo }) => {
         getPedidosUser();
         console.log(pedidos)
     }, [getPedidosUser]);
-
-    // const handleCancelarPedido = async (pedidoId) => {
-    //     if (window.confirm("¿Estás seguro de que deseas cancelar este pedido?")) {
-    //         try {
-    //             const pedidoActualizado = await api.cancelarPedido(pedidoId);
-    //            updatePedido(pedidoActualizado)
-    //             alert("Pedido cancelado exitosamente.");
-    //         } catch (error) {
-    //             console.error("Error al cancelar el pedido:", error);
-    //             alert("No se pudo cancelar el pedido. Por favor, intenta de nuevo.");
-    //         }
-    //     }
-    // };
-
     
 
     return (
@@ -60,32 +46,36 @@ const OrderHistoryPage = ({ navigateTo }) => {
                 <div className="order-list">
                     {pedidos.map((pedido) => {
                         return (
-                            <div key={pedido.id}  >
+                            <div key={pedido.id} className ="order-form">
                                 <div className="order-item__header">
-                                    <h2 className="order-item__id">Pedido #{pedido.id}</h2>
-                                    <p className="order-item__date">
-                                    
-                                        Realizado el: {new Date(pedido.fechaCreacion).toLocaleDateString()}
-                                    </p>
+                                    <div>
+                                        <p className="order-item__date">
+                                            Realizado el: {new Date(pedido.fechaCreacion).toLocaleDateString()}
+                                        </p>
+                                    </div>
+                                    <div className = "order-state-id">
+                                        <div className="order-item__actions">
+                                                <h2 className="order-item__id">Pedido #{pedido.id}</h2>
+                                                <span className={`status-badge ${getStatusClass(pedido.estado)}`}>
+                                                    {pedido.estado}
+                                                </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className = "order-change-state">
+                                    <PedidoAcciones pedido={pedido}/>
                                 </div>
                                 <div className="order-item__body">
-                                    <div>
-                                        <p className="order-item__total">Total: <span>${pedido.total.toFixed(2)}</span></p>
-                                    </div>
-                                    <div className="order-item__actions">
-                                        <span className={`status-badge ${getStatusClass(pedido.estado)}`}>
-                                            {pedido.estado}
-                                        </span>
-                                         <PedidoAcciones
-                                            pedido={pedido}
-                                           
-                                            />
+                                        <Button onClick={() =>  navigateTo(`historial-pedidos/${pedido.id}`)}>
+                                            Ver Pedido
+                                        </Button>
+                                        <div>
+                                            <p className="order-item__total">Total: <span>${pedido.total.toFixed(2)}</span></p>
+                                        </div>
                                         
-                                    </div>
                                 </div>
-                                <Button onClick={() =>  navigateTo(`historial-pedidos/${pedido.id}`)}>
-                                    Ver Pedido
-                                </Button>
+                                
+                                
                             </div>
                         );
                     })}

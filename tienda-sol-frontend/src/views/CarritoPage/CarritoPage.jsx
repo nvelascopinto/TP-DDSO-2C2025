@@ -43,7 +43,7 @@ const CarritoPage = ({ onLoginRequest, navigateTo }) => {
 
   if (orderPlaced) {
     return (
-      <div className="order-success-message">
+      <div className="order-success-message" role="status" aria-live="polite">
         <h1 className="order-success-message__title">¡Gracias por tu compra!</h1>
         <p>Tu pedido ha sido realizado con éxito.</p>
         <p>Recibirás notificaciones sobre su estado.</p>
@@ -66,17 +66,19 @@ const CarritoPage = ({ onLoginRequest, navigateTo }) => {
         </div>
       ) : (
         <>
-          <div>
+          <div role="list" className="cart-page__item-list">
             {cartItems.map((item) => (
-              <CartItem key={item.producto.id} item={item} />
+              <CartItem key={item.producto.id} item={item} role="listitem"/>
             ))}
           </div>
           <div className="cart-page__summary">
-            <div className="cart-page__total">
+            <div className="cart-page__total" aria-live="polite">
               Total: <span>${getCartTotal().toFixed(2)}</span>
             </div>
             <Button onClick={handleCheckout} disabled={isProcessing || cartItems.length === 0}>
+              <span aria-busy={isProcessing ? 'true' : 'false'}> 
               {isProcessing ? 'Procesando...' : 'Finalizar Compra'}
+              </span>
             </Button>
           </div>
         </>

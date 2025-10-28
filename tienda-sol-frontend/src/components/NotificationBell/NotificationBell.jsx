@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AppContext.jsx';
 import { api } from '../../services/mockService.js';
@@ -16,14 +15,14 @@ const NotificationBell = ({ onClick }) => {
             };
             fetchNotifications();
             
-            const interval = setInterval(fetchNotifications, 10000); // Poll for new notifications every 10 seconds
+            const interval = setInterval(fetchNotifications, 10000);
             return () => clearInterval(interval);
         }
     }, [currentUser]);
 
     return (
         <div className="notification-bell" onClick={onClick}>
-            <span className="material-symbols-outlined" style={{ fontSize: "26px" }}>
+            <span className="material-symbols-outlined icon">
                 notifications
             </span>
             {unreadCount > 0 && (

@@ -1,10 +1,11 @@
 .order-history-page {
   background-color: var(--color-white);
-  padding: 1.5rem;
+  padding: 1rem;
   border-radius: 0.75rem;
   box-shadow: var(--shadow-xl);
-  max-width: 64rem; /* 1024px */
+  max-width: 48rem;
   margin: 0 auto;
+  width: 100%;
 }
 
 @media (min-width: 768px) {
@@ -13,25 +14,51 @@
   }
 }
 
+.order-form {
+  box-shadow: var(--shadow-lg);
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .order-form {
+    padding: 1.5rem;
+  }
+}
+
 .order-history-page__title {
-  font-size: 1.875rem; /* 30px */
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--color-text-primary);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   border-bottom: 1px solid var(--color-gray-200);
-  padding-bottom: 1rem;
+  padding-bottom: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .order-history-page__title {
+    font-size: 1.875rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+  }
 }
 
 .order-history-page__empty-message {
   color: var(--color-text-secondary);
   text-align: center;
-  padding: 2rem 0;
+  padding: 2rem 1rem;
 }
 
 .order-list {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .order-list {
+    gap: 1.5rem;
+  }
 }
 
 .order-item {
@@ -45,112 +72,259 @@
   box-shadow: var(--shadow-md);
 }
 
-.order-item__header, .order-item__body {
+/* HEADER - Fecha y Pedido#/Estado */
+.order-item__header {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-}
-
-.order-item__header {
-  margin-bottom: 0.5rem;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-gray-100);
 }
 
 @media (min-width: 768px) {
-  .order-item__header, .order-item__body {
+  .order-item__header {
     flex-direction: row;
+    justify-content: space-between;
     align-items: center;
+    gap: 1rem;
+    padding-bottom: 0;
+    border-bottom: none;
+    margin-bottom: 1rem;
   }
 }
 
-.order-item__id {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: var(--color-accent-secondary);
-}
-
 .order-item__date {
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   color: var(--color-text-secondary);
-  margin-top: 0.25rem;
+  text-align: center;
+  margin: 0;
 }
 
 @media (min-width: 768px) {
   .order-item__date {
-    margin-top: 0;
+    font-size: 0.875rem;
+    text-align: left;
+  }
+}
+
+/* Contenedor de Pedido# y Estado */
+.order-state-id {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .order-state-id {
+    justify-content: flex-end;
+    width: auto;
+  }
+}
+
+.order-item__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .order-item__actions {
+    align-items: flex-end;
+    width: auto;
+  }
+}
+
+.order-item__id {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-accent-secondary);
+  text-align: center;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .order-item__id {
+    font-size: 1.125rem;
+    text-align: right;
+  }
+}
+
+/* SECCIÓN BOTONES DE CAMBIAR ESTADO */
+.order-change-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 1rem 0;
+  margin: 0;
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+@media (min-width: 768px) {
+  .order-change-state {
+    align-items: flex-start;
+    padding: 0.75rem 0;
+    border-bottom: none;
+  }
+}
+
+/* BODY - Total y Ver Pedido */
+.order-item__body {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding-top: 1rem;
+}
+
+@media (min-width: 768px) {
+  .order-item__body {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.75rem;
   }
 }
 
 .order-item__total {
   font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 0;
 }
 
 .order-item__total span {
   color: var(--color-accent-primary);
 }
 
-.order-item__actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 0.5rem;
+@media (min-width: 768px) {
+  .order-item__total {
+    font-size: 1rem;
+    text-align: left;
+  }
+}
+
+/* Botón Ver Pedido - se ajusta desde el componente Button pero forzamos ancho completo en móvil */
+.order-item__body button {
+  width: 100%;
+  max-width: 280px;
+  padding: 0.65rem 1.5rem;
+  font-size: 0.85rem;
 }
 
 @media (min-width: 768px) {
-  .order-item__actions {
-    margin-top: 0;
+  .order-item__body button {
+    width: auto;
+    max-width: none;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Botones de cambiar estado */
+.order-change-state button {
+  width: 100%;
+  max-width: 280px;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .order-change-state button {
+    width: auto;
+    max-width: none;
+    padding: 0.375rem 0.875rem;
+    font-size: 0.8rem;
   }
 }
 
 .order-item__cancel-button {
-    background-color: transparent;
-    color: var(--color-red-500);
-    border: 1px solid var(--color-red-500);
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
+  background-color: transparent;
+  color: var(--color-red-500);
+  border: 1px solid var(--color-red-500);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  width: 100%;
+  max-width: 280px;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .order-item__cancel-button {
+    padding: 0.375rem 0.875rem;
+    width: auto;
+    max-width: none;
+  }
 }
 
 .order-item__cancel-button:hover {
-    background-color: var(--color-red-500);
-    color: var(--color-white);
+  background-color: var(--color-red-500);
+  color: var(--color-white);
 }
 
+/* STATUS BADGE */
 .status-badge {
-    padding: 0.25rem 0.75rem;
+  padding: 0.35rem 0.875rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  width: 100%;
+  max-width: 280px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .status-badge {
+    width: 175px;
+    max-width: 175px;
     font-size: 0.875rem;
-    font-weight: 600;
-    border-radius: 9999px;
+  }
 }
 
 .status-badge--pending {
-    background-color: #ebf8ff; /* blue-100 */
-    color: #3182ce; /* blue-800 */
+  background-color: #9961a143;
+  color: #9A61A1;
 }
 
-.status-badge--confirm{
-    background-color: #ebf8ff; /* blue-100 */
-    color: #24a4ab; /* blue-800 */
+.status-badge--confirm {
+  background-color: #e2e8f0;
+  color: #2d3748;
 }
+
 .status-badge--preparing {
-    background-color: #fefcbf; /* yellow-100 */
-    color: #b7791f; /* yellow-800 */
+  background-color: #d1efff;
+  color: #3182ce;
 }
+
 .status-badge--shipped {
-    background-color: #c6f6d5; /* green-100 */
-    color: #2f855a; /* green-800 */
+  background-color: #ebf8ff;
+  color: #24a4ab;
 }
+
 .status-badge--delivered {
-    background-color: #e2e8f0; /* gray-300 */
-    color: #2d3748; /* gray-900 */
+  background-color: #c6f6d5;
+  color: #2f855a;
 }
+
 .status-badge--cancelled {
-    background-color: #fed7d7; /* red-100 */
-    color: #c53030; /* red-800 */
+  background-color: #fed7d7;
+  color: #c53030;
 }
+
 .status-badge--default {
-    background-color: var(--color-gray-200);
-    color: var(--color-gray-800);
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-800);
 }

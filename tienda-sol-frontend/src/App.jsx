@@ -13,24 +13,36 @@ import LoginPage from './views/LoginPage/LoginPage.jsx';
 import RegisterPage from './views/RegisterPage/RegisterPage.jsx';
 import './App.css';
 import DetailsPedido from './views/DetailsPedido/DetailsPedido.jsx';
-
+import ErrorPage from './views/Errors/Errors';
 // Componente interno que usa los hooks de routing
 const AppContent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedStore, setSelectedStore] = useState(null);
   const { currentUser, login } = useAuth();
+  const [appError, setAppError] = useState(null);
 
   // Obtener la ruta actual sin el "/"
   const currentRoute = location.pathname.slice(1) || 'home';
 
   const navigateTo = (newView, store) => {
+    setAppError(null);
     if (store) {
       setSelectedStore(store);
     }
     // Navegar usando React Router
     navigate(`/${newView === 'home' ? '' : newView}`);
   };
+
+  const handleError = (errorDetails) => {
+    console.error("Error capturado para navegación:", errorDetails);
+    // Establecemos el error en el estado global
+    setAppError(errorDetails);
+    
+    // Redirigimos a la ruta de error, pasando los detalles del error en el 'state'
+    navigate('/error', { state: { error: errorDetails } });
+  };
+
 
   const handleLogin = (userType) => {
     login(userType);
@@ -50,6 +62,12 @@ const AppContent = () => {
           <Route 
             path="/" 
             element={<HomePage onStoreSelect={(store) => navigateTo('tienda', store)} />} 
+          />
+
+           {/* Ruta de error general */}
+          <Route 
+            path="/error" 
+            element={<ErrorPage />}
           />
 
           {/* Ruta de tienda */}
@@ -139,7 +157,7 @@ const AppContent = () => {
           />
 
           {/* Ruta 404 - redirige al home */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/error" replace state={{ error: { status: '404', message: 'Página no encontrada', details: 'Parece que la URL que buscabas no existe. No te preocupes, puedes volver al inicio.' } }} />} />
         </Routes>
       </main>
       <Footer />

@@ -10,10 +10,17 @@ const Header = ({ navigateTo, currentRoute }) => {
   const cartItemCount = getCartItemCount();
 
   const [activeTab, setActiveTab] = useState("home");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigateTo('home');
+    setIsMenuOpen(false);
+  };
+
+  const handleNavigate = (route) => {
+    navigateTo(route);
+    setIsMenuOpen(false);
   };
 
   useEffect(() => {
@@ -32,6 +39,18 @@ const Header = ({ navigateTo, currentRoute }) => {
     }
   }, [currentUser, currentRoute]);
 
+  // Cerrar menú al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isMenuOpen && !event.target.closest('.header__nav') && !event.target.closest('.header__hamburger')) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMenuOpen]);
+
   const showCart = currentUser?.tipo !== 'VENDEDOR';
 
   return (
@@ -44,16 +63,26 @@ const Header = ({ navigateTo, currentRoute }) => {
               navigateTo('');
             }
           }}
-          style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}
         >
           <img src={logo} alt="Logo Tienda Sol" className="header__logo-image" />
           <span className="header__logo-text">Tienda Sol</span>
         </div>
 
-        <nav className="header__nav">
+        {/* Botón Hamburguesa - Solo móvil */}
+        <button 
+          className="header__hamburger"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Menú"
+        >
+          <span className={`header__hamburger-line ${isMenuOpen ? 'open' : ''}`}></span>
+          <span className={`header__hamburger-line ${isMenuOpen ? 'open' : ''}`}></span>
+          <span className={`header__hamburger-line ${isMenuOpen ? 'open' : ''}`}></span>
+        </button>
+
+        <nav className={`header__nav ${isMenuOpen ? 'open' : ''}`}>
           {currentUser?.tipo === 'COMPRADOR' && (
             <button
-              onClick={() => navigateTo('historial-pedidos')}
+              onClick={() => handleNavigate('historial-pedidos')}
               className={`header__nav-link ${activeTab === "historial-pedidos" ? "active" : ""}`}
             >
               Mis Pedidos
@@ -63,13 +92,13 @@ const Header = ({ navigateTo, currentRoute }) => {
           {currentUser?.tipo === 'VENDEDOR' && (
             <div className="header__nav-vendor-links">
               <button
-                onClick={() => navigateTo('productos')}
+                onClick={() => handleNavigate('productos')}
                 className={`header__nav-link ${activeTab === "productos" ? "active" : ""}`}
               >
                 Productos
               </button>
               <button
-                onClick={() => navigateTo('pedidos')}
+                onClick={() => handleNavigate('pedidos')}
                 className={`header__nav-link ${activeTab === "pedidos" ? "active" : ""}`}
               >
                 Pedidos
@@ -80,9 +109,9 @@ const Header = ({ navigateTo, currentRoute }) => {
           {showCart && (
             <button
               className={`header__nav-link header__cart-icon ${activeTab === "carrito" ? "active" : ""}`}
-              onClick={() => navigateTo('carrito')}
+              onClick={() => handleNavigate('carrito')}
             >
-              <span className="material-symbols-outlined" style={{ fontSize: "26px" }}>
+              <span className="material-symbols-outlined">
                 shopping_cart_checkout
               </span>
               {cartItemCount > 0 && (
@@ -95,8 +124,8 @@ const Header = ({ navigateTo, currentRoute }) => {
 
           {currentUser && (
             <button
-              className={`header__nav-link ${activeTab === "notificaciones" ? "active" : ""}`}
-              onClick={() => navigateTo('notificaciones')}
+              className={`header__nav-link header__notification-icon  ${activeTab === "notificaciones" ? "active" : ""}`}
+              onClick={() => handleNavigate('notificaciones')}
             >
               <NotificationBell />
             </button>
@@ -114,14 +143,14 @@ const Header = ({ navigateTo, currentRoute }) => {
           ) : (
             <div className="header__user-info">
               <button 
-                onClick={() => navigateTo('login')}
+                onClick={() => handleNavigate('login')}
                 className="header__login-button"
               >
                 Ingresar
               </button>
 
               <button
-                onClick={() => navigateTo('register')}
+                onClick={() => handleNavigate('register')}
                 className="header__register-button"
               >
                 Registrarse

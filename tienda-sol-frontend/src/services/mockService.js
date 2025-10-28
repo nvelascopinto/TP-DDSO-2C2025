@@ -156,6 +156,13 @@ export const api = {
     return simulateDelay(pedido);
   },
 
+  cambiarEstadoPedido: async (pedidoId, estadoNuevo) => {
+    const pedido = mockPedidos.find(p => p.id === pedidoId);
+    if (!pedido) throw new Error("Pedido no encontrado");
+    pedido.estado = estadoNuevo;
+    return simulateDelay(pedido);
+  },
+
   crearProducto: async (vendedorId, data) => {
     const nuevoProducto = {
       ...data,
