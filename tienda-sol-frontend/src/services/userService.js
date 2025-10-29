@@ -22,3 +22,10 @@ export function registerUser(userData) {
       throw error;
     });
 }
+
+export function getVendedores() {
+  return apiBack.get('/usuarios/tiendas')
+    .then((response) => {
+      return response.data;
+    })
+}

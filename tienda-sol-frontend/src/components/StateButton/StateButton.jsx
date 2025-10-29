@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth, usePedidos } from "../../contexts/AppContext.jsx";
 import './StateButton.css';
-import { TipoUsuario, EstadoPedido } from "../../services/mockService.js";
+import { TipoUsuario, EstadoPedido } from "../../../enums.js";
 //import { api } from "../../services/mockService.js";
 import {cancelarPedido, cambiarEstadoPedido} from '../../services/pedidoService.js';
 

@@ -68,10 +68,11 @@ class UsuarioController {
   login(req,res) {
     return Promise.resolve()
       .then(()=>{
-        loginValidator.parse(req.body)
+        return loginValidator.parse(req.body)
         
       }).then((userData)=> {
-        usuarioService.autenticarUser(userData.username, userData.password)
+        console.log("PASSWORD CON "+ userData.password)
+        return usuarioService.autenticarUser(userData.username, userData.password)
       }).then((usuarioObtenido) =>{
         res.status(200).json(usuarioObtenido)
       })

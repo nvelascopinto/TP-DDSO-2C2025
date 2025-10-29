@@ -59,7 +59,7 @@ const Header = ({ navigateTo, currentRoute }) => {
         <div
           className="header__logo"
           onClick={() => { 
-            if (currentUser?.tipo !== 'Vendedor') {
+            if (currentUser?.tipo === 'Comprador') {
               navigateTo('');
             }
           }}

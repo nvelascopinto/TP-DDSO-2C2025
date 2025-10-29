@@ -21,7 +21,7 @@ const RegisterPage = ({ onRegister }) => {
       nombre: formData.get('name'),
       telefono: formData.get('telefono'),
       tipoUsuario: userType,
-      ...(userType === 'vendedor' && {
+      ...(userType === 'Vendedor' && {
         tienda: {
         nombre: formData.get('storeName'),
         descripcion: formData.get('descripcion'),
@@ -30,7 +30,7 @@ const RegisterPage = ({ onRegister }) => {
 };
 
     onRegister(
-      userType === 'comprador' ? TipoUsuario.COMPRADOR : TipoUsuario.VENDEDOR,
+      userType === 'Comprador' ? TipoUsuario.COMPRADOR : TipoUsuario.VENDEDOR,
       data
     ).then((result) => {
       if (result?.error) {
@@ -53,10 +53,10 @@ const RegisterPage = ({ onRegister }) => {
       <div className="register-form__container">
         {/* Tabs de tipo de usuario */}
         <div className="register-form__tabs" role="tablist" aria-label="Tipo de cuenta a registrar">
-          <button onClick={() => setUserType('comprador')} className={getTabClasses('comprador')} aria-selected={userType === 'comprador'} aria-controls="panel-comprador">
+          <button onClick={() => setUserType('Comprador')} className={getTabClasses('Comprador')} aria-selected={userType === 'Comprador'} aria-controls="panel-Comprador">
             Soy Comprador
           </button>
-          <button onClick={() => setUserType('vendedor')} className={getTabClasses('vendedor')} aria-selected={userType === 'vendedor'} aria-controls="panel-vendedor">
+          <button onClick={() => setUserType('Vendedor')} className={getTabClasses('Vendedor')} aria-selected={userType === 'Vendedor'} aria-controls="panel-Vendedor">
             Soy Vendedor
           </button>
         </div>
@@ -127,8 +127,8 @@ const RegisterPage = ({ onRegister }) => {
             </div>
           </div>
 
-          {/* Campos extra si el usuario es vendedor */}
-          {userType === 'vendedor' && (
+          {/* Campos extra si el usuario es Vendedor */}
+          {userType === 'Vendedor' && (
             <>
               <p className="register-form__subtitle">Ingresa los datos de tu tienda para terminar</p>
               <div className="register-form__fields" aria-live="polite">
@@ -162,11 +162,11 @@ const RegisterPage = ({ onRegister }) => {
           <div className="register-form__actions">
             <Button
               type="submit"
-              variant={userType === 'comprador' ? 'primary' : 'secondary'}
+              variant={userType === 'Comprador' ? 'primary' : 'secondary'}
               className="button--full-width" aria-label={
-              userType === 'comprador'
-              ? 'Registrarse como comprador'
-              : 'Registrarse como vendedor'
+              userType === 'Comprador'
+              ? 'Registrarse como Comprador'
+              : 'Registrarse como Vendedor'
           }
             >
               Registrarse

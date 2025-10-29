@@ -20,7 +20,10 @@ const SellerDashboard = () => {
     if (currentUser) {
       try {
         setLoading(true);
-        const data = await getProductosByVendedor(currentUser.id);
+         const filters = {
+          vendedor: currentUser.username
+        };
+        const data = await getProductosByVendedor(filters);
         setProductos(data);
       } catch (error) {
         console.error("Error fetching seller products:", error);
@@ -28,8 +31,11 @@ const SellerDashboard = () => {
         setLoading(false);
       }
     }
+      
   }, [currentUser]);
-
+  const currentProducts = 
+                         productos?._embedded?.productos ||
+                         [];
   useEffect(() => {
     fetchProductos();
   }, [fetchProductos]);

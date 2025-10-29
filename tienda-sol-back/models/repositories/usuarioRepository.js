@@ -17,10 +17,10 @@ class UsuarioRepository {
   }
 
   findById(id) {
-    return this.model.findById(id)
+    return this.model.findOne({username : id})
   }
   findTiendas() {
-    return this.model.find({ tipoUsuario: "Vendedor" }, { tienda: 1, _id: 0})
+    return this.model.find({ tipoUsuario: "Vendedor" },{ tienda: 1, username: 1, _id: 0 } )
   }
 
   update(notificacion) {

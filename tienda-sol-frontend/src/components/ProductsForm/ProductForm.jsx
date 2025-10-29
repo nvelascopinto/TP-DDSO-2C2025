@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Moneda } from '../../../enums.js';
 import Button from '../Button/Button.jsx';
 import './ProductForm.css';
+import {CATEGORIAS} from '../../../enums.js';
 
 const ProductForm = ({ onSubmit, onCancel, initialData }) => {
     const [id, setId] = useState(null);
@@ -13,6 +14,8 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
     const [moneda, setMoneda] = useState(Moneda.DOLAR_USA);
     const [fotos, setFotos] = useState([]);
     const [activo, setActivo] = useState(true);
+    const [categoria, setCategoria] = useState('');
+
 
     useEffect(() => {
         if (initialData) {
@@ -24,6 +27,7 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
             setMoneda(initialData.moneda);
             setFotos(initialData.fotos);
             setActivo(initialData.activo);
+            setCategoria(initialData.categorias?.[0]?.id || 'OTROS');
         }
     }, [initialData]);
 
@@ -39,6 +43,8 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const selectedCategoria = CATEGORIAS.find(cat => cat.id === categoria);
+        
         const productData = {
             id: id || '',
             titulo,
@@ -46,8 +52,7 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
             precio: parseFloat(precio),
             stock: parseInt(stock, 10),
             moneda,
-            categorias: initialData?.categorias || [{ id: 'cat-new', nombre: 'General' }],
-            fotos,
+            categorias: [{ id: categoria, nombre: CATEGORIAS[categoria] }],
             activo,
         };
 
@@ -107,6 +112,20 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
                         required
                     />
                 </div>
+            </div>
+                        <div className="form-group">
+                <label htmlFor="categoria" className="form-label">Categoría</label>
+                <select
+                    id="categoria"
+                    value={categoria}
+                    onChange={(e) => setCategoria(e.target.value)}
+                    className="form-select"
+                    required
+                >
+                    {Object.entries(CATEGORIAS).map(([key, value]) => (
+                        <option key={key} value={key}>{value}</option>
+                    ))}
+                </select>
             </div>
             <div className="form-group">
                 <label className="form-label">Imágenes</label>

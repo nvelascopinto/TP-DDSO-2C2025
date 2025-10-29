@@ -28,6 +28,9 @@ class UsuarioService {
   buscar(id) {
     return usuarioRepository.findById(id)
       .then((usuarioBuscado) => {
+        console.log("USUARIO COMPLETO:", JSON.stringify(usuarioBuscado, null, 2))
+      console.log("KEYS:", Object.keys(usuarioBuscado))
+      console.log("PASSWORD:", usuarioBuscado.password)
         if (!usuarioBuscado) throw new UsuarioInexistenteError(id)
         return usuarioBuscado
       })
@@ -35,6 +38,7 @@ class UsuarioService {
 
   autenticarUser(username, password) {
     return this.buscar(username).then((usuarioBuscado)=>{
+      console.log("PASSWORD"+ usuarioBuscado)
       if(usuarioBuscado.password != password) {
         throw new UsuarioWrongPassword(username)
       }

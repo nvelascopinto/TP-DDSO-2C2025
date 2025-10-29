@@ -47,14 +47,23 @@ export const AppProvider = ({ children }) => {
 
   // auth methods
 
-  const login = (user, passwrord) => {
-    return authenticate(user, passwrord).then((user) => {
-      setCurrentUser(user)
-    }).catch((error) => {
-      console.log("Ocurrio un error al autenticarse")
-      throw error
+const login = (username, password) => {
+  return authenticate(username, password)
+    .then((user) => {
+      setCurrentUser(user);
+      return user;
     })
-  };
+    .catch((error) => {
+      console.error("Error al autenticarse:", error);
+
+      if (error.response?.status === 403 && error.response?.data?.error) {
+        return { error: error.response.data.error };
+      }
+
+      return { error: "Error al iniciar sesión. Inténtalo nuevamente." };
+    });
+};
+
 
    const register = (user) => {
   

@@ -7,17 +7,34 @@ import './LoginPage.css';
 
 const LoginPage = ({ onLogin }) => {
     const [activeTab, setActiveTab] = useState('comprador');
+    const [errorMsg, setErrorMsg] = useState(null);
 
     const handleLogin = (e) => {
         e.preventDefault();
+        setErrorMsg(null)
+
         const formData = new FormData(e.target);
         const data = {
         username: formData.get('username'),
         password: formData.get('password')
         }
-        onLogin(activeTab === 'comprador' ? TipoUsuario.COMPRADOR : TipoUsuario.VENDEDOR, data.username, data.password);
-
-
+        onLogin(
+      activeTab === 'comprador' ? TipoUsuario.COMPRADOR : TipoUsuario.VENDEDOR,
+      data.username,
+      data.password
+    )
+      .then((result) => {
+        if (result?.error) {
+          setErrorMsg(result.error);
+        }
+      })
+      .catch((err) => {
+        if (err?.message?.includes('contraseña')) {
+          setErrorMsg('La contraseña ingresada es incorrecta.');
+        } else {
+          setErrorMsg('Error al iniciar sesión. Inténtalo nuevamente.');
+        }
+      });
     };
 
     
@@ -35,6 +52,8 @@ const LoginPage = ({ onLogin }) => {
                     <p className="login-form__subtitle">
                         Ingresa tus datos para continuar
                     </p>
+                    {errorMsg && (
+                    <p className="login-form__error" role="alert"> {errorMsg} </p>)}
 
                     <div className="login-form__fields">
                         <div className="form-group">
@@ -53,7 +72,7 @@ const LoginPage = ({ onLogin }) => {
                         <PasswordInput
                             id="password"
                             name="password"
-                            placeholder="••••••••"
+                            placeholder="********"
                             aria-label="Contraseña"
                             aria-required="true"
                         />

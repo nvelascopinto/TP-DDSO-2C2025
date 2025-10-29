@@ -32,11 +32,11 @@
   border-bottom-width: 4px;
 }
 
-.register-form__tab--comprador.register-form__tab--active {
+.register-form__tab--Comprador.register-form__tab--active {
     border-color: var(--color-accent-primary);
     color: var(--color-accent-primary);
 }
-.register-form__tab--vendedor.register-form__tab--active {
+.register-form__tab--Vendedor.register-form__tab--active {
     border-color: var(--color-accent-secondary);
     color: var(--color-accent-secondary);
 }
@@ -85,8 +85,8 @@
 .register-button__user-type {
  display: flex;
   flex-direction: column;
-  align-items: center;      /* centra horizontalmente */
-  justify-content: center;  /* centra verticalmente si tiene altura */
+  align-items: center;     
+  justify-content: center;  
   text-align: center;
   width: 100%;
   padding: 0px;
@@ -102,16 +102,15 @@
   overflow: hidden;
 }
 .form-group {
-  display: flex;               /* pone label e input en la misma línea */
-  align-items: left;         /* los centra verticalmente */
+  display: flex;              
+  align-items: left;         
   margin-bottom: 1rem;
 }
 
-/* Cuando está seleccionado */
 .form-radio {
   display: flex;
   align-items: center;
-  gap: 0.5rem;              /* espacio entre círculo y texto */
+  gap: 0.5rem;              
   font-size: 1rem;
   color: var(--color-gray-700);
   cursor: pointer;
@@ -122,7 +121,7 @@
   -webkit-appearance: none;
   width: 18px;
   height: 18px;
-  border: 2px solid #999;         /* gris por defecto */
+  border: 2px solid #999;        
   border-radius: 50%;
   position: relative;
   cursor: pointer;
@@ -141,13 +140,13 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: white;              /* puntito blanco al centro */
+  background: white;           
 }
 
 .form-horizontal {
   display: flex;
-  flex-direction: row;    /* título arriba, opciones abajo */
-  align-items: center;       /* centra todo */
+  flex-direction: row;    
+  align-items: center;      
   gap: 0.75rem;
 }
 

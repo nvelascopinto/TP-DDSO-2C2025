@@ -13,7 +13,10 @@ export function getProductosByVendedor (filters){
 //get producto by id
 
 export async function actualizarProducto (id, productData){
-    return apiBack.patch('/productos/${id}', productData)
+    return apiBack.patch('/productos/${id}', {
+       // params: productData.idProducto,
+        body : productData
+        })
     .then((response) => {
         return response.data
     })
@@ -25,7 +28,7 @@ export async function actualizarProducto (id, productData){
 
 export async function crearProducto (usuario, productData){
     return apiBack.post('/',{
-    usuario : usuario,
+    user : usuario,
     body : productData
     })
     .then((response) => {

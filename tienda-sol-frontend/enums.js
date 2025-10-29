@@ -18,3 +18,24 @@ export const EstadoPedido = {
   ENTREGADO: 'ENTREGADO',
   CANCELADO: 'CANCELADO',
 };
+
+
+export const CATEGORIAS = {
+  ROPA: 'Ropa' ,
+  CALZADO: 'Calzado',
+  ELECTRÓNICA: 'Electrónica',
+  HOGAR: 'Hogar',
+  DEPORTES: 'Deportes',
+  JUGUETES: 'Juguetes',
+  ACCESORIOS: 'Accesorios',
+  ELECTRODOMÉSTICOS: 'Electrodomésticos',
+  PAPELERÍA: 'Papelería' ,
+  FOTOGRAFÍA: 'Fotografía',
+  VEHÍCULOS: 'Vehículos',
+  JOYASYRELOJES: 'Joyas y Relojes' ,
+  MÚSICA: 'Música',
+  VIDEOJUEGOS: 'Videojuegos',
+  ALIMENTOSYBEBIDAS: 'Alimentos y Bebidas' ,
+  OTROS: 'Otros' 
+}
+;

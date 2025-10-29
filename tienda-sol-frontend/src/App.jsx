@@ -48,23 +48,39 @@ const AppContent = () => {
 
 
   const handleLogin = (tipo, user, password) => {
-    login(user, password).then((() => {
-        if (tipo === 'Vendedor') {
-         navigate('/productos');
+    login(user, password)
+    //.then((() => {
+    //     if (tipo === 'Vendedor') {
+    //      navigate('/productos');
+    //     } else {
+    //     navigate('/');
+    //     }
+    // })).catch((error) =>{
+    //   if(!error.response) {
+    //       navigate('/error')
+    //   } else {    login(user, password)
+      .then((userData) => {
+        // userData es el usuario devuelto por el backend después del login
+        console.log('Usuario logueado:', userData); // Debug
+      
+        // Navegar según el tipo de usuario devuelto por el backend
+if (userData?.tipo === 'Vendedor') {
+          navigate('/productos');
         } else {
-        navigate('/');
+          navigate('/');
         }
-    })).catch((error) =>{
-      if(!error.response) {
-          navigate('/error')
-      } else {
-        if(error.response.status >= 500 && error.response.status > 600)
-        {
-          navigate('/error', {
-          state :  {
-            status : error.response.status
-          }})
+      })
+      .catch((error) => {
+        if (!error.response) {
+          navigate('/error');
         } else {
+          if (error.response.status >= 500 && error.response.status < 600) { // Corregí el operador
+            navigate('/error', {
+              state: {
+                status: error.response.status
+              }
+            });
+          } else {
           throw error
         }
       }

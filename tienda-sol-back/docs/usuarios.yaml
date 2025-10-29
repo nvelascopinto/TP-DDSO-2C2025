@@ -12,6 +12,8 @@ servers:
 tags:
   - name: Usuarios
     description: Operaciones sobre usuarios y su historial
+  - name: Tiendas
+    description: Operaciones sobre tiendas (vendedores)
 
 paths:
   /usuarios:
@@ -29,10 +31,14 @@ paths:
               ejemplo:
                 value:
                   username: "jose50"
+                  password: "Secreto123"
                   nombre: "Jose"
                   email: "jose@gmail.com"
                   telefono: "+54 11 3333 3333"
                   tipoUsuario: "Comprador"
+                  tienda:
+                    nombre: "Mi Tienda"
+                    descripcion: "Tienda de ejemplo"
       responses:
         "201":
           description: Usuario creado correctamente
@@ -48,6 +54,92 @@ paths:
                 $ref: "#/components/schemas/Error"
         "409":
           description: Ya existe un usuario con ese username
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /usuarios/login:
+    post:
+      tags:
+        - Usuarios
+      summary: Autenticar usuario (login)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: "jose50"
+                password:
+                  type: string
+                  example: "Secreto123"
+      responses:
+        "200":
+          description: Inicio de sesión exitoso (UserDTO)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+        "400":
+          description: Datos inválidos (validación fallida)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Credenciales incorrectas o acceso denegado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                password_incorrecta:
+                  value:
+                    name: "AuthorizationError"
+                    message: "La contraseña ingresada fue incorrecta"
+                    details: null
+                usuario_inexistente:
+                  value:
+                    name: "UsuarioNoAutorizado"
+                    message: "No existe el usuario especificado"
+                    details: null
+
+  /usuarios/tiendas:
+    get:
+      tags:
+        - Tiendas
+      summary: Listar tiendas de vendedores
+      description: Retorna una lista de vendedores con la información de tienda
+      responses:
+        "200":
+          description: Lista de tiendas de vendedores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/VendedorTienda"
+              examples:
+                ejemplo:
+                  value:
+                    - username: "vendedor1"
+                      tienda:
+                        nombre: "Tienda Central"
+                        descripcion: "Tienda de ejemplo"
+                        logo: "https://example.com/logo.png"
+                    - username: "vendedor2"
+                      tienda:
+                        nombre: "Rincón Tech"
+                        descripcion: "Electrónica y accesorios"
+        "400":
+          description: Solicitud inválida
           content:
             application/json:
               schema:
@@ -74,14 +166,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Usuario"
-        "404":
-          description: Usuario inexistente
+        "400":
+          description: Username inválido
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-        "403":
-          description: Usuario sin permiso
+        "404":
+          description: Usuario inexistente
           content:
             application/json:
               schema:
@@ -150,82 +242,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-        /tiendas:
-    get:
-      tags:
-        - Tiendas
-      summary: Listar tiendas
-      description: Retorna una lista de tiendas registradas
-      responses:
-        "200":
-          description: Lista de tiendas
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Tienda"
-              examples:
-                ejemplo:
-                  value:
-                    - _id: "64b8f0c3e8f9b0a1d2c3e111"
-                      nombre: "Tienda Central"
-                      direccion: "Av. Siempreviva 742"
-                      telefono: "+54 11 4444 4444"
-                      email: "contacto@tiendacentral.com"
-                      ropietario: "vendedor1"
-                      abierto: true
-                      categorias:
-                        - "Electrónica"
-                        - "Hogar"
-                      fechaAlta: "2025-09-01T10:00:00Z"
-    post:
-      tags:
-        - Tiendas
-      summary: Crear una nueva tienda
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/TiendaDTO"
-            examples:
-              ejemplo:
-                value:
-                  nombre: "Mi Tienda"
-                  direccion: "Calle Falsa 123"
-                  telefono: "+54 11 5555 5555"
-                  email: "mitienda@ejemplo.com"
-                  propietario: "vendedor1"
-                  abierto: true
-                  categorias:
-                    - "Ropa"
-      responses:
-        "201":
-          description: Tienda creada correctamente
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Tienda"
-        "400":
-          description: Datos inválidos
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-        "403":
-          description: Usuario sin permiso
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
 
 components:
   schemas:
+    TiendaDTO:
+      type: object
+      properties:
+        nombre:
+          type: string
+          example: "Mi Tienda"
+        descripcion:
+          type: string
+          example: "Tienda de ejemplo"
+        logo:
+          type: string
+          format: uri
+          example: "https://example.com/logo.png"
+
     UsuarioDTO:
       type: object
       required:
         - username
+        - password
         - nombre
         - email
         - telefono
@@ -235,6 +273,10 @@ components:
           type: string
           example: "jose50"
           description: Debe ser único. No puede estar vacío.
+        password:
+          type: string
+          example: "Secreto123"
+          description: Contraseña del usuario.
         nombre:
           type: string
           example: "Jose"
@@ -253,6 +295,8 @@ components:
             - Vendedor
             - Admin
           example: "Comprador"
+        tienda:
+          $ref: "#/components/schemas/TiendaDTO"
 
     Usuario:
       allOf:
@@ -261,11 +305,30 @@ components:
           properties:
             _id:
               type: string
-              example: "64a8f0c3e8f9b0a1d2c3e4f5"
+              example: "jose50"
             fechaAlta:
               type: string
               format: date-time
               example: "2025-10-01T12:00:00Z"
+
+    UserDTO:
+      type: object
+      properties:
+        username:
+          type: string
+          example: "jose50"
+        tipo:
+          type: string
+          example: "Comprador"
+
+    VendedorTienda:
+      type: object
+      properties:
+        username:
+          type: string
+          example: "vendedor1"
+        tienda:
+          $ref: "#/components/schemas/TiendaDTO"
 
     Error:
       type: object

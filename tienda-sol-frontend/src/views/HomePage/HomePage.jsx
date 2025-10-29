@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../../services/mockService.js';
 import Spinner from '../../components/Spinner/Spinner.jsx';
 import './HomePage.css';
+import { getVendedores } from '../../services/userService.js';
 
 const HomePage = ({ onStoreSelect, onError }) => {
   const [vendedores, setVendedores] = useState([]);
@@ -12,12 +13,12 @@ const HomePage = ({ onStoreSelect, onError }) => {
     const fetchVendedores = async () => {
       try {
         setLoading(true);
-        const data = await api.getVendedores();
+        const data = await getVendedores();
         setVendedores(data);
       } catch (error) {
         console.error("Error fetching vendedores:", error);
       // Reportar el error al componente padre para que navegue
-if (onError) {
+        if (onError) {
              
              // 1. Determinar el estado (código) del error
              const status = error.response?.status || 
@@ -86,15 +87,16 @@ if (onError) {
           aria-label="Cargando tiendas disponibles"/>
       ) : (
         <div className="homepage__store-grid" role="region" aria-label="Listado de tiendas disponibles"> 
-          {vendedores.map((vendedor) => (
+          {vendedores.filter(v => v.tienda)
+          .map((vendedor) => (
             <div
-              key={vendedor.id}
+              key={vendedor.username}
               className="homepage__store-card"
               role="button"
-              aria-label={`Abrir catálogo de la tienda ${vendedor.nombre}`}
+              aria-label={'Abrir catálogo de la tienda' + vendedor.tienda.nombre}
               onClick={() => onStoreSelect(vendedor)}
             >
-              <h2 className="store-card__title">{vendedor.nombre}</h2>
+              <h2 className="store-card__title">{vendedor.tienda.nombre}</h2>
               <p className="store-card__cta">Ver catálogo</p>
             </div>
           ))}

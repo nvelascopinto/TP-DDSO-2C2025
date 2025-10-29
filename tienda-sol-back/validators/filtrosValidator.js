@@ -10,7 +10,7 @@ export const filtrosValidator = z.object({
     .transform(val => val ? parseInt(val) : 1),
   limite: z.string().optional()
     .transform(val => val ? parseInt(val) : 5),
-  nombre: z.string().optional(),
+  titulo: z.string().optional(),
   categoria: z.string().optional(),
   descripcion: z.string().optional(),
   orden: z.string().optional()
