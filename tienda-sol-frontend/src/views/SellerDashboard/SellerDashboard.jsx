@@ -1,12 +1,13 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '../../contexts/AppContext.jsx';
-import { api } from '../../services/mockService.js';
+//import { api } from '../../services/mockService.js';
 import Spinner from '../../components/Spinner/Spinner.jsx';
 import Modal from '../../components/Modal/Modal.jsx';
 import ProductForm from '../../components/ProductsForm/ProductForm.jsx';
 import Button from '../../components/Button/Button.jsx';
 import './SellerDashboard.css';
+import { getProductosByVendedor, actualizarProducto, crearProducto } from '../../services/productoService.js';
 
 const SellerDashboard = () => {
   const { currentUser } = useAuth();
@@ -19,7 +20,7 @@ const SellerDashboard = () => {
     if (currentUser) {
       try {
         setLoading(true);
-        const data = await api.getProductosByVendedor(currentUser.id);
+        const data = await getProductosByVendedor(currentUser.id);
         setProductos(data);
       } catch (error) {
         console.error("Error fetching seller products:", error);
@@ -52,9 +53,9 @@ const SellerDashboard = () => {
     if (!currentUser) return;
     try {
       if (isNew) {
-        await api.crearProducto(currentUser.id, productData);
+        await crearProducto(currentUser.id, productData);
       } else {
-        await api.actualizarProducto(productData.id, productData);
+        await actualizarProducto(productData.id, productData);
       }
       handleCloseModal();
       fetchProductos();
@@ -67,28 +68,28 @@ const SellerDashboard = () => {
   if (!currentUser) return null;
 
   return (
-    <div className="dashboard">
-      <h1 className="dashboard__title">Productos de Vendedor</h1>
+    <div className="dashboard" role="main" aria-labelledby="dashboard-title">
+      <h1 className="dashboard__title" id="dashboard-title">Productos de Vendedor</h1>
       <p className="dashboard__welcome">Bienvenido, {currentUser.nombre}.</p>
 
       <div className="dashboard__content-box">
         <div className="dashboard__header">
-          <h2 className="dashboard__subtitle">Mis Productos</h2>
-          <Button variant="primary" onClick={handleOpenAddModal}>
+          <h2 className="dashboard__subtitle" id="dashboard-products-title">Mis Productos</h2>
+          <Button variant="primary" onClick={handleOpenAddModal} aria-label="Agregar nuevo producto">
             + Agregar Producto
           </Button>
         </div>
 
-        {loading ? <Spinner /> : (
-          <div className="table-container">
+        {loading ? <Spinner role="status" aria-live="polite" aria-label="Cargando productos del vendedor"/> : (
+          <div className="table-container" role="region" aria-label="Lista de productos del vendedor">
             <table className="products-table">
               <thead>
                 <tr>
-                  <th>Producto</th>
-                  <th>Precio</th>
-                  <th>Stock</th>
-                  <th>Activo</th>
-                  <th>Acciones</th>
+                  <th scope="col">Producto</th>
+                  <th scope="col">Precio</th>
+                  <th scope="col">Stock</th>
+                  <th scope="col">Activo</th>
+                  <th scope="col">Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -99,7 +100,7 @@ const SellerDashboard = () => {
                     <td data-label="Stock">{p.stock}</td>
                     <td data-label="Activo">{p.activo ? 'Sí' : 'No'}</td>
                     <td data-label="Acciones">
-                      <button onClick={() => handleOpenEditModal(p)} className="table-action-button">Editar</button>
+                      <button onClick={() => handleOpenEditModal(p)} className="table-action-button" aria-label={`Editar producto ${p.titulo}`}>Editar</button>
                     </td>
                   </tr>
                 ))}

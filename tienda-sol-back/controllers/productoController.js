@@ -34,7 +34,7 @@ class ProductoController {
         throw new ZodValidationError(e)
       })      
       .then((query) => {
-        const vendedor = req.user
+        const vendedor = req.vendedor
         const { pagina, limite, ...filtros } = query // Cualquier filtro que vayamos a agregar entra automáticamente a "filtros"
         return productoService.obtenerTodosDeVendedor(vendedor, filtros, pagina, limite)
       })

@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import './Producto.Item.css';
-import { api } from '../../services/mockService.js';
+//import { api } from '../../services/mockService.js';
 import Spinner from '../Spinner/Spinner';
+import {getProductosByVendedor} from '../../services/productoService.js';
 
 const ProductoItem = ({ item}) => {
     const [producto, setProducto] = useState(null)
     const [loading, setLoading] = useState(true)
     useEffect(() => {
-        api.getProductoById(item.productoId).then((prod) => 
+        getProductosByVendedor(item.productoId).then((prod) => 
         setProducto(prod)).finally(()=>{
             console.log("PRODUCTO" +producto)
             setLoading(false)
@@ -27,7 +28,6 @@ const ProductoItem = ({ item}) => {
         </div>
       </div>
       <div>
-      {/* <div className="producto__actions"> //product actions */}
         <span className="producto__details">{item.cantidad}</span>
         <span className="producto__details">${item.subtotal}{producto.moneda} </span>
       </div>

@@ -31,15 +31,15 @@ const Header = ({ navigateTo, currentRoute }) => {
 
   useEffect(() => {
     if (!currentRoute) {
-      if (currentUser?.tipo === "COMPRADOR") {
+      if (currentUser?.tipo === "Comprador") {
         setActiveTab("");
-      } else if (currentUser?.tipo === "VENDEDOR") {
+      } else if (currentUser?.tipo === "Vendedor") {
         setActiveTab("productos");
       }
     }
   }, [currentUser, currentRoute]);
 
-  // Cerrar menú al hacer clic fuera
+  // cerrar menú con click fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isMenuOpen && !event.target.closest('.header__nav') && !event.target.closest('.header__hamburger')) {
@@ -51,7 +51,7 @@ const Header = ({ navigateTo, currentRoute }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isMenuOpen]);
 
-  const showCart = currentUser?.tipo !== 'VENDEDOR';
+  const showCart = currentUser?.tipo !== 'Vendedor';
 
   return (
     <header className="header">
@@ -59,7 +59,7 @@ const Header = ({ navigateTo, currentRoute }) => {
         <div
           className="header__logo"
           onClick={() => { 
-            if (currentUser?.tipo !== 'VENDEDOR') {
+            if (currentUser?.tipo !== 'Vendedor') {
               navigateTo('');
             }
           }}
@@ -68,7 +68,7 @@ const Header = ({ navigateTo, currentRoute }) => {
           <span className="header__logo-text">Tienda Sol</span>
         </div>
 
-        {/* Botón Hamburguesa - Solo móvil */}
+        {/* menú hamburguesa*/}
         <button 
           className="header__hamburger"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -80,7 +80,7 @@ const Header = ({ navigateTo, currentRoute }) => {
         </button>
 
         <nav className={`header__nav ${isMenuOpen ? 'open' : ''}`}>
-          {currentUser?.tipo === 'COMPRADOR' && (
+          {currentUser?.tipo === 'Comprador' && (
             <button
               onClick={() => handleNavigate('historial-pedidos')}
               className={`header__nav-link ${activeTab === "historial-pedidos" ? "active" : ""}`}
@@ -89,7 +89,7 @@ const Header = ({ navigateTo, currentRoute }) => {
             </button>
           )}
 
-          {currentUser?.tipo === 'VENDEDOR' && (
+          {currentUser?.tipo === 'Vendedor' && (
             <div className="header__nav-vendor-links">
               <button
                 onClick={() => handleNavigate('productos')}
@@ -134,7 +134,7 @@ const Header = ({ navigateTo, currentRoute }) => {
           {currentUser ? (
             <div className="header__user-info">
               <span className="header__user-greeting">
-                Hola, {currentUser.nombre.split(' ')[0]}
+                Hola, {currentUser.username.split(' ')[0]}
               </span>
               <button onClick={handleLogout} className="header__logout-button">
                 Salir

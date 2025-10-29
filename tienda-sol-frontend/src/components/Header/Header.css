@@ -17,7 +17,7 @@
   width: 100%;
   max-width: 100%;
   position: relative;
-  min-height: 60px; /* Altura mínima para evitar cortes */
+  min-height: 60px;
 }
 
 .header__logo {
@@ -70,7 +70,7 @@
   }
 }
 
-/* BOTÓN HAMBURGUESA */
+/* MENU HAMBURGUESA */
 .header__hamburger {
   display: flex;
   flex-direction: column;
@@ -83,8 +83,8 @@
   padding: 0;
   z-index: 1002;
   position: relative;
-  flex-shrink: 0; /* Evita que se comprima */
-  margin-left: auto; /* Asegura que se mantenga a la derecha */
+  flex-shrink: 0; /* no se comprime */
+  margin-left: auto;
 }
 
 @media (min-width: 768px) {
@@ -126,7 +126,7 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
-  z-index: -1; /* DETRÁS del menú - esto es CLAVE */
+  z-index: -1;
   pointer-events: auto;
 }
 
@@ -155,16 +155,16 @@
   padding: 5rem 1.5rem 2rem;
   flex-direction: column;
   gap: 1rem;
-  z-index: 9999; /* Muy alto para estar por encima de todo */
+  z-index: 9999;
   overflow-y: auto;
   transition: transform 0.3s ease;
   transform: translateX(100%);
-  pointer-events: none; /* Desactiva clicks cuando está cerrado */
+  pointer-events: none; /* desactiva clicks cuando esta cerrado */
 }
 
 .header__nav.open {
   transform: translateX(0);
-  pointer-events: auto; /* Activa clicks cuando está abierto */
+  pointer-events: auto; /* activa clicks cuando está abierto */
 }
 
 @media (min-width: 768px) {
@@ -183,12 +183,12 @@
     transform: none;
     overflow-y: visible;
     z-index: auto;
-    pointer-events: auto; /* Siempre activo en desktop */
+    pointer-events: auto; 
   }
   
   .header__nav.open {
     transform: none;
-    pointer-events: auto; /* Siempre activo en desktop */
+    pointer-events: auto; 
   }
 }
 
@@ -280,7 +280,6 @@
   }
 }
 
-/* Badge para notificaciones - igual que carrito */
 .header__notification-icon .notification-bell {
   position: relative;
   display: flex;
@@ -294,12 +293,10 @@
   transition: color 0.2s ease;
 }
 
-/* Hover en móvil */
 .header__notification-icon:hover .notification-bell .icon {
   color: var(--color-accent-secondary);
 }
 
-/* Cuando el botón está activo (seleccionado) en móvil */
 .header__nav-link.header__notification-icon.active .notification-bell .icon {
   color: var(--color-white) !important;
 }
@@ -313,7 +310,6 @@
     color: var(--color-white);
   }
   
-  /* En desktop cuando está activo */
   .header__nav-link.header__notification-icon.active .notification-bell .icon {
     color: var(--color-white) !important;
   }
@@ -381,7 +377,6 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* USER INFO */
 .header__user-info {
   display: flex;
   flex-direction: column;

@@ -1,11 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { useAuth, usePedidos } from '../../contexts/AppContext.jsx';
-import { api } from '../../services/mockService.js';
+//import { api } from '../../services/mockService.js';
 import { EstadoPedido } from '../../../enums.js';
 import Spinner from '../../components/Spinner/Spinner.jsx';
 import './OrderHistoryPage.css';
-import PedidoAcciones from '@/src/components/StateButton/StateButton.jsx';
+import PedidoAcciones from '../../components/StateButton/StateButton.jsx';
 import Button from '../../components/Button/Button.jsx';
 
 const getStatusClass = (status) => {
@@ -38,15 +38,15 @@ const OrderHistoryPage = ({ navigateTo }) => {
     
 
     return (
-        <div className="order-history-page">
-            <h1 className="order-history-page__title">Mi Historial de Pedidos</h1>
+        <div className="order-history-page" role="main" aria-labelledby="order-history-title">
+            <h1 className="order-history-page__title" id="order-history-title">Mi Historial de Pedidos</h1>
             {pedidos.length === 0 ? (
-                <p className="order-history-page__empty-message">Aún no has realizado ningún pedido.</p>
+                <p className="order-history-page__empty-message" role="status" aria-live="polite">Aún no has realizado ningún pedido.</p>
             ) : (
                 <div className="order-list">
                     {pedidos.map((pedido) => {
                         return (
-                            <div key={pedido.id} className ="order-form">
+                            <div key={pedido.id} className ="order-form" role="listitem" aria-labelledby={`order-id-${pedido.id}`}>
                                 <div className="order-item__header">
                                     <div>
                                         <p className="order-item__date">
@@ -54,23 +54,25 @@ const OrderHistoryPage = ({ navigateTo }) => {
                                         </p>
                                     </div>
                                     <div className = "order-state-id">
-                                        <div className="order-item__actions">
+                                        <div className="order-item__actions" role="group" aria-label="Identificación del pedido">
                                                 <h2 className="order-item__id">Pedido #{pedido.id}</h2>
-                                                <span className={`status-badge ${getStatusClass(pedido.estado)}`}>
+                                                <span className={`status-badge ${getStatusClass(pedido.estado)}`} role="status" aria-live="polite" aria-label={`Estado del pedido: ${pedido.estado}`}>
                                                     {pedido.estado}
                                                 </span>
                                         </div>
                                     </div>
                                 </div>
                                 <div className = "order-change-state">
-                                    <PedidoAcciones pedido={pedido}/>
+                                        <div role="region" aria-label={`Acciones del pedido ${pedido.id}`}>
+                                            <PedidoAcciones pedido={pedido} />
+                                        </div>
                                 </div>
                                 <div className="order-item__body">
-                                        <Button onClick={() =>  navigateTo(`historial-pedidos/${pedido.id}`)}>
+                                        <Button onClick={() =>  navigateTo(`historial-pedidos/${pedido.id}`)} aria-label={`Ver detalles del pedido ${pedido.id}`}>
                                             Ver Pedido
                                         </Button>
                                         <div>
-                                            <p className="order-item__total">Total: <span>${pedido.total.toFixed(2)}</span></p>
+                                            <p className="order-item__total">Total: <span aria-label={`Total del pedido: ${pedido.total.toFixed(2)}`}>${pedido.total.toFixed(2)}</span></p>
                                         </div>
                                         
                                 </div>

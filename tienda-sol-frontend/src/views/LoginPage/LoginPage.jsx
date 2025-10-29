@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { TipoUsuario } from '../../../enums.js';
 import Button from '../../components/Button/Button.jsx';
+import PasswordInput from '../../components/PasswordInput/PasswordInput.jsx';
 import './LoginPage.css';
 
 const LoginPage = ({ onLogin }) => {
@@ -9,7 +10,14 @@ const LoginPage = ({ onLogin }) => {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        onLogin(activeTab === 'comprador' ? TipoUsuario.COMPRADOR : TipoUsuario.VENDEDOR);
+        const formData = new FormData(e.target);
+        const data = {
+        username: formData.get('username'),
+        password: formData.get('password')
+        }
+        onLogin(activeTab === 'comprador' ? TipoUsuario.COMPRADOR : TipoUsuario.VENDEDOR, data.username, data.password);
+
+
     };
 
     
@@ -30,29 +38,25 @@ const LoginPage = ({ onLogin }) => {
 
                     <div className="login-form__fields">
                         <div className="form-group">
-                            <label htmlFor="email" className="form-label">Email*</label>
+                            <label htmlFor="username" className="form-label">Nombre de Usuario*</label>
                             <input
-                                type="email"
-                                id="email"
+                                type="text"
+                                id="username"
+                                name='username'
                                 className="form-input"
-                                placeholder="tu@email.com"
+                                placeholder="Ingresa tu nombre de usuario"
                                 required
-                                aria-label="Correo electrónico"
+                                aria-label="Nombre de Usuario"
                                 aria-required="true"
                             />
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="password" className="form-label">Contraseña*</label>
-                            <input
-                                type="password"
-                                id="password"
-                                className="form-input"
-                                placeholder="••••••••"
-                                required
-                                aria-required="true"
-                                aria-label="Contraseña"
-                            />
-                        </div>
+                        <PasswordInput
+                            id="password"
+                            name="password"
+                            placeholder="••••••••"
+                            aria-label="Contraseña"
+                            aria-required="true"
+                        />
                     </div>
 
                     <div className="login-form__actions"  role="group" aria-label="Acciones del formulario">

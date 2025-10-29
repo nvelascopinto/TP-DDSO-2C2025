@@ -8,6 +8,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "cors": "^2.8.5",
     "lint": "^0.8.19",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -17,12 +18,11 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "vite",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "dev": "vite",
-    "build-vite": "vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint ."
   },

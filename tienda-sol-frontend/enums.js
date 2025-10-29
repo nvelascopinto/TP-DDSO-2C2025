@@ -1,8 +1,7 @@
-
 export const TipoUsuario = {
-  COMPRADOR: 'COMPRADOR',
-  VENDEDOR: 'VENDEDOR',
-  ADMIN: 'ADMIN',
+  COMPRADOR: 'Comprador',
+  VENDEDOR: 'Vendedor',
+  ADMIN: 'Admin',
 };
 
 export const Moneda = {

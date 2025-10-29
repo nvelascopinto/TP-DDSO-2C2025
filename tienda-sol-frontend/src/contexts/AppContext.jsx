@@ -1,28 +1,28 @@
 
 import React, { createContext, useState, useContext, useCallback, useEffect} from 'react';
-import { TipoUsuario } from '@/enums';
+import { TipoUsuario } from '/enums';
 import Toast from '../components/Toast/Toast';
 import {api} from '../services/mockService.js'
 import {authenticate} from '../services/userService.js'
 
 
-// --- MOCK USERS FOR LOGIN ---
+// usuarios
 const mockComprador = { id: 'user-1', nombre: 'Ana (Compradora)', email: 'ana@example.com', telefono: '123456789', tipo: TipoUsuario.COMPRADOR, fechaAlta: new Date().toISOString() };
 const mockVendedor = { id: 'user-2', nombre: 'Boutique de Ropa "Estilo Urbano"', email: 'estilo@example.com', telefono: '987654321', tipo: TipoUsuario.VENDEDOR, fechaAlta: new Date().toISOString() };
 
-// --- CONTEXTS ---
+// contextos
 const AuthContext = createContext(undefined);
 const CartContext = createContext(undefined);
 const PedidosContext = createContext(undefined);
 
-// --- APP PROVIDER ---
+// providers
 export const AppProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [toastMessage, setToastMessage] = useState(null);
   const [pedidos, setPedidos] = useState([]);
 
-    // Cargar usuario guardado al montar (para que no se pierda al refresh)
+  // Cargar usuario guardado al montar
   useEffect(() => {
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
@@ -30,7 +30,7 @@ export const AppProvider = ({ children }) => {
     }
   }, []);
 
-  // Guardar usuario cada vez que cambia
+  // guardar usuario cada vez que cambia
   useEffect(() => {
     if (currentUser) {
       localStorage.setItem('currentUser', JSON.stringify(currentUser));
@@ -38,16 +38,17 @@ export const AppProvider = ({ children }) => {
       localStorage.removeItem('currentUser');
     }
   }, [currentUser]);
-    // Guardar carrito cada vez que cambia
+
+    // guardar carrito cada vez que cambia
     useEffect(() => {
     if (cartItems.length > 0) localStorage.setItem('cartItems', JSON.stringify(cartItems));
     else localStorage.removeItem('cartItems');
   }, [cartItems]);
 
-  // Auth methods
+  // auth methods
 
   const login = (user, passwrord) => {
-    return authenticate(user, password).then((user) => {
+    return authenticate(user, passwrord).then((user) => {
       setCurrentUser(user)
     }).catch((error) => {
       console.log("Ocurrio un error al autenticarse")
@@ -61,11 +62,14 @@ export const AppProvider = ({ children }) => {
     
   };
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setCurrentUser(null);
-  };
+    setCartItems([]); // vacia el carrito
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('cartItems');
+  }, []);
 
-  // Toast method
+  // toast notificaciones
   const showToast = useCallback((message) => {
     setToastMessage(message);
     setTimeout(() => {
@@ -118,7 +122,7 @@ export const AppProvider = ({ children }) => {
 
   const getPedidosUser = useCallback(() => {
     if (!currentUser) return;
-    api.getPedidos()
+    api.getPedidos() //mock
       .then(data => {
         console.log(data)
         let userPedidos = [];
@@ -133,7 +137,7 @@ export const AppProvider = ({ children }) => {
         setPedidos(userPedidos);
       })
       .catch(error => {
-        console.error("Error fetching pedidos:", error);
+        console.error("Error buscando pedidos:", error);
       });
   }, [currentUser]);
 
@@ -167,7 +171,6 @@ export const AppProvider = ({ children }) => {
   );
 };
 
-// --- HOOKS ---
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

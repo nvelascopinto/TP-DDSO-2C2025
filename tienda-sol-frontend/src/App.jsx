@@ -47,9 +47,9 @@ const AppContent = () => {
   };
 
 
-  const handleLogin = (user, password) => {
-    login(user, password).then(((user) => {
-        if (user.tipo === 'VENDEDOR') {
+  const handleLogin = (tipo, user, password) => {
+    login(user, password).then((() => {
+        if (tipo === 'Vendedor') {
          navigate('/productos');
         } else {
         navigate('/');
@@ -136,7 +136,7 @@ const AppContent = () => {
           <Route 
             path="/productos" 
             element={
-              currentUser?.tipo === 'VENDEDOR' 
+              currentUser?.tipo === 'Vendedor' 
                 ? <SellerDashboard />
                 : <Navigate to="/" replace />
             } 
@@ -166,7 +166,7 @@ const AppContent = () => {
           <Route 
             path="/historial-pedidos" 
             element={
-              currentUser?.tipo === 'COMPRADOR' 
+              currentUser?.tipo === 'Comprador' 
                 ? <OrderHistoryPage navigateTo={navigateTo} />
                 : <Navigate to="/" replace />
             } 
@@ -174,7 +174,7 @@ const AppContent = () => {
           <Route 
             path="/historial-pedidos/:id" 
             element={
-              currentUser?.tipo === 'COMPRADOR' 
+              currentUser?.tipo === 'Comprador' 
                 ? <DetailsPedido />
                 : <Navigate to="/" replace />
             } 

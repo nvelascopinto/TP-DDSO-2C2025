@@ -1,8 +1,6 @@
-// --- CONSTANTES (antes eran enums en TypeScript) ---
-
 export const TipoUsuario = {
-  COMPRADOR: 'COMPRADOR',
-  VENDEDOR: 'VENDEDOR',
+  COMPRADOR: 'Comprador',
+  VENDEDOR: 'Vendedor',
 };
 
 export const Moneda = {
@@ -19,13 +17,13 @@ export const EstadoPedido = {
   CANCELADO: 'CANCELADO',
 };
 
-// --- MOCK DATABASE ---
+// mock bd
 
 const mockUsuarios = [
   { id: 'user-1', nombre: 'Ana (Compradora)', email: 'ana@example.com', telefono: '123456789', tipo: TipoUsuario.COMPRADOR, fechaAlta: new Date().toISOString() },
   { id: 'user-2', nombre: 'Boutique de Ropa "Estilo Urbano"', email: 'estilo@example.com', telefono: '987654321', tipo: TipoUsuario.VENDEDOR, fechaAlta: new Date().toISOString() },
   { id: 'user-3', nombre: 'Carlos (Comprador)', email: 'carlos@example.com', telefono: '555555555', tipo: TipoUsuario.COMPRADOR, fechaAlta: new Date().toISOString() },
-  { id: 'user-4', nombre: 'ArteSano Decoraciones', email: 'artesano@example.com', telefono: '111222333', tipo: TipoUsuario.VENDEDOR, fechaAlta: new Date().toISOString() },
+  { id: 'pepeSeller', nombre: 'ArteSano Decoraciones', email: 'artesano@example.com', telefono: '111222333', tipo: TipoUsuario.VENDEDOR, fechaAlta: new Date().toISOString() },
 ];
 
 const mockCategorias = [
@@ -42,6 +40,23 @@ let mockProductos = [
   { id: 'prod-3', vendedorId: 'user-2', titulo: 'Gorra Trucker', descripcion: 'Gorra con diseño exclusivo para completar tu look.', categorias: [mockCategorias[2]], precio: 15.00, moneda: Moneda.DOLAR_USA, stock: 100, fotos: ['https://picsum.photos/seed/gorra/400/400'], activo: true },
   { id: 'prod-4', vendedorId: 'user-4', titulo: 'Cuadro Abstracto Moderno', descripcion: 'Obra de arte pintada a mano sobre lienzo.', categorias: [mockCategorias[3], mockCategorias[4]], precio: 120.00, moneda: Moneda.DOLAR_USA, stock: 5, fotos: ['https://picsum.photos/seed/cuadro/400/400'], activo: true },
   { id: 'prod-5', vendedorId: 'user-4', titulo: 'Jarrón de Cerámica', descripcion: 'Jarrón artesanal ideal para decorar cualquier espacio.', categorias: [mockCategorias[3]], precio: 45.00, moneda: Moneda.DOLAR_USA, stock: 15, fotos: ['https://picsum.photos/seed/jarron/400/400'], activo: true },
+  { id: 'prod-6', vendedorId: 'user-2', titulo: 'Remera de Algodón Premium', descripcion: 'Remera suave y duradera, perfecta para el día a día.', categorias: [mockCategorias[0]], precio: 25.00, moneda: Moneda.DOLAR_USA, stock: 50, fotos: ['https://picsum.photos/seed/remera/400/400'], activo: true },
+  { id: 'prod-7', vendedorId: 'user-2', titulo: 'Jean Slim Fit', descripcion: 'Jean moderno y cómodo con un calce perfecto.', categorias: [mockCategorias[1]], precio: 60.00, moneda: Moneda.DOLAR_USA, stock: 30, fotos: ['https://picsum.photos/seed/jean/400/400'], activo: true },
+  { id: 'prod-8', vendedorId: 'user-2', titulo: 'Gorra Trucker', descripcion: 'Gorra con diseño exclusivo para completar tu look.', categorias: [mockCategorias[2]], precio: 15.00, moneda: Moneda.DOLAR_USA, stock: 100, fotos: ['https://picsum.photos/seed/gorra/400/400'], activo: true },
+  { id: 'prod-9', vendedorId: 'user-4', titulo: 'Cuadro Abstracto Moderno', descripcion: 'Obra de arte pintada a mano sobre lienzo.', categorias: [mockCategorias[3], mockCategorias[4]], precio: 120.00, moneda: Moneda.DOLAR_USA, stock: 5, fotos: ['https://picsum.photos/seed/cuadro/400/400'], activo: true },
+  { id: 'prod-10', vendedorId: 'user-4', titulo: 'Jarrón de Cerámica', descripcion: 'Jarrón artesanal ideal para decorar cualquier espacio.', categorias: [mockCategorias[3]], precio: 45.00, moneda: Moneda.DOLAR_USA, stock: 15, fotos: ['https://picsum.photos/seed/jarron/400/400'], activo: true },
+  { id: 'prod-11', vendedorId: 'user-2', titulo: 'Remera de Algodón Premium', descripcion: 'Remera suave y duradera, perfecta para el día a día.', categorias: [mockCategorias[0]], precio: 25.00, moneda: Moneda.DOLAR_USA, stock: 50, fotos: ['https://picsum.photos/seed/remera/400/400'], activo: true },
+  { id: 'prod-12', vendedorId: 'user-2', titulo: 'Jean Slim Fit', descripcion: 'Jean moderno y cómodo con un calce perfecto.', categorias: [mockCategorias[1]], precio: 60.00, moneda: Moneda.DOLAR_USA, stock: 30, fotos: ['https://picsum.photos/seed/jean/400/400'], activo: true },
+  { id: 'prod-13', vendedorId: 'user-2', titulo: 'Gorra Trucker', descripcion: 'Gorra con diseño exclusivo para completar tu look.', categorias: [mockCategorias[2]], precio: 15.00, moneda: Moneda.DOLAR_USA, stock: 100, fotos: ['https://picsum.photos/seed/gorra/400/400'], activo: true },
+  { id: 'prod-14', vendedorId: 'user-4', titulo: 'Cuadro Abstracto Moderno', descripcion: 'Obra de arte pintada a mano sobre lienzo.', categorias: [mockCategorias[3], mockCategorias[4]], precio: 120.00, moneda: Moneda.DOLAR_USA, stock: 5, fotos: ['https://picsum.photos/seed/cuadro/400/400'], activo: true },
+  { id: 'prod-15', vendedorId: 'user-4', titulo: 'Jarrón de Cerámica', descripcion: 'Jarrón artesanal ideal para decorar cualquier espacio.', categorias: [mockCategorias[3]], precio: 45.00, moneda: Moneda.DOLAR_USA, stock: 15, fotos: ['https://picsum.photos/seed/jarron/400/400'], activo: true },
+  { id: 'prod-16', vendedorId: 'user-4', titulo: 'Jarrón de Cerámica', descripcion: 'Jarrón artesanal ideal para decorar cualquier espacio.', categorias: [mockCategorias[3]], precio: 45.00, moneda: Moneda.DOLAR_USA, stock: 15, fotos: ['https://picsum.photos/seed/jarron/400/400'], activo: true },
+  { id: 'prod-17', vendedorId: 'user-2', titulo: 'Remera de Algodón Premium', descripcion: 'Remera suave y duradera, perfecta para el día a día.', categorias: [mockCategorias[0]], precio: 25.00, moneda: Moneda.DOLAR_USA, stock: 50, fotos: ['https://picsum.photos/seed/remera/400/400'], activo: true },
+  { id: 'prod-18', vendedorId: 'user-2', titulo: 'Jean Slim Fit', descripcion: 'Jean moderno y cómodo con un calce perfecto.', categorias: [mockCategorias[1]], precio: 60.00, moneda: Moneda.DOLAR_USA, stock: 30, fotos: ['https://picsum.photos/seed/jean/400/400'], activo: true },
+  { id: 'prod-19', vendedorId: 'user-2', titulo: 'Gorra Trucker', descripcion: 'Gorra con diseño exclusivo para completar tu look.', categorias: [mockCategorias[2]], precio: 15.00, moneda: Moneda.DOLAR_USA, stock: 100, fotos: ['https://picsum.photos/seed/gorra/400/400'], activo: true },
+  { id: 'prod-20', vendedorId: 'user-4', titulo: 'Cuadro Abstracto Moderno', descripcion: 'Obra de arte pintada a mano sobre lienzo.', categorias: [mockCategorias[3], mockCategorias[4]], precio: 120.00, moneda: Moneda.DOLAR_USA, stock: 5, fotos: ['https://picsum.photos/seed/cuadro/400/400'], activo: true },
+  { id: 'prod-21', vendedorId: 'user-4', titulo: 'Jarrón de Cerámica', descripcion: 'Jarrón artesanal ideal para decorar cualquier espacio.', categorias: [mockCategorias[3]], precio: 45.00, moneda: Moneda.DOLAR_USA, stock: 15, fotos: ['https://picsum.photos/seed/jarron/400/400'], activo: true },
+
 ];
 
 let mockNotificaciones = [
@@ -58,7 +73,7 @@ let mockPedidos = [
   { id: 'order-4', compradorId: 'user-1', vendedorId: 'user-2', items: [{ productoId: 'prod-5', cantidad: 1, precioUnitario: 45.00 }], total: 45.00, moneda: Moneda.DOLAR_USA, direccionEntrega: { calle: 'Calle Falsa', altura: '123', ciudad: 'Capital', provincia: 'CABA', pais: 'Argentina', codigoPostal: '1001'}, estado: EstadoPedido.EN_PREPARACION, fechaCreacion: new Date(Date.now() - 86400000).toISOString() },
 ];
 
-// --- MOCK API FUNCTIONS ---
+// mock api
 
 const simulateDelay = (data) => {
   return new Promise(resolve => setTimeout(() => resolve(JSON.parse(JSON.stringify(data))), 500));
@@ -112,7 +127,7 @@ export const api = {
     };
     mockPedidos.push(nuevoPedido);
 
-    // Notificación al vendedor
+    // notificación al vendedor
     const notifVendedor = {
       id: `notif-${mockNotificaciones.length + 1}`,
       usuarioDestinoId: vendedorId,

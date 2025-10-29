@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { TipoUsuario } from '../../../enums.js';
 import Button from '../../components/Button/Button.jsx';
+import PasswordInput from '../../components/PasswordInput/PasswordInput.jsx';
 import './RegisterPage.css';
 
 const RegisterPage = ({ onRegister }) => {
-  const [userType, setUserType] = useState("comprador");
+  const [userType, setUserType] = useState("Comprador");
   const [errorMsg, setErrorMsg] = useState(null);
 
   // manejo el envío del formulario
@@ -15,14 +16,18 @@ const RegisterPage = ({ onRegister }) => {
     const formData = new FormData(e.target);
     const data = {
       username: formData.get('username'),
-      password: formData.get('contraseña'),
+      password: formData.get('password'),
       email: formData.get('email'),
+      nombre: formData.get('name'),
       telefono: formData.get('telefono'),
+      tipoUsuario: userType,
       ...(userType === 'vendedor' && {
-        storeName: formData.get('storeName'),
+        tienda: {
+        nombre: formData.get('storeName'),
         descripcion: formData.get('descripcion'),
-      }),
-    };
+    }
+  }),
+};
 
     onRegister(
       userType === 'comprador' ? TipoUsuario.COMPRADOR : TipoUsuario.VENDEDOR,
@@ -44,25 +49,25 @@ const RegisterPage = ({ onRegister }) => {
   };
 
   return (
-    <div className="register-page">
+    <div className="register-page" role="main" aria-labelledby="register-title">
       <div className="register-form__container">
         {/* Tabs de tipo de usuario */}
-        <div className="register-form__tabs">
-          <button onClick={() => setUserType('comprador')} className={getTabClasses('comprador')}>
+        <div className="register-form__tabs" role="tablist" aria-label="Tipo de cuenta a registrar">
+          <button onClick={() => setUserType('comprador')} className={getTabClasses('comprador')} aria-selected={userType === 'comprador'} aria-controls="panel-comprador">
             Soy Comprador
           </button>
-          <button onClick={() => setUserType('vendedor')} className={getTabClasses('vendedor')}>
+          <button onClick={() => setUserType('vendedor')} className={getTabClasses('vendedor')} aria-selected={userType === 'vendedor'} aria-controls="panel-vendedor">
             Soy Vendedor
           </button>
         </div>
 
         {/* Formulario */}
-        <form onSubmit={handleRegister} className="register-form__body">
+        <form onSubmit={handleRegister} className="register-form__body" role="form">
           <h2 className="register-form__title">Crea tu cuenta</h2>
           <p className="register-form__subtitle">Ingresa tus datos para registrarte</p>
 
           {/* Mensaje de error */}
-          {errorMsg && <p className="register-form__error">{errorMsg}</p>}
+          {errorMsg && <p className="register-form__error" role="alert">{errorMsg}</p>}
 
           <div className="register-form__fields">
             <div className="form-group">
@@ -78,16 +83,24 @@ const RegisterPage = ({ onRegister }) => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="contraseña" className="form-label">Contraseña*</label>
+              <label htmlFor="name" className="form-label">Nombre y Apellido*</label>
               <input
-                type="password"
-                id="contraseña"
-                name="contraseña"
+                type="text"
+                id="name"
+                name="name"
                 className="form-input"
-                placeholder="Ingresa tu contraseña"
+                placeholder="Ingresa tu nombre y apellido"
                 required
               />
             </div>
+
+            <PasswordInput
+              id="password"
+              name="password"
+              placeholder="********"
+              aria-label="Contraseña"
+              aria-required="true"
+            />
 
             <div className="form-group">
               <label htmlFor="email" className="form-label">Email*</label>
@@ -118,7 +131,7 @@ const RegisterPage = ({ onRegister }) => {
           {userType === 'vendedor' && (
             <>
               <p className="register-form__subtitle">Ingresa los datos de tu tienda para terminar</p>
-              <div className="register-form__fields">
+              <div className="register-form__fields" aria-live="polite">
                 <div className="form-group">
                   <label htmlFor="storeName" className="form-label">Nombre de la tienda*</label>
                   <input
@@ -150,7 +163,11 @@ const RegisterPage = ({ onRegister }) => {
             <Button
               type="submit"
               variant={userType === 'comprador' ? 'primary' : 'secondary'}
-              className="button--full-width"
+              className="button--full-width" aria-label={
+              userType === 'comprador'
+              ? 'Registrarse como comprador'
+              : 'Registrarse como vendedor'
+          }
             >
               Registrarse
             </Button>
