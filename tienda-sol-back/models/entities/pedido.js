@@ -14,7 +14,7 @@ export class Pedido {
     this.total = this.calcularTotal()
     this.moneda = moneda
     this.direccionEntrega = direccionEntrega
-    this.estado = estados.PENDIENTE
+    this.estado = estados.Pendiente
     this.fechaCreacion = new Date()
     this.historialCambioPedidos = []
   }

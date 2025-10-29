@@ -76,7 +76,7 @@ const SellerDashboard = () => {
   return (
     <div className="dashboard" role="main" aria-labelledby="dashboard-title">
       <h1 className="dashboard__title" id="dashboard-title">Productos de Vendedor</h1>
-      <p className="dashboard__welcome">Bienvenido, {currentUser.nombre}.</p>
+      <p className="dashboard__welcome">Bienvenido, {currentUser.username}</p>
 
       <div className="dashboard__content-box">
         <div className="dashboard__header">
@@ -99,7 +99,7 @@ const SellerDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {productos.map(p => (
+                {currentProducts.map(p => (
                   <tr key={p.id}>
                     <td data-label="Producto">{p.titulo}</td>
                     <td data-label="Precio">${p.precio.toFixed(2)}</td>
