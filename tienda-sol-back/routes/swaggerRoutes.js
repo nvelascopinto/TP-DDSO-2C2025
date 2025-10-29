@@ -22,7 +22,8 @@ const options = {
       { url: "/docs/pedidos.yaml", name: "Pedidos" },
       { url: "/docs/productos.yaml", name: "Productos" },
       { url: "/docs/usuarios.yaml", name: "Usuarios" }
-    ]
+    ],
+    supportedSubmitMethods: []
   }
 }
 

@@ -3,7 +3,7 @@
   padding: 1.5rem;
   border-radius: 0.75rem;
   box-shadow: var(--shadow-xl);
-  max-width: 56rem; /* 896px */
+  max-width: 56rem; 
   margin: 0 auto;
 }
 
@@ -31,7 +31,7 @@
 }
 
 .notifications-page__title {
-  font-size: 1.875rem; /* 30px */
+  font-size: 1.875rem; 
   font-weight: 700;
   color: var(--color-text-primary);
   margin: 0;
@@ -68,7 +68,7 @@
 }
 
 .notification-item {
-  background-color: rgba(68, 179, 151, 0.1); /* accent-primary/10 */
+  background-color: rgba(68, 179, 151, 0.1); 
   padding: 1rem;
   border-radius: 0.5rem;
   display: flex;

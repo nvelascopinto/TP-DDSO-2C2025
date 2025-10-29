@@ -6,7 +6,7 @@
 }
 
 .lpedidoDetails-page__title{
-    font-size: 1.875rem; /* 30px */
+    font-size: 1.875rem; 
     font-weight: 700;
     color: var(--color-text-primary);
     margin-bottom: 1.5rem;
@@ -24,7 +24,7 @@
 }
 
 .pedidoDetails-page__total{
-    font-size: 1.5rem; /* 24px */
+    font-size: 1.5rem;
     font-weight: 700;
 }
 
@@ -49,4 +49,10 @@
 .pedidos-table th,
 .pedidos-table td {
   padding: 0.75rem;
+}
+
+.button{
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
 }

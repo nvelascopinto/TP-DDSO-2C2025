@@ -60,17 +60,17 @@ let mockProductos = [
 ];
 
 let mockNotificaciones = [
-  { id: 'notif-1', usuarioDestinoId: 'user-2', mensaje: 'Ana (Compradora) ha realizado un nuevo pedido (#order-1).', fechaAlta: '2025-10-22T11:19:54.000Z', leida: false },
-  { id: 'notif-2', usuarioDestinoId: 'user-1', mensaje: 'Tu pedido #order-1 ha sido confirmado.', fechaAlta: new Date().toISOString(), leida: false },
-  { id: 'notif-3', usuarioDestinoId: 'user-1', mensaje: 'Tu pedido #order-1 ha sido enviado. ¡Pronto estará contigo!', fechaAlta: '2025-10-25T11:19:54.000Z', leida: true, fechaLeida: new Date().toISOString() },
-  { id: 'notif-4', usuarioDestinoId: 'user-2', mensaje: 'Tu producto "Jean Slim Fit" tiene poco stock.', fechaAlta: '2025-10-25T11:19:54.000Z', leida: false },
+  { id: 'notif-1', usuarioDestinoId: 'vendedorTecno', mensaje: 'Ana (Compradora) ha realizado un nuevo pedido (#order-1).', fechaAlta: '2025-10-22T11:19:54.000Z', leida: false },
+  { id: 'notif-2', usuarioDestinoId: 'camila_15', mensaje: 'Tu pedido #order-1 ha sido confirmado.', fechaAlta: new Date().toISOString(), leida: false },
+  { id: 'notif-3', usuarioDestinoId: 'camila_15', mensaje: 'Tu pedido #order-1 ha sido enviado. ¡Pronto estará contigo!', fechaAlta: '2025-10-25T11:19:54.000Z', leida: true, fechaLeida: new Date().toISOString() },
+  { id: 'notif-4', usuarioDestinoId: 'vendedor_ropa', mensaje: 'Tu producto "Jean Slim Fit" tiene poco stock.', fechaAlta: '2025-10-25T11:19:54.000Z', leida: false },
 ];
 
 let mockPedidos = [
-  { id: 'order-1', compradorId: 'user-1', vendedorId: 'user-2', items: [{ productoId: 'prod-1', cantidad: 2, precioUnitario: 25.00 }], total: 50.00, moneda: Moneda.DOLAR_USA, direccionEntrega: { calle: 'Av. Siempreviva', altura: '742', ciudad: 'Springfield', provincia: 'Bs As', pais: 'Argentina', codigoPostal: '1234' }, estado: EstadoPedido.ENVIADO, fechaCreacion: new Date().toISOString() },
-  { id: 'order-2', compradorId: 'user-3', vendedorId: 'user-4', items: [{ productoId: 'prod-5', cantidad: 1, precioUnitario: 45.00 }], total: 45.00, moneda: Moneda.DOLAR_USA, direccionEntrega: { calle: 'Calle Falsa', altura: '123', ciudad: 'Capital', provincia: 'CABA', pais: 'Argentina', codigoPostal: '1001'}, estado: EstadoPedido.CONFIRMADO, fechaCreacion: new Date(Date.now() - 86400000).toISOString() },
-   { id: 'order-3', compradorId: 'user-1', vendedorId: 'user-2', items: [{ productoId: 'prod-1', cantidad: 2, precioUnitario: 25.00 }], total: 50.00, moneda: Moneda.DOLAR_USA, direccionEntrega: { calle: 'Av. Siempreviva', altura: '742', ciudad: 'Springfield', provincia: 'Bs As', pais: 'Argentina', codigoPostal: '1234' }, estado: EstadoPedido.PENDIENTE, fechaCreacion: new Date().toISOString() },
-  { id: 'order-4', compradorId: 'user-1', vendedorId: 'user-2', items: [{ productoId: 'prod-5', cantidad: 1, precioUnitario: 45.00 }], total: 45.00, moneda: Moneda.DOLAR_USA, direccionEntrega: { calle: 'Calle Falsa', altura: '123', ciudad: 'Capital', provincia: 'CABA', pais: 'Argentina', codigoPostal: '1001'}, estado: EstadoPedido.EN_PREPARACION, fechaCreacion: new Date(Date.now() - 86400000).toISOString() },
+  { id: 'order-1', compradorId: 'camila_15', vendedorId: 'vendedorTecno', items: [{ productoId: '69026c83a23e0d910a2c0fc3', cantidad: 2, precioUnitario: 2500.00, subtotal:5000.00 },{ productoId: '69026c8da23e0d910a2c0fc6', cantidad: 1, precioUnitario: 200.00, subtotal: 200.00}], total: 5400.00, moneda: Moneda.DOLAR_USA, direccionEntrega: { calle: 'Av. Siempreviva', altura: '742', ciudad: 'Springfield', provincia: 'Bs As', pais: 'Argentina', codigoPostal: '1234' }, estado: EstadoPedido.ENVIADO, fechaCreacion: new Date().toISOString() },
+  { id: 'order-2', compradorId: 'camila_15', vendedorId: 'vendedor_ropa', items: [{ productoId: '69026caba23e0d910a2c0fc9', cantidad: 1, precioUnitario: 4500.00,subtotal:9000.00 }], total: 4500.00, moneda: Moneda.DOLAR_USA, direccionEntrega: { calle: 'Calle Falsa', altura: '123', ciudad: 'Capital', provincia: 'CABA', pais: 'Argentina', codigoPostal: '1001'}, estado: EstadoPedido.CONFIRMADO, fechaCreacion: new Date(Date.now() - 86400000).toISOString() },
+ // { id: 'order-3', compradorId: 'user-1', vendedorId: 'user-2', items: [{ productoId: 'prod-1', cantidad: 2, precioUnitario: 25.00 }], total: 50.00, moneda: Moneda.DOLAR_USA, direccionEntrega: { calle: 'Av. Siempreviva', altura: '742', ciudad: 'Springfield', provincia: 'Bs As', pais: 'Argentina', codigoPostal: '1234' }, estado: EstadoPedido.PENDIENTE, fechaCreacion: new Date().toISOString() },
+ // { id: 'order-4', compradorId: 'user-1', vendedorId: 'user-2', items: [{ productoId: 'prod-5', cantidad: 1, precioUnitario: 45.00 }], total: 45.00, moneda: Moneda.DOLAR_USA, direccionEntrega: { calle: 'Calle Falsa', altura: '123', ciudad: 'Capital', provincia: 'CABA', pais: 'Argentina', codigoPostal: '1001'}, estado: EstadoPedido.EN_PREPARACION, fechaCreacion: new Date(Date.now() - 86400000).toISOString() },
 ];
 
 // mock api

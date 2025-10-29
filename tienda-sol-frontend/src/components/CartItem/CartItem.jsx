@@ -17,12 +17,12 @@ const CartItem = ({ item }) => {
       </div>
       <div className="cart-item__actions">
         <div className="quantity-control">
-          <button onClick={() => updateQuantity(item.producto.id, item.cantidad - 1)} className="quantity-control__button">-</button>
+          <button onClick={() => updateQuantity(item.producto._id, item.cantidad - 1)} className="quantity-control__button">-</button>
           <span className="quantity-control__display">{item.cantidad}</span>
-          <button onClick={() => updateQuantity(item.producto.id, item.cantidad + 1)} className="quantity-control__button">+</button>
+          <button onClick={() => updateQuantity(item.producto._id, item.cantidad + 1)} className="quantity-control__button">+</button>
         </div>
         <span className="cart-item__subtotal">${(item.producto.precio * item.cantidad).toFixed(2)}</span>
-        <button onClick={() => removeFromCart(item.producto.id)} className="cart-item__remove-button">
+        <button onClick={() => removeFromCart(item.producto._id)} className="cart-item__remove-button">
           <span className="material-symbols-outlined">delete</span>
         </button> 
       </div>

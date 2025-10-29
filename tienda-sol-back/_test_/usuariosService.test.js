@@ -1,4 +1,5 @@
 import { UsuarioDTO } from "../models/DTO/usuarioDTO.js"
+import { UserDTO } from "../models/DTO/userDTO.js"
 import { Usuario } from "../models/entities/usuario.js"
 import { UsuarioInexistenteError } from "../errors/notFoundError.js"
 
@@ -20,13 +21,14 @@ describe("UsuarioService", () => {
 
   describe("crearUsuario", () => {
     it("deberia crear el usuario", async () => {
-      let usuario = new UsuarioDTO("jose50", "Jose", "jose@gmail.com", "+54 11 3333 3333", "Comprador")
-      let usuarioCreado = new Usuario("jose50", "Jose", "jose@gmail.com", "+54 11 3333 3333", "Comprador")
+      let usuario = new UsuarioDTO("jose50", "Jose123","Jose", "jose@gmail.com", "+54 11 3333 3333", "Comprador")
+      let usuarioCreado = new Usuario("jose50", "Jose123", "Jose", "jose@gmail.com", "+54 11 3333 3333", "Comprador")
+      let usuarioCreadoDTO = new UserDTO("jose50", "Comprador")
 
       mockUsuarioRepository.crear.mockResolvedValue(usuarioCreado) // importante
 
       const user = await usuarioService.crearUsuario(usuario)
-      expect(user).toEqual(usuarioCreado)
+      expect(user).toEqual(usuarioCreadoDTO)
       expect(mockUsuarioRepository.crear).toHaveBeenCalledTimes(1)
     })
   })

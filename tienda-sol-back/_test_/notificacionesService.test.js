@@ -1,4 +1,4 @@
-import { estado } from "../models/entities/estadoPedido.js"
+import { estados } from "../models/entities/estadosPedido.js"
 import { NotificacionInexistenteError } from "../errors/notFoundError.js"
 import { UsuarioSinPermisoError } from "../errors/authorizationError.js"
 import { YaLeidaError } from "../errors/conflicError.js"
@@ -7,7 +7,7 @@ import { Notificacion } from "../models/entities/notificacion.js"
 jest.mock("../models/repositories/notificacionRepository.js", () => ({
   __esModule: true,
   default: {
-    crear: jest.fn().mockResolvedValue("mock-result"),
+    crear: jest.fn((notificacion) => Promise.resolve(notificacion)),
     getById: jest.fn(),
     update: jest.fn(),
     getNotificacionesLeidas: jest.fn(),
@@ -41,27 +41,23 @@ describe("NotificacionService", () => {
     }
   })
 
-  it("debe retornar null y no notificar si el estado es en_preparacion", () => {
-    const resultado = notificacionService.crearSegunEstadoPedido(estado.EN_PREPARACION, pedidoMock)
+  it("debe notificar si el estado es en_preparacion", async () => {
+    const resultado = await notificacionService.crearSegunEstadoPedido(estados["En Preparación"], pedidoMock)
 
-    expect(resultado).toBeNull()
+    const notificacionMock = new Notificacion(vendedorMock, "El pedido 1 cambio a estado En Preparación")
+    notificacionMock.fechaAlta = fechaFija
+
+    expect(resultado).toEqual(notificacionMock)
   })
 
   it("debe crear una notificación con el mensaje correcto y enviarla al repositorio", async () => {
-    const notificacionMock = {
-      usuarioDestino: vendedorMock,
-      mensaje: "ID NUEVO PEDIDO REALIZADO: 1",
-      fechaAlta: fechaFija,
-      fechaLeida: null,
-      leida: false
-    }
-    //Notificacion.mockReturnValue(notificacionMock)
+  const notificacionMock = new Notificacion(vendedorMock, "ID NUEVO PEDIDO REALIZADO: 1")
+  notificacionMock.fechaAlta = fechaFija
 
-    const resultado = await notificacionService.crearSegunPedido(pedidoMock)
+  const resultado = await notificacionService.crearSegunPedido(pedidoMock)
 
-    //expect(Notificacion).toHaveBeenCalledWith(pedidoMock.vendedor, 'ID NUEVO PEDIDO REALIZADO: 1')
-    expect(resultado).toBe("mock-result")
-  })
+  expect(resultado).toEqual(notificacionMock)
+})
 
   describe("marcarComoLeida", () => {
     it("marca la notificacion correctamente como leida", async () => {

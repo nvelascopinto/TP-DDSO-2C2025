@@ -16,11 +16,6 @@ class UsuarioService {
           return usuarioRepository.crear({ ...user })
         }).then((createdUser)=>{
         return new UserDTO(createdUser.username, createdUser.tipoUsuario)
-      }).catch((error) => {
-          if (error.name === "MongoServerError" && error.code === 11000) {
-              throw new YaExisteUsuarioError(usuarioDTO.username)
-          }
-          throw error
       })
   }
 

@@ -59,7 +59,7 @@ const SellerDashboard = () => {
     if (!currentUser) return;
     try {
       if (isNew) {
-        await crearProducto(currentUser.id, productData);
+        await crearProducto(currentUser.username, productData);
       } else {
         await actualizarProducto(productData.id, productData);
       }

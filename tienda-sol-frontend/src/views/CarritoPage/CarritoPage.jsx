@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import { useCart, useAuth } from '../../contexts/AppContext.jsx';
 import CartItem from '../../components/CartItem/CartItem.jsx';
 import Button from '../../components/Button/Button.jsx';
-//import { api } from '../../services/mockService.js';
+import { api } from '../../services/mockService.js';
 import './CarritoPage.css';
-import { crearPedido } from '../../services/pedidoService.js';
+//import { crearPedido } from '../../services/pedidoService.js';
 
 const CarritoPage = ({ onLoginRequest, navigateTo }) => {
   const { cartItems, getCartTotal, clearCart } = useCart();
@@ -22,15 +22,15 @@ const CarritoPage = ({ onLoginRequest, navigateTo }) => {
 
     setIsProcessing(true);
     try {
-      const vendedorId = cartItems[0].producto.vendedorId;
+      const vendedorId = cartItems[0].producto.vendedor;
       const items = cartItems.map(item => ({
-        productoId: item.producto.id,
+        productoId: item.producto._id,
         cantidad: item.cantidad,
         precioUnitario: item.producto.precio
       }));
       const total = getCartTotal();
 
-      await crearPedido(currentUser.id, vendedorId, items, total);
+      await api.crearPedido(currentUser.username, vendedorId, items, total);
 
       setOrderPlaced(true);
       clearCart();
@@ -70,7 +70,7 @@ const CarritoPage = ({ onLoginRequest, navigateTo }) => {
           <>
             <div role="list" className="cart-page__item-list">
               {cartItems.map((item) => (
-                <CartItem key={item.producto.id} item={item} role="listitem"/>
+                <CartItem key={item.producto._id} item={item} role="listitem"/>
               ))}
             </div>
             <div className="cart-page__summary">

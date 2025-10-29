@@ -19,24 +19,23 @@ const LoginPage = ({ onLogin }) => {
         password: formData.get('password')
         }
         onLogin(
-      activeTab === 'comprador' ? TipoUsuario.COMPRADOR : TipoUsuario.VENDEDOR,
-      data.username,
-      data.password
-    )
-      .then((result) => {
-        if (result?.error) {
-          setErrorMsg(result.error);
-        }
-      })
-      .catch((err) => {
-        if (err?.message?.includes('contraseña')) {
+            activeTab === 'comprador' ? TipoUsuario.COMPRADOR : TipoUsuario.VENDEDOR,
+            data.username,
+            data.password
+        ).then(()=>{}).catch((error) => {
+        if (errpr?.response) {
+        const msg = error.response.message.toLowerCase();
+        if (msg.includes('contraseña') || msg.includes('password')) {
           setErrorMsg('La contraseña ingresada es incorrecta.');
         } else {
-          setErrorMsg('Error al iniciar sesión. Inténtalo nuevamente.');
+          setErrorMsg(error.response.message);
         }
-      });
-    };
-
+        }
+    })
+    .catch(() => {
+      setErrorMsg('La contraseña ingresada es incorrecta.');
+    });
+};
     
     return (
         <div className="login-page" role="main">    
@@ -52,9 +51,7 @@ const LoginPage = ({ onLogin }) => {
                     <p className="login-form__subtitle">
                         Ingresa tus datos para continuar
                     </p>
-                    {errorMsg && (
-                    <p className="login-form__error" role="alert"> {errorMsg} </p>)}
-
+                    {errorMsg && <p className="login-form__error" role="alert"> {errorMsg} </p>}
                     <div className="login-form__fields">
                         <div className="form-group">
                             <label htmlFor="username" className="form-label">Nombre de Usuario*</label>

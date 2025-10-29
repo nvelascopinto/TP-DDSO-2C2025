@@ -43,18 +43,31 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const selectedCategoria = CATEGORIAS.find(cat => cat.id === categoria);
-        
-        const productData = {
-            id: id || '',
-            titulo,
-            descripcion,
+        const selectedCategoria = CATEGORIAS[categoria];
+        let productData = []
+        if(!initialData) {
+            productData = {
+            titulo : titulo,
+            descripcion : descripcion,
             precio: parseFloat(precio),
             stock: parseInt(stock, 10),
-            moneda,
-            categorias: [{ id: categoria, nombre: CATEGORIAS[categoria] }],
-            activo,
-        };
+            moneda : moneda,
+            categoria: CATEGORIAS[categoria],
+            activo: activo
+        }
+        }else {
+            productData = {
+            id : id,
+            titulo : titulo,
+            descripcion : descripcion,
+            precio: parseFloat(precio),
+            stock: parseInt(stock, 10),
+            moneda : moneda,
+            categoria: CATEGORIAS[categoria],
+            activo: activo
+        }
+        }
+        
 
         if (!titulo || !descripcion || isNaN(productData.precio) || isNaN(productData.stock)) {
             alert("Por favor, completa todos los campos correctamente.");

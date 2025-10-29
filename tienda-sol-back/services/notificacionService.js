@@ -15,7 +15,7 @@ class NotificacionService {
   }
 
   notificarEstadoPedido(estado, destinatario, idPedido) {
-    const notificacion = new Notificacion(destinatario, "El pedido " + idPedido + " cambio a estado " + estado)
+    const notificacion = new Notificacion(destinatario, "El pedido " + idPedido + " cambio a estado " + estado.nombre)
     return notificacionRepository.crear(notificacion)
   }
 

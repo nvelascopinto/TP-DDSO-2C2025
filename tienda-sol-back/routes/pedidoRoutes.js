@@ -11,6 +11,7 @@ pedidoRouter.post("/", authenticateUser("X-User"), (req, res) => {
   return pedidoController.crear(req, res)
 })
 
+
 pedidoRouter.patch("/:id", authenticateUser("X-User"), (req, res) => {
   return pedidoController.cambioEstado(req, res)
 })

@@ -8,17 +8,20 @@ class UsuarioController {
   crearUsuario(req, res) {
     return Promise.resolve()
       .then(() => 
-        usuarioValidator.parse(req.body)
+        {  
+
+          return usuarioValidator.parse(req.body)}
       )
       .catch((e) => {
         throw new ZodValidationError(e)
       })        
       .then((bodyUsuario) => { 
+        console.log(bodyUsuario)
         const usuario = toUsuarioDTO(bodyUsuario)
         return usuarioService.crearUsuario(usuario)
       })
       .then((nuevoUsuario) => {
-        console.log(nuevoUsuario)
+        
         res.status(201).json(nuevoUsuario)
       })
   }

@@ -1,18 +1,19 @@
 import {apiBack} from "./apiBack.js"
 import { EstadoPedido } from "../../enums.js"
 
-export async function crearPedido(user, vendedor, items, total){
+export async function crearPedido(user, moneda, items, direccionEntrega){
     return apiBack.post('/',{
     vendedor: vendedor,
     user: user,
     body: {
-        comprador: user,
-        vendedor: vendedor,     items: items,
-        total: total,
-        moneda: "PESO_ARG",
+        items: items,
+        moneda: "...",
         estadoNombre: EstadoPedido.PENDIENTE,
-        direccionEntrega: "AlgunaCalle",
+        direccionEntrega: "Mmmm",
    },
+      headers: {
+        'X-User': user,
+      }
 
     })
     .then((response) => {

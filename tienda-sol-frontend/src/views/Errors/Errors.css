@@ -1,31 +1,22 @@
-/* Heredamos estilos del contenedor principal de HomePage */
 .error-page {
-    /* Puedes centrar el contenido si lo deseas */
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 2rem;
 }
 
-/* Estilos del Banner de Error
-  Reutilizamos la clase 'homepage__banner' y la ajustamos con colores de error.
-*/
 .error-page__banner {
-    /* Sobreescribe el color de acento primario por un color de error */
-    background-color: var(--color-error,#c16565 ); /* Rojo de error */
-    /* Asegúrate de que los estilos del banner original se apliquen (padding, border-radius, box-shadow) */
+    background-color: var(--color-error,#c16565 ); 
     width: 100%;
     max-width: 800px;
     margin-bottom: 2rem;
 }
 
 .error-page__status {
-    /* Mantenemos el estilo de título del banner (homepage__banner-title) */
     font-size: 3rem; 
 }
 
 .error-page__message {
-    /* Mantenemos el estilo de subtítulo del banner (homepage__banner-subtitle) */
     font-weight: 500;
 }
 
@@ -53,10 +44,8 @@
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    /* Incluye box-shadow en la transición para suavizar el efecto */
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     
-    /* Estilo Normal */
     background-color: var(--color-accent-primary); 
     color: var(--color-white);
     box-shadow: var(--shadow-md);
@@ -64,7 +53,6 @@
 
 
 .error-page__button--secondary {
-    /* Estilo secundario, por ejemplo, sin relleno para no competir */
     background-color: transparent;
     color: var(--color-text-secondary);
     border: 1px solid var(--color-text-secondary);

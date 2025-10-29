@@ -72,7 +72,6 @@
   box-shadow: var(--shadow-md);
 }
 
-/* HEADER - Fecha y Pedido#/Estado */
 .order-item__header {
   display: flex;
   flex-direction: column;
@@ -109,7 +108,6 @@
   }
 }
 
-/* Contenedor de Pedido# y Estado */
 .order-state-id {
   display: flex;
   justify-content: center;
@@ -154,7 +152,6 @@
   }
 }
 
-/* SECCIÓN BOTONES DE CAMBIAR ESTADO */
 .order-change-state {
   display: flex;
   flex-direction: column;
@@ -175,7 +172,6 @@
   }
 }
 
-/* BODY - Total y Ver Pedido */
 .order-item__body {
   display: flex;
   flex-direction: column-reverse;
@@ -212,7 +208,6 @@
   }
 }
 
-/* Botón Ver Pedido - se ajusta desde el componente Button pero forzamos ancho completo en móvil */
 .order-item__body button {
   width: 100%;
   max-width: 280px;
@@ -229,7 +224,6 @@
   }
 }
 
-/* Botones de cambiar estado */
 .order-change-state button {
   width: 100%;
   max-width: 280px;
@@ -275,7 +269,6 @@
   color: var(--color-white);
 }
 
-/* STATUS BADGE */
 .status-badge {
   padding: 0.35rem 0.875rem;
   font-size: 0.8rem;

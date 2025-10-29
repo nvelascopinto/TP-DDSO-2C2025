@@ -1,6 +1,7 @@
 import pedidoRepository from "../models/repositories/pedidoRepository.js"
 import productoService from "./productoService.js"
 import notificacionService from "./notificacionService.js"
+import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { fromPedidoDTO } from "../converters/pedidoConverter.js"
 import { PedidoInexistenteError } from "../errors/notFoundError.js"
 import { estadoConverter } from "../converters/estadoConverter.js"
@@ -48,12 +49,11 @@ class PedidoService {
     let estadoNuevo = estado
     return Promise.resolve()
       .then(() => {
-        estadoNuevo = estadoConverter(estado)
-      }).then(() => {
-        estadoNuevo.validarUsuario(usuario)
         return this.consultar(idPedido,usuario)
       })
       .then((pedido) => {
+        estadoNuevo = estadoConverter(estado)
+        estadoNuevo.validarUsuario(usuario)
         pedido.actualizarEstado(estadoNuevo, usuario, motivo)
         return pedidoRepository.update(pedido)
       })

@@ -18,9 +18,9 @@ export class Estado {
         }
     }
 
-    validarUsuario(usuarioRol) {
-        if(!this.permitidosAEstado.includes(usuarioRol)) {
-            throw new UsuarioSinPermisoError(usuarioRol);
+    validarUsuario(usuario) {
+        if(!this.permitidosAEstado.includes(usuario.tipoUsuario)) {
+            throw new UsuarioSinPermisoError(usuario.tipoUsuario);
         }
     }
 

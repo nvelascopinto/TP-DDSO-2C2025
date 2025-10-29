@@ -22,15 +22,20 @@ export const AppProvider = ({ children }) => {
   const [toastMessage, setToastMessage] = useState(null);
   const [pedidos, setPedidos] = useState([]);
 
-  // Cargar usuario guardado al montar
+  // Cargar usuario Y carrito al montar
   useEffect(() => {
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
       setCurrentUser(JSON.parse(storedUser));
     }
+
+    const storedCart = localStorage.getItem('cartItems');
+    if (storedCart) {
+      setCartItems(JSON.parse(storedCart));
+    }
   }, []);
 
-  // guardar usuario cada vez que cambia
+  // Guardar usuario cada vez que cambia
   useEffect(() => {
     if (currentUser) {
       localStorage.setItem('currentUser', JSON.stringify(currentUser));
@@ -39,14 +44,15 @@ export const AppProvider = ({ children }) => {
     }
   }, [currentUser]);
 
-    // guardar carrito cada vez que cambia
-    useEffect(() => {
-    if (cartItems.length > 0) localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    else localStorage.removeItem('cartItems');
+  // Guardar carrito cada vez que cambia
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    } else {
+      localStorage.removeItem('cartItems');
+    }
   }, [cartItems]);
-
-  // auth methods
-
+  
 const login = (username, password) => {
   return authenticate(username, password)
     .then((user) => {
@@ -55,12 +61,7 @@ const login = (username, password) => {
     })
     .catch((error) => {
       console.error("Error al autenticarse:", error);
-
-      if (error.response?.status === 403 && error.response?.data?.error) {
-        return { error: error.response.data.error };
-      }
-
-      return { error: "Error al iniciar sesión. Inténtalo nuevamente." };
+      throw error; 
     });
 };
 
@@ -73,12 +74,12 @@ const login = (username, password) => {
 
   const logout = useCallback(() => {
     setCurrentUser(null);
-    setCartItems([]); // vacia el carrito
+    setCartItems([]); 
     localStorage.removeItem('currentUser');
     localStorage.removeItem('cartItems');
   }, []);
 
-  // toast notificaciones
+  
   const showToast = useCallback((message) => {
     setToastMessage(message);
     setTimeout(() => {
@@ -86,13 +87,13 @@ const login = (username, password) => {
     }, 3000);
   }, []);
 
-  // Cart methods
+  
   const addToCart = useCallback((producto) => {
     setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.producto.id === producto.id);
+      const existingItem = prevItems.find(item => item.producto._id === producto._id);
       if (existingItem) {
         return prevItems.map(item =>
-          item.producto.id === producto.id
+          item.producto._id === producto._id
             ? { ...item, cantidad: item.cantidad + 1 }
             : item
         );
@@ -102,7 +103,7 @@ const login = (username, password) => {
   }, []);
 
   const removeFromCart = useCallback((productoId) => {
-    setCartItems(prevItems => prevItems.filter(item => item.producto.id !== productoId));
+    setCartItems(prevItems => prevItems.filter(item => item.producto._id !== productoId));
   }, []);
 
   const updateQuantity = useCallback((productoId, quantity) => {
@@ -111,7 +112,7 @@ const login = (username, password) => {
     } else {
       setCartItems(prevItems =>
         prevItems.map(item =>
-          item.producto.id === productoId ? { ...item, cantidad: quantity } : item
+          item.producto._id === productoId ? { ...item, cantidad: quantity } : item
         )
       );
     }
@@ -130,17 +131,18 @@ const login = (username, password) => {
   }, [cartItems]);
 
   const getPedidosUser = useCallback(() => {
+
     if (!currentUser) return;
-    api.getPedidos() //mock
+      api.getPedidos() //mock
       .then(data => {
         console.log(data)
         let userPedidos = [];
         if(currentUser.tipo === TipoUsuario.VENDEDOR) {
-          userPedidos = data.filter(p => p.vendedorId === currentUser.id);
+          userPedidos = data.filter(p => p.vendedorId === currentUser.username);
           
           
         }else if(currentUser.tipo === TipoUsuario.COMPRADOR) {
-          userPedidos = data.filter(p => p.compradorId === currentUser.id);
+          userPedidos = data.filter(p => p.compradorId === currentUser.username);
           
         }
         setPedidos(userPedidos);

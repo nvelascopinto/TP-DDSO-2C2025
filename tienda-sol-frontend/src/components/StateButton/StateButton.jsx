@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth, usePedidos } from "../../contexts/AppContext.jsx";
 import './StateButton.css';
 import { TipoUsuario, EstadoPedido } from "../../../enums.js";
-//import { api } from "../../services/mockService.js";
+import { api } from "../../services/mockService.js";
 import {cancelarPedido, cambiarEstadoPedido} from '../../services/pedidoService.js';
 
 function PedidoAcciones({ pedido}) {
@@ -28,7 +28,7 @@ function PedidoAcciones({ pedido}) {
   const handleCancelar = async () => {
     if (window.confirm("¿Estás seguro de que deseas cancelar este pedido?")) {
     try {
-          const pedidoActualizado = await cancelarPedido(pedido.id);
+          const pedidoActualizado = await api.cancelarPedido(pedido.id);
           updatePedido(pedidoActualizado)
           setEstado(EstadoPedido.CANCELADO);
             } catch (error) {
@@ -42,7 +42,7 @@ function PedidoAcciones({ pedido}) {
     const nuevoEstado = siguienteEstado[estado];
     if (nuevoEstado) {
       setEstado(nuevoEstado);
-      const pedidoActualizado = await cambiarEstadoPedido(pedido.id, nuevoEstado)
+      const pedidoActualizado = await api.cambiarEstadoPedido(pedido.id, nuevoEstado)
       updatePedido(pedidoActualizado)}
     };
     const puedeCancelar = ![

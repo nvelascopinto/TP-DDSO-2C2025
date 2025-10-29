@@ -50,9 +50,10 @@
 }
 
 .product-card__price {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--color-accent-primary);
+  
 }
 
 .product-card__button {

@@ -42,50 +42,44 @@ const AppContent = () => {
     // Establecemos el error en el estado global
     setAppError(errorDetails);
     
-    // Redirigimos a la ruta de error, pasando los detalles del error en el 'state'
+    // Redirigimos a la ruta de error, pasando los detalles del error en el "state"
     navigate('/error', { state: { error: errorDetails } });
   };
 
 
   const handleLogin = (tipo, user, password) => {
-    login(user, password)
-    //.then((() => {
-    //     if (tipo === 'Vendedor') {
-    //      navigate('/productos');
-    //     } else {
-    //     navigate('/');
-    //     }
-    // })).catch((error) =>{
-    //   if(!error.response) {
-    //       navigate('/error')
-    //   } else {    login(user, password)
-      .then((userData) => {
-        // userData es el usuario devuelto por el backend después del login
-        console.log('Usuario logueado:', userData); // Debug
+  return login(user, password)
+    .then((userData) => {
+      console.log('Usuario logueado:', userData);
       
-        // Navegar según el tipo de usuario devuelto por el backend
-if (userData?.tipo === 'Vendedor') {
-          navigate('/productos');
-        } else {
-          navigate('/');
-        }
-      })
-      .catch((error) => {
-        if (!error.response) {
-          navigate('/error');
-        } else {
-          if (error.response.status >= 500 && error.response.status < 600) { // Corregí el operador
-            navigate('/error', {
-              state: {
-                status: error.response.status
-              }
-            });
-          } else {
-          throw error
-        }
+      // Navegar según el tipo de usuario
+      if (userData?.tipo === 'Vendedor') {
+        navigate('/productos');
+      } else {
+        navigate('/');
       }
+      
+      return userData;
     })
-  };
+    .catch((error) => {
+      // Si no hay respuesta del servidor (error de red)
+      if (!error.response) {
+        navigate('/error');
+        throw error; // Propagar para que lo agarre el siguiente catch
+      }
+      
+      // Si es error 500+
+      if (error.response.status >= 500) {
+        navigate('/error', {
+          state: { status: error.response.status }
+        });
+        throw error;
+      }
+      
+      // Cualquier otro error (400, 401, 403, etc.)
+      throw error; // Propagar para el formulario
+    });
+};
 
   const handleRegister = (tipoUsuario, userData) => {
   const payload = { ...userData, tipo: tipoUsuario }
@@ -120,19 +114,16 @@ if (userData?.tipo === 'Vendedor') {
       <Header navigateTo= {navigateTo} currentRoute={currentRoute} />
       <main className="main-content container">
         <Routes>
-          {/* Ruta principal - Home */}
           <Route 
             path="/" 
             element={<HomePage onStoreSelect={(store) => navigateTo('tienda', store)} />} 
           />
 
-           {/* Ruta de error general */}
           <Route 
             path="/error" 
             element={<ErrorPage />}
           />
 
-          {/* Ruta de tienda */}
           <Route 
             path="/tienda" 
             element={
@@ -142,13 +133,11 @@ if (userData?.tipo === 'Vendedor') {
             } 
           />
 
-          {/* Ruta del carrito */}
           <Route 
             path="/carrito" 
             element={<CarritoPage onLoginRequest={() => navigateTo('login')} navigateTo={navigateTo} />} 
           />
 
-          {/* Dashboard del vendedor - protegida */}
           <Route 
             path="/productos" 
             element={
@@ -158,7 +147,6 @@ if (userData?.tipo === 'Vendedor') {
             } 
           />
 
-          {/* Pedidos del vendedor - protegida */}
           <Route 
             path="/pedidos" 
             element={
@@ -168,7 +156,6 @@ if (userData?.tipo === 'Vendedor') {
             } 
           />
 
-          {/* Notificaciones - requiere autenticación */}
           <Route 
             path="/notificaciones" 
             element={
@@ -178,7 +165,6 @@ if (userData?.tipo === 'Vendedor') {
             } 
           />
 
-          {/* Historial de pedidos - solo compradores */}
           <Route 
             path="/historial-pedidos" 
             element={
@@ -196,7 +182,6 @@ if (userData?.tipo === 'Vendedor') {
             } 
           />
 
-          {/* Login */}
           <Route 
             path="/login" 
             element={
@@ -206,7 +191,6 @@ if (userData?.tipo === 'Vendedor') {
             } 
           />
 
-          {/* Registro */}
           <Route 
             path="/register" 
             element={
@@ -216,7 +200,6 @@ if (userData?.tipo === 'Vendedor') {
             } 
           />
 
-          {/* Ruta 404 - redirige al home */}
           <Route path="*" element={<Navigate to="/error" replace state={{ error: { status: '404', message: 'Página no encontrada', details: 'Parece que la URL que buscabas no existe. No te preocupes, puedes volver al inicio.' } }} />} />
         </Routes>
       </main>

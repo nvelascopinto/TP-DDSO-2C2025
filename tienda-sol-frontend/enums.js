@@ -5,9 +5,9 @@ export const TipoUsuario = {
 };
 
 export const Moneda = {
-  PESO_ARG: 'ARS',
-  DOLAR_USA: 'USD',
-  REAL: 'BRL',
+   PESO_ARG: "PESO_ARG",
+  DOLAR_USA: "DOLAR_USA",
+  REAL: "REAL"
 };
 
 export const EstadoPedido = {

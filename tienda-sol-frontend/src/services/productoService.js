@@ -1,6 +1,6 @@
 import {apiBack} from "./apiBack.js"
 
-export function getProductosByVendedor (filters){ 
+export async function getProductosByVendedor (filters){ 
     return apiBack.get('/productos',{
         params: filters
   })
@@ -9,12 +9,22 @@ export function getProductosByVendedor (filters){
     })
 }
 
+export async function getProductoById(id){
+    return apiBack.get(`/productos/${id}`)
+    .then((response) => {
+        return response.data
+    })
+    .catch((error) => {
+      console.error("Error obteniendo producto:", error);
+      throw error.response?.data || error;
+    });
+}
 
 //get producto by id
 
 export async function actualizarProducto (id, productData){
-    return apiBack.patch('/productos/${id}', {
-       // params: productData.idProducto,
+    return apiBack.patch(`/productos/${id}`, {
+
         body : productData
         })
     .then((response) => {
@@ -27,21 +37,14 @@ export async function actualizarProducto (id, productData){
 }
 
 export async function crearProducto (usuario, productData){
-    return apiBack.post('/',{
-    user : usuario,
+    return apiBack.post('/productos',{
     body : productData
-    })
+    }, {
+      headers: {
+        'X-User': usuario,
+      }})
     .then((response) => {
         return response.data
     })
 }
 
-
-//        titulo: titulo,
-//        descripcion: descripcion,
-//        precio: precio,
-//        moneda: moneda,
-//        stock: stock,
-//        fotos: fotos,
-//        activo: Boolean,
-//        cantVentas: Number

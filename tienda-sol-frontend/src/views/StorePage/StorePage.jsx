@@ -103,7 +103,6 @@ const StorePage = ({ vendedor }) => {
         <p className="store-page__subtitle">Nuestro catálogo de productos</p>
       </div>
 
-      {/* Barra de búsqueda principal */}
       <div className="store-page__search-bar">
         <input
           type="text"
@@ -116,12 +115,10 @@ const StorePage = ({ vendedor }) => {
         />
       </div>
 
-      {/* Panel de filtros avanzados */}
       <div className="store-page__filters-panel" role="search" aria-label="Panel de filtros avanzados">
         <h3 className="filters-panel__title">Filtros</h3>
         
         <div className="filters-panel__grid">
-          {/* Filtro de Precio Mínimo */}
           <div className="filter-group">
             <label htmlFor="minPrecioFilter" className="filter-label">Precio Mínimo</label>
             <input
@@ -136,7 +133,6 @@ const StorePage = ({ vendedor }) => {
             />
           </div>
 
-          {/* Filtro de Precio Máximo */}
           <div className="filter-group">
             <label htmlFor="maxPrecioFilter" className="filter-label">Precio Máximo</label>
             <input
@@ -151,7 +147,6 @@ const StorePage = ({ vendedor }) => {
             />
           </div>
 
-          {/* Filtro de Categoría */}
           <div className="filter-group">
             <label htmlFor="categoriaFilter" className="filter-label">Categoría</label>
             <select
@@ -167,7 +162,6 @@ const StorePage = ({ vendedor }) => {
             </select>
           </div>
 
-          {/* Filtro de Ordenamiento */}
           <div className="filter-group">
             <label htmlFor="ordenFilter" className="filter-label">Ordenar por</label>
             <select
@@ -183,7 +177,6 @@ const StorePage = ({ vendedor }) => {
           </div>
         </div>
 
-        {/* Botón para limpiar filtros */}
         <button 
           onClick={handleClearFilters}
           className="filters-panel__clear-btn"
@@ -193,7 +186,6 @@ const StorePage = ({ vendedor }) => {
         </button>
       </div>
 
-      {/* Grid de productos */}
       {loading ? (
         <Spinner role="status" aria-live="polite" aria-label="Cargando productos"/>
       ) : (
@@ -215,7 +207,6 @@ const StorePage = ({ vendedor }) => {
             </div>
           )}
       
-          {/* Controles de paginación */}
           {totalPages > 1 && (
             <div className="pagination" role="navigation" aria-label="Controles de paginación de productos">
               <button

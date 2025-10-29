@@ -4,6 +4,9 @@ import './DetailsPedido.css';
 import { useParams } from 'react-router-dom';
 import { usePedidos } from '../../contexts/AppContext.jsx';
 import Spinner from '../../components/Spinner/Spinner.jsx';
+import Button from '../../components/Button/Button.jsx';
+
+
 const DetailsPedido = ({}) => {
   const { id } = useParams(); 
   const { pedidos } = usePedidos();
@@ -17,6 +20,7 @@ if (!pedidos || pedidos.length === 0) {
 const pedido = pedidos.find(p => p.id === id);
 if (!pedido) return <p role="alert">No se encontró el pedido</p>;
   return (
+    <div>
     <div className="pedidoDetails-page" role="main"       aria-labelledby="pedidoDetails-title" aria-describedby="pedidoDetails-summary">
       <h1 className="pedidoDetails-page__title">Pedido</h1>
 
@@ -46,6 +50,10 @@ if (!pedido) return <p role="alert">No se encontró el pedido</p>;
 
 
         
+      </div>
+    </div >
+      <div className = "button">
+        <Button  onClick={() =>  navigateTo(`/historial-pedidos`)} aria-label={`Ver detalles del pedido ${pedido.id}`}>Volver</Button>
       </div>
     </div>
   );

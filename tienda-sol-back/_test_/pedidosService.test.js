@@ -3,7 +3,8 @@ import { ItemPedido } from "../models/entities/itemPedido.js"
 import { Pedido } from "../models/entities/pedido.js"
 import { Producto } from "../models/entities/producto.js"
 import { Usuario } from "../models/entities/usuario.js"
-import { estado } from "../models/entities/estadoPedido.js"
+import { Vendedor } from "../models/entities/vendedor.js"
+import { estados } from "../models/entities/estadosPedido.js"
 import { UsuarioSinPermisoError } from "../errors/authorizationError.js"
 import { DomainMultipleErrors, EstadoInvalidoError } from "../errors/domainValidationError.js"
 import { PedidoInexistenteError, ProductoInexistenteError } from "../errors/notFoundError.js"
@@ -74,9 +75,7 @@ describe("PedidosService", () => {
         }
       }
 
-      const vendedor = new Usuario("pepe", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
-
-      const comprador = new Usuario("pepa", "Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
+      const comprador = new Usuario("pepa", "Pepa123","Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
       const item = new Producto(
         "pepe",
         "auriculares",
@@ -147,9 +146,7 @@ describe("PedidosService", () => {
         }
       }
 
-      const vendedor = new Usuario("pepe", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
-
-      const comprador = new Usuario("pepa", "Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
+      const comprador = new Usuario("pepa", "Pepa123", "Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
       const item1 = new Producto(
         "pepe",
         "auriculares",
@@ -221,7 +218,7 @@ describe("PedidosService", () => {
 
       const vendedor = new Usuario("pepe", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
 
-      const comprador = new Usuario("pepa", "Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
+      const comprador = new Usuario("pepa", "Pepa123","Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
 
       const item1 = new Producto(
         "pepe",
@@ -290,7 +287,7 @@ describe("PedidosService", () => {
       }
 
       const vendedor = new Usuario("pepe", "Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
-      const comprador = new Usuario("pepa", "Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
+      const comprador = new Usuario("pepa", "Pepa123", "Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
 
       const direEntrega = new DireccionEntrega(
         "Avenida Siempre Viva",
@@ -336,11 +333,8 @@ describe("PedidosService", () => {
         }
       }
 
-      const vendedor = new Usuario("pepe", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
+      const comprador = new Usuario("pepa", "Pepa123", "Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
 
-      const otroVendedor = new Usuario("carlitos", "Carlos Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
-
-      const comprador = new Usuario("pepa", "Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
       const item1 = new Producto(
         "pepe",
         "auriculares",
@@ -379,9 +373,9 @@ describe("PedidosService", () => {
   })
 
   describe("consultar", () => {
-    const vendedor = new Usuario("juanchi", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
+    const vendedor = new Vendedor("juanchi", "Juanchi123", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor", "JuanchiStore")
 
-    const comprador = new Usuario("juana", "Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
+    const comprador = new Usuario("juana", "Juana123","Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
     const item = new Producto(
       "juanchi",
       "auriculares",
@@ -436,7 +430,7 @@ describe("PedidosService", () => {
     })
 
     it(" deberia devolver el pedido ya que es un usuario valido el administrador", async () => {
-      const adminValido = new Usuario("pepita", "Juan Perez", "juan.perez@email.com", "+541112345678", "Admin")
+      const adminValido = new Usuario("pepita", "Pepita123", "Juan Perez", "juan.perez@email.com", "+541112345678", "Admin")
       const mockPedido = new Pedido("juana", "juanchi", [itemPed], "PESO_ARG", direEntrega)
       mockPedido._id = 2
       mockPedidoRepository.findById.mockResolvedValue(mockPedido)
@@ -448,9 +442,9 @@ describe("PedidosService", () => {
   })
 
   describe("cambioEstado", () => {
-    const vendedor = new Usuario("juancito", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
+    const vendedor = new Vendedor("juancito", "Juancito123", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor", "JuancitoSeller")
 
-    const comprador = new Usuario("juancho", "Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
+    const comprador = new Usuario("juancho", "Juancho123","Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
 
     const item = new Producto(
       "juancito",
@@ -485,22 +479,21 @@ describe("PedidosService", () => {
 
       const cambioEstadoJSON = {
         motivo: "enviado",
-        estado: "ENVIADO"
+        estado: "Enviado"
       }
-      cambioEstadoJSON.usuario = vendedor
 
       const mockPedidoEnviado = new Pedido("juancho", "juancito", [itemPed], "PESO_ARG", direEntrega)
 
       mockPedidoEnviado._id = 1
-      mockPedidoEnviado.estado = estado.ENVIADO
+      mockPedidoEnviado.estado = estados["Enviado"]
       mockPedidoRepository.update.mockResolvedValue(mockPedidoEnviado)
       mockNotificacionService.crearSegunEstadoPedido.mockResolvedValue({
         mensaje: "El pedido 1 cambio a estado ENVIADO"
       })
 
-      const result = await pedidoService.cambioEstado(cambioEstadoJSON, 1)
+      const result = await pedidoService.cambioEstado(cambioEstadoJSON.estado, vendedor, cambioEstadoJSON.motivo, 1)
 
-      expect(result).toBe("El pedido 1 cambio a estado ENVIADO")
+      expect(result).toBe("El pedido cambio a estado Enviado correctamente.")
       expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
       expect(mockNotificacionService.crearSegunEstadoPedido).toHaveBeenCalledTimes(1)
     })
@@ -508,17 +501,15 @@ describe("PedidosService", () => {
     it("NO deberia cambiar de estado de Enviado a Cancelado", async () => {
       const mockPedido = new Pedido("juancho", "juancito", [itemPed], "PESO_ARG", direEntrega)
       mockPedido._id = 1
-      mockPedido.estado = estado.ENVIADO
+      mockPedido.estado = estados["Enviado"]
 
       mockPedidoRepository.findById.mockResolvedValue(mockPedido)
       const cambioEstadoJSON = {
         motivo: "disgusto",
-        estado: "CANCELADO"
+        estado: "Cancelado"
       }
 
-      cambioEstadoJSON.usuario = vendedor
-
-      await expect(pedidoService.cambioEstado(cambioEstadoJSON, 1)).rejects.toThrow(CambioEstadoInvalidoError)
+      await expect(pedidoService.cambioEstado(cambioEstadoJSON.estado, vendedor, cambioEstadoJSON.motivo, 1)).rejects.toThrow(CambioEstadoInvalidoError)
 
       expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
       expect(mockPedidoRepository.findById).toHaveBeenCalledWith(1)
@@ -529,17 +520,15 @@ describe("PedidosService", () => {
     it("NO deberia cambiar de estado de Cancelado a Enviado", async () => {
       const mockPedido = new Pedido("juancho", "juancito", [itemPed], "PESO_ARG", direEntrega)
       mockPedido._id = 1
-      mockPedido.estado = estado.CANCELADO
+      mockPedido.estado = estados["Cancelado"]
 
       mockPedidoRepository.findById.mockResolvedValue(mockPedido)
       const cambioEstadoJSON = {
         motivo: "envio",
-        estado: "ENVIADO"
+        estado: "Enviado"
       }
 
-      cambioEstadoJSON.usuario = vendedor
-
-      await expect(pedidoService.cambioEstado(cambioEstadoJSON, 1)).rejects.toThrow(CambioEstadoInvalidoError)
+      await expect(pedidoService.cambioEstado(cambioEstadoJSON.estado, vendedor, cambioEstadoJSON.motivo, 1)).rejects.toThrow(CambioEstadoInvalidoError)
 
       expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
       expect(mockPedidoRepository.findById).toHaveBeenCalledWith(1)
@@ -555,10 +544,10 @@ describe("PedidosService", () => {
 
       const cambioEstadoJSON = {
         motivo: "enviar",
-        estado: "ENVIADO"
+        estado: "Enviado"
       }
-      cambioEstadoJSON.usuario = vendedor
-      await expect(pedidoService.cambioEstado(cambioEstadoJSON, 1)).rejects.toThrow(PedidoInexistenteError)
+
+      await expect(pedidoService.cambioEstado(cambioEstadoJSON.estado, vendedor, cambioEstadoJSON.motivo, 1)).rejects.toThrow(PedidoInexistenteError)
 
       expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
       expect(mockPedidoRepository.update).toHaveBeenCalledTimes(0)
@@ -568,16 +557,17 @@ describe("PedidosService", () => {
     it("NO deberia cambiar de estado a ENVIADO por ser pedido por un COMPRADOR ", async () => {
       const mockPedido = new Pedido("juancho", "juancito", [itemPed], "PESO_ARG", direEntrega)
       mockPedido._id = 1
-      mockPedido.estado = estado.ENVIADO
-
+      mockPedido.estado = estados["Enviado"]
+      mockPedidoRepository.findById.mockResolvedValue(mockPedido)
+      
       const cambioEstadoJSON = {
         motivo: "enviar",
-        estado: "ENVIADO"
+        estado: "Enviado"
       }
-      cambioEstadoJSON.usuario = comprador
-      await expect(pedidoService.cambioEstado(cambioEstadoJSON, 1)).rejects.toThrow(UsuarioSinPermisoError)
 
-      expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(0)
+      await expect(pedidoService.cambioEstado(cambioEstadoJSON.estado, comprador, cambioEstadoJSON.motivo, 1)).rejects.toThrow(UsuarioSinPermisoError)
+
+      expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
       expect(mockPedidoRepository.update).toHaveBeenCalledTimes(0)
       expect(mockNotificacionService.crearSegunEstadoPedido).toHaveBeenCalledTimes(0)
     })
@@ -586,16 +576,16 @@ describe("PedidosService", () => {
       const desconocido = new Usuario("pepita", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
       const mockPedido = new Pedido("juancho", "juancito", [itemPed], "PESO_ARG", direEntrega)
       mockPedido._id = 1
-      mockPedido.estado = estado.ENVIADO
+      mockPedido.estado = estados["Enviado"]
 
       mockPedidoRepository.findById.mockResolvedValue(mockPedido)
 
       const cambioEstadoJSON = {
         motivo: "enviar",
-        estado: "ENVIADO"
+        estado: "Enviado"
       }
-      cambioEstadoJSON.usuario = desconocido
-      await expect(pedidoService.cambioEstado(cambioEstadoJSON, 1)).rejects.toThrow(UsuarioSinPermisoError)
+
+      await expect(pedidoService.cambioEstado(cambioEstadoJSON.estado, comprador, cambioEstadoJSON.motivo, 1)).rejects.toThrow(UsuarioSinPermisoError)
 
       expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
       expect(mockPedidoRepository.update).toHaveBeenCalledTimes(0)
@@ -612,20 +602,20 @@ describe("PedidosService", () => {
         motivo: "enviar",
         estado: "CAMBIADO"
       }
-      cambioEstadoJSON.usuario = comprador
-      await expect(pedidoService.cambioEstado(cambioEstadoJSON, 1)).rejects.toThrow(EstadoInvalidoError)
 
-      expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(0)
+      await expect(pedidoService.cambioEstado(cambioEstadoJSON.estado, vendedor, cambioEstadoJSON.motivo, 1)).rejects.toThrow(EstadoInvalidoError)
+
+      expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
       expect(mockPedidoRepository.update).toHaveBeenCalledTimes(0)
       expect(mockNotificacionService.crearSegunEstadoPedido).toHaveBeenCalledTimes(0)
     })
   })
 
   describe("consultarHistorial", () => {
-    const comprador = new Usuario("juancito", "Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
+    const comprador = new Usuario("juancito", "Juancito123", "Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
     const vendedor = new Usuario("juancho", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
 
-    const admin = new Usuario("pepita", "Juan Perez", "juan.perez@email.com", "+541112345678", "Admin")
+    const admin = new Usuario("pepita", "Pepita123","Juan Perez", "juan.perez@email.com", "+541112345678", "Admin")
     const item1 = new Producto(
       "juancho",
       "auriculares",
@@ -679,7 +669,7 @@ describe("PedidosService", () => {
       ped1._id = 1
       const ped2 = new Pedido("juancito", "juancho", [itemPed2], "PESO_ARG", direEntrega)
       ped2._id = 2
-      const otroVendedor = new Usuario("jose", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
+      const otroVendedor = new Usuario("jose", "Jose123", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
       mockPedidoRepository.consultarHistorial.mockResolvedValue([ped1, ped2])
       await expect(pedidoService.consultarHistorial("juancito", otroVendedor)).rejects.toThrow(UsuarioSinPermisoError)
       expect(mockPedidoRepository.consultarHistorial).toHaveBeenCalledTimes(1)

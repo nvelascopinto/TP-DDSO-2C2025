@@ -61,12 +61,10 @@ const RegisterPage = ({ onRegister }) => {
           </button>
         </div>
 
-        {/* Formulario */}
         <form onSubmit={handleRegister} className="register-form__body" role="form">
           <h2 className="register-form__title">Crea tu cuenta</h2>
           <p className="register-form__subtitle">Ingresa tus datos para registrarte</p>
 
-          {/* Mensaje de error */}
           {errorMsg && <p className="register-form__error" role="alert">{errorMsg}</p>}
 
           <div className="register-form__fields">
@@ -127,7 +125,6 @@ const RegisterPage = ({ onRegister }) => {
             </div>
           </div>
 
-          {/* Campos extra si el usuario es Vendedor */}
           {userType === 'Vendedor' && (
             <>
               <p className="register-form__subtitle">Ingresa los datos de tu tienda para terminar</p>

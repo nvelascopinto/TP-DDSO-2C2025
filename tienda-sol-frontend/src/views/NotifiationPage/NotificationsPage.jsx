@@ -16,7 +16,7 @@ const NotificationsPage = ({ navigateTo }) => {
     if (currentUser) {
       try {
         setLoading(true);
-        const data = await api.getNotificaciones(currentUser.id);
+        const data = await api.getNotificaciones(currentUser.username);
         setNotifications(data);
       } catch (error) {
         console.error("Error fetching notifications:", error);

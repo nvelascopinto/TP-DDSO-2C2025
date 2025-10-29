@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useAuth, usePedidos } from '../../contexts/AppContext.jsx';
-//import { api } from '../../services/mockService.js';
+import { api } from '../../services/mockService.js';
 import { EstadoPedido } from '../../../enums.js';
 import Spinner from '../../components/Spinner/Spinner.jsx';
 import './OrderHistoryPage.css';
@@ -33,8 +33,16 @@ const OrderHistoryPage = ({ navigateTo }) => {
 
     useEffect(() => {
         getPedidosUser();
-        console.log(pedidos)
     }, [getPedidosUser]);
+
+    useEffect(() => {
+        console.log('Pedidos actualizados:', pedidos);
+    }, [pedidos]);
+
+    // useEffect(() => {
+    //     getPedidosUser();
+    //     console.log(pedidos)
+    // }, [getPedidosUser]);
     
 
     return (

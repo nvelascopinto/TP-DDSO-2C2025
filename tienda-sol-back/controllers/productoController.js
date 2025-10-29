@@ -5,17 +5,24 @@ import { idMongoValidator } from "../validators/idValidator.js"
 import { cambioProductoValidator } from "../validators/productoValidator.js"
 import { filtrosValidator } from "../validators/filtrosValidator.js"
 import { ZodValidationError } from "../errors/validationError.js"
+import { brotliDecompressSync } from "zlib"
 
 class ProductoController {
   crear(req, res) {
     return Promise.resolve()
       .then(() =>
-        productoValidator.parse(req.body)
+      {
+        const dataToValidate = req.body.body || req.body;
+      console.log('Datos a validar:', dataToValidate);
+        return productoValidator.parse(dataToValidate)
+        
+        }
       )
       .catch((e) => {
         throw new ZodValidationError(e)
       })
       .then((bodyProducto) => {
+        
         const usuario = req.user
         const producto = toProductoDTO(bodyProducto)
         return productoService.crear(producto, usuario)
@@ -24,7 +31,7 @@ class ProductoController {
         res.status(201).json(nuevoProducto)
       )
   }
-
+  
   obtenerTodosDeVendedor(req, res) {
     return Promise.resolve()
       .then(() => 
@@ -59,6 +66,21 @@ class ProductoController {
       .then((productoActualizado) => 
         res.status(200).json(productoActualizado)
       )
+  }
+
+  obtenerProducto(req, res) {
+    return Promise.resolve()
+      .then(() => 
+        {return idMongoValidator.parse(req.params.id)}
+      )
+      .catch((e) => {
+        throw new ZodValidationError(e)
+      })      
+      .then((idProducto) =>
+        {return productoService.obtenerProducto(idProducto)}
+      ) .then((prod)=>{
+        res.status(200).json(prod)
+      })
   }
 }
 

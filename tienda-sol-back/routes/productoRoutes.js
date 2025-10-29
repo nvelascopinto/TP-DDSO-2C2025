@@ -16,4 +16,8 @@ productoRouter.patch("/:id", authenticateUser("X-User"), (req, res) => {
   return productoController.actualizar(req, res)
 })
 
+productoRouter.get("/:id", (req, res) => {
+  return productoController.obtenerProducto(req, res)
+})
+
 export default productoRouter
