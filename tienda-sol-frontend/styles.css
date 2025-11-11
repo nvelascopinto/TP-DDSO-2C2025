@@ -1,12 +1,19 @@
 :root {
-  --color-background: #FDFDFD;
+  --color-background: #white;
   --color-text-primary: #0F0F0F;
   --color-text-secondary: #4F7068;
-  --color-accent-primary: #44B397;
-  --color-accent-secondary: #9A61A1;
-  --color-accent-highlight: #EF68B2;
+  --color-accent-primary: #f2ead8;
+  --color-accent-secondary: #75162D; 
+  /* --color-accent-secondary: #44B397; verde agua*/
+  /* --color-accent-secondary: #6561a1; */
+  /* --color-accent-secondary: #9c6ca6;  */
+  --color-accent-highlight: #F2E5C6;
   --color-accent-lowlight: #f065b2a5;
+  --color-accent-primary-transparent: #75162e43;
+  --color-accent-transparent:  rgba(255, 255, 255, 0.3);
   --color-white: #FFFFFF;
+  --color-negro: #0F0F0F;
+  --color-bordo-negro: #260c35;
   --color-gray-100: #f7fafc;
   --color-gray-200: #edf2f7;
   --color-gray-300: #e2e8f0;
@@ -23,8 +30,8 @@
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 0 10px 2px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 0 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 }
 

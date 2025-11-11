@@ -59,7 +59,7 @@ const Header = ({ navigateTo, currentRoute }) => {
         <div
           className="header__logo"
           onClick={() => { 
-            if (currentUser?.tipo === 'Comprador') {
+            if (currentUser?.tipo != 'Vendedor') {
               navigateTo('');
             }
           }}
@@ -146,14 +146,14 @@ const Header = ({ navigateTo, currentRoute }) => {
                 onClick={() => handleNavigate('login')}
                 className="header__login-button"
               >
-                Ingresar
+                Iniciar Sesión
               </button>
 
               <button
                 onClick={() => handleNavigate('register')}
                 className="header__register-button"
               >
-                Registrarse
+                CREAR CUENTA
               </button>
             </div>
           )}

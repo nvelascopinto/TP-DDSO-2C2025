@@ -41,3 +41,12 @@ export class NotificacionInexistenteError extends NotFoundError {
     )
   }
 }
+
+export class TiendaInexistenteError extends NotFoundError {
+  constructor(tiendaNombre) {
+    super(
+      "La tienda solicitada no existe.", 
+      "Intento buscar la Tienda " + tiendaNombre + " inexistente."
+    )
+  }
+}

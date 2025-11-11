@@ -4,7 +4,7 @@ import { TipoUsuario } from '../../../enums.js';
 import Button from '../../components/Button/Button.jsx';
 import PasswordInput from '../../components/PasswordInput/PasswordInput.jsx';
 import './LoginPage.css';
-
+import {InputForm} from "../../components/InputForm/InputForm.jsx"
 const LoginPage = ({ onLogin }) => {
     const [activeTab, setActiveTab] = useState('comprador');
     const [errorMsg, setErrorMsg] = useState(null);
@@ -53,19 +53,13 @@ const LoginPage = ({ onLogin }) => {
                     </p>
                     {errorMsg && <p className="login-form__error" role="alert"> {errorMsg} </p>}
                     <div className="login-form__fields">
-                        <div className="form-group">
-                            <label htmlFor="username" className="form-label">Nombre de Usuario*</label>
-                            <input
-                                type="text"
-                                id="username"
-                                name='username'
-                                className="form-input"
-                                placeholder="Ingresa tu nombre de usuario"
-                                required
-                                aria-label="Nombre de Usuario"
-                                aria-required="true"
-                            />
-                        </div>
+                        <InputForm
+                            label="Nombre de usuario"
+                            type="text"
+                            name="username"
+                            placeholder="Ingresa tu nombre de usuario"
+                            ariaLabel="Nombre de usuario"
+                        />
                         <PasswordInput
                             id="password"
                             name="password"

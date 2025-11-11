@@ -7,6 +7,7 @@
   transition: transform 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
+  width:auto
 }
 
 .product-card:hover {
@@ -52,12 +53,12 @@
 .product-card__price {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--color-accent-primary);
+  color: var(--color-bordo-negro);
   
 }
 
 .product-card__button {
-  background-color: var(--color-accent-primary);
+  background-color: var(--color-accent-secondary);
   color: var(--color-white);
   padding: 0.5rem 1rem;
   border-radius: 9999px;

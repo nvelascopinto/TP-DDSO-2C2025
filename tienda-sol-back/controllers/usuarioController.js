@@ -3,7 +3,7 @@ import { toUsuarioDTO } from "../converters/usuarioConverter.js"
 import { usuarioValidator } from "../validators/usuarioValidator.js"
 import { idValidator } from "../validators/idValidator.js"
 import { ZodValidationError } from "../errors/validationError.js"
-import {loginValidator}  from "../validators/loginValidator.js"
+import {loginValidator }  from "../validators/loginValidator.js"
 class UsuarioController {
   crearUsuario(req, res) {
     return Promise.resolve()
@@ -66,19 +66,6 @@ class UsuarioController {
       .then((tiendas) =>
         res.status(200).json(tiendas)
       )
-  }
-
-  login(req,res) {
-    return Promise.resolve()
-      .then(()=>{
-        return loginValidator.parse(req.body)
-        
-      }).then((userData)=> {
-        console.log("PASSWORD CON "+ userData.password)
-        return usuarioService.autenticarUser(userData.username, userData.password)
-      }).then((usuarioObtenido) =>{
-        res.status(200).json(usuarioObtenido)
-      })
   }
 }
 

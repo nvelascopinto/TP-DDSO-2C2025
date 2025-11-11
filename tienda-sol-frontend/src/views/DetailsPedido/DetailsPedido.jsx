@@ -52,7 +52,7 @@ if (!pedido) return <p role="alert">No se encontró el pedido</p>;
         
       </div>
     </div >
-      <div className = "button">
+      <div className = "button-pedidoDetails ">
         <Button  onClick={() =>  navigateTo(`/historial-pedidos`)} aria-label={`Ver detalles del pedido ${pedido.id}`}>Volver</Button>
       </div>
     </div>

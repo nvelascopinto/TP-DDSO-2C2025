@@ -7,17 +7,18 @@
   z-index: 50;
   width: 100%;
   overflow: visible;
+  padding: 0.5rem 1rem;
 }
 
 .header__container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 1rem;
+  /* padding: 0.75rem 1rem; */
   width: 100%;
   max-width: 100%;
   position: relative;
-  min-height: 60px;
+  /* min-height: 60px; */
 }
 
 .header__logo {
@@ -45,7 +46,7 @@
 
 @media (min-width: 768px) {
   .header__logo-image {
-    height: 70px;
+    height: 50px;
     width: 70px;
   }
 }
@@ -414,7 +415,7 @@
 
 .header__logout-button {
   background-color: var(--color-accent-highlight);
-  color: var(--color-white);
+  color: var(--color-bordo-negro);
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   transition: all 0.2s ease;
@@ -447,8 +448,8 @@
 }
 
 .header__login-button {
-  background-color: var(--color-white);
-  color: var(--color-accent-primary);
+  background-color: var(--color-accent-secondary);
+  color: var(--color-white);
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
@@ -478,21 +479,20 @@
 
 @media (min-width: 768px) {
   .header__login-button:hover {
-    background-color: var(--color-gray-100);
-    color: var(--color-accent-primary);
+    background-color: var(--color-accent-transparent);
     transform: none;
   }
 }
 
 .header__register-button {
   background-color: var(--color-accent-primary);
-  color: var(--color-white);
+  color: var(--color-bordo-negro);
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
   transition: all 0.2s ease;
   box-shadow: var(--shadow-sm);
-  border: 2px solid var(--color-accent-primary);
+  border: 2px solid var(--color-bordo-negro);
   cursor: pointer;
   font-size: 1rem;
   white-space: nowrap;
@@ -516,8 +516,9 @@
 
 @media (min-width: 768px) {
   .header__register-button:hover {
-    background-color: var(--color-accent-primary-dark);
+    background-color: var(--color-accent-transparent);
     color: var(--color-white);
     transform: none;
+    
   }
 }

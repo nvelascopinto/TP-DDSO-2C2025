@@ -53,6 +53,8 @@ class UsuarioService {
   consultarTiendas() {
     return usuarioRepository.findTiendas()
     }
+  
+   
 
   
 }

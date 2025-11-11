@@ -2,7 +2,7 @@ import {apiBack} from "./apiBack.js"
 
 
 export function authenticate(user, password) {
-    return apiBack.post('/usuarios/login', {
+    return apiBack.post('/sesiones', {
         username : user, 
         password : password
     }).then((response) => {

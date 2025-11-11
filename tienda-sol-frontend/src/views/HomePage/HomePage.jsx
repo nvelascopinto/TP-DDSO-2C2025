@@ -4,6 +4,8 @@ import { api } from '../../services/mockService.js';
 import Spinner from '../../components/Spinner/Spinner.jsx';
 import './HomePage.css';
 import { getVendedores } from '../../services/userService.js';
+import { TiendaCard } from '../../components/TiendaCard/TiendaCard.jsx';
+import Skeleton from '@mui/material/Skeleton';
 
 const HomePage = ({ onStoreSelect, onError }) => {
   const [vendedores, setVendedores] = useState([]);
@@ -81,24 +83,28 @@ const HomePage = ({ onStoreSelect, onError }) => {
       </div>
 
       {loading ? (
-        <Spinner  role="status"
-          aria-busy="true"
-          aria-live="polite"
-          aria-label="Cargando tiendas disponibles"/>
+       
+        <div className="homepage__store-grid" 
+            role="status" 
+            aria-label="Cargando tiendas disponibles"
+            aria-busy="true"
+            aria-live="polite">
+          <Skeleton variant="rounded" width={300} height={150} />
+          <Skeleton variant="rounded" width={300} height={150} />
+          <Skeleton variant="rounded" width={300} height={150} />
+          <Skeleton variant="rounded" width={300} height={150} />
+          <Skeleton variant="rounded" width={300} height={150} />
+          <Skeleton variant="rounded" width={300} height={150} />
+        </div>
       ) : (
         <div className="homepage__store-grid" role="region" aria-label="Listado de tiendas disponibles"> 
           {vendedores.filter(v => v.tienda)
           .map((vendedor) => (
-            <div
+            <TiendaCard
               key={vendedor.username}
-              className="homepage__store-card"
-              role="button"
-              aria-label={'Abrir catálogo de la tienda' + vendedor.tienda.nombre}
-              onClick={() => onStoreSelect(vendedor)}
-            >
-              <h2 className="store-card__title">{vendedor.tienda.nombre}</h2>
-              <p className="store-card__cta">Ver catálogo</p>
-            </div>
+              vendedor={vendedor}
+              onStoreSelect={onStoreSelect}
+            />
           ))}
           {vendedores.length === 0 && (
             <p className="homepage__no-stores" role="alert" aria-live="assertive">

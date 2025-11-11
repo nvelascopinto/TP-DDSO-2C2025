@@ -4,12 +4,21 @@ import Spinner from '../../components/Spinner/Spinner.jsx';
 import './StorePage.css';
 import { getProductosByVendedor } from '../../services/productoService.js';
 import {CATEGORIAS} from '../../../enums.js'
-
+import IconButton from '@mui/material/IconButton';
+import SearchIcon from '@mui/icons-material/Search';
+import Accordion from '@mui/material/Accordion';
+import AccordionActions from '@mui/material/AccordionActions';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {FiltrosStore} from '../../components/FiltrosStore/FiltrosStore.jsx';
+import { Add, Remove } from '@mui/icons-material';
 
 const StorePage = ({ vendedor }) => {
   // CAMBIO IMPORTANTE: Inicializa con null para detectar cuando no hay datos
   const [productos, setProductos] = useState(null);
   const [loading, setLoading] = useState(true);
+    const [shouldFetch, setShouldFetch] = useState(true);
   
   // Estados de filtros
   const [searchTerm, setSearchTerm] = useState('');
@@ -22,8 +31,7 @@ const StorePage = ({ vendedor }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 6;
 
-  useEffect(() => {
-    const fetchProductos = async () => {
+  const fetchProductos = async () => {
       try {
         setLoading(true);
         const filters = {
@@ -70,8 +78,12 @@ const StorePage = ({ vendedor }) => {
         setLoading(false);
       }
     };
+    useEffect(() => {
+  if (shouldFetch) {
     fetchProductos();
-  }, [vendedor.username, searchTerm, minPrecio, maxPrecio, categoria, sortOrder, currentPage]);
+    setShouldFetch(false);
+  }
+}, [shouldFetch, searchTerm, minPrecio, maxPrecio, categoria, sortOrder, currentPage]);
 
   // CAMBIO IMPORTANTE: Acceso seguro a los datos
   const currentProducts = 
@@ -82,9 +94,9 @@ const StorePage = ({ vendedor }) => {
                     1;
 
   // Resetear página si cambian filtros
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, minPrecio, maxPrecio, categoria, sortOrder]);
+  // useEffect(() => {
+  //   setCurrentPage(1);
+  // }, [searchTerm, minPrecio, maxPrecio, categoria, sortOrder]);
 
   // Limpiar todos los filtros
   const handleClearFilters = () => {
@@ -94,102 +106,59 @@ const StorePage = ({ vendedor }) => {
     setCategoria('all');
     setSortOrder('masVendido');
     setCurrentPage(1);
+    setShouldFetch(true);
   };
 
   return (
     <div className="store-page" role="main" aria-labelledby="store-title">
-      <div className="store-page__header">
-        <h1 id="store-title" className="store-page__title">{vendedor.tienda?.nombre || vendedor.nombre}</h1>
-        <p className="store-page__subtitle">Nuestro catálogo de productos</p>
-      </div>
+      <div className='store-page__box'>
+      <div className='store-page__header_box'>
+          <div className="store-page__header">
+            <h1 id="store-title" className="store-page__title">{vendedor.tienda?.nombre || vendedor.nombre}</h1>
+          </div>
 
-      <div className="store-page__search-bar">
-        <input
-          type="text"
-          id="titulo"
-          placeholder="Buscar por titulo del producto..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-          aria-label="Buscar productos por titulo"
-        />
-      </div>
-
-      <div className="store-page__filters-panel" role="search" aria-label="Panel de filtros avanzados">
-        <h3 className="filters-panel__title">Filtros</h3>
-        
-        <div className="filters-panel__grid">
-          <div className="filter-group">
-            <label htmlFor="minPrecioFilter" className="filter-label">Precio Mínimo</label>
+          <div className="store-page__search-bar">
             <input
-              type="number"
-              id="minPrecioFilter"
-              placeholder="$ 0"
-              value={minPrecio}
-              onChange={(e) => setMinPrecio(e.target.value)}
-              className="filter-input"
-              min="0"
-              step="0.01"
+              type="text"
+              id="titulo"
+              placeholder="Buscar por titulo del producto..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+              aria-label="Buscar productos por titulo"
             />
-          </div>
-
-          <div className="filter-group">
-            <label htmlFor="maxPrecioFilter" className="filter-label">Precio Máximo</label>
-            <input
-              type="number"
-              id="maxPrecioFilter"
-              placeholder="$ 999999"
-              value={maxPrecio}
-              onChange={(e) => setMaxPrecio(e.target.value)}
-              className="filter-input"
-              min="0"
-              step="0.01"
-            />
-          </div>
-
-          <div className="filter-group">
-            <label htmlFor="categoriaFilter" className="filter-label">Categoría</label>
-            <select
-              id="categoriaFilter"
-              value={categoria}
-              onChange={(e) => setCategoria(e.target.value)}
-              className="filter-select"
-            >
-              <option value="all">Todas las categorías</option>
-              {Object.entries(CATEGORIAS).map(([key, value]) => (
-                                      <option key={key} value={key}>{value}</option>
-                                  ))}
-            </select>
-          </div>
-
-          <div className="filter-group">
-            <label htmlFor="ordenFilter" className="filter-label">Ordenar por</label>
-            <select
-              id="ordenFilter"
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-              className="filter-select"
-            >
-              <option value="masVendido">Más vendidos</option>
-              <option value="asc">Precio: Menor a Mayor</option>
-              <option value="desc">Precio: Mayor a Menor</option>
-            </select>
-          </div>
+            <div className = 'search-icon-button'>
+            <IconButton aria-label="search icon"
+                        sx={{ color: 'white' }}
+                        onClick={fetchProductos}>
+              <SearchIcon 
+                          
+                          fontSize="large"
+                          />
+            </IconButton>
+            </div>
         </div>
-
-        <button 
-          onClick={handleClearFilters}
-          className="filters-panel__clear-btn"
-          aria-label="Limpiar todos los filtros"
-        >
-          Limpiar filtros
-        </button>
       </div>
-
-      {loading ? (
-        <Spinner role="status" aria-live="polite" aria-label="Cargando productos"/>
-      ) : (
-        <>
+      </div>
+      <div className = "filters_and_products_box">
+            
+              <FiltrosStore 
+                minPrecio={minPrecio}
+                setMinPrecio={setMinPrecio}
+                maxPrecio={maxPrecio}
+                setMaxPrecio={setMaxPrecio}
+                categoria={categoria}
+                setCategoria={setCategoria}
+                sortOrder={sortOrder}
+                setSortOrder={setSortOrder}
+                handleClearFilters={handleClearFilters}
+                fetchProductos={fetchProductos}
+              />
+            
+           {loading ? (
+            <Spinner role="status" aria-live="polite" aria-label="Cargando productos"/>
+          ) : (
+            <>
           {currentProducts.length > 0 ? (
             <div className="store-page__product-grid" role="grid" aria-label="Lista de productos disponibles">
               {currentProducts.map((producto) => (
@@ -206,7 +175,11 @@ const StorePage = ({ vendedor }) => {
               <p>No se encontraron productos con los filtros seleccionados.</p>
             </div>
           )}
-      
+        </>
+        )}
+      </div>
+      {!loading && (
+        <>
           {totalPages > 1 && (
             <div className="pagination" role="navigation" aria-label="Controles de paginación de productos">
               <button
@@ -242,6 +215,7 @@ const StorePage = ({ vendedor }) => {
           )}
         </>
       )}
+       
     </div>
   );
 };
