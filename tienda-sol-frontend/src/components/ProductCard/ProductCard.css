@@ -31,9 +31,11 @@
   font-size: 1.125rem;
   font-weight: 700;
   color: var(--color-text-primary);
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
+   word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .product-card__description {
@@ -41,6 +43,7 @@
   font-size: 0.875rem; 
   margin-top: 0.25rem;
   flex-grow: 1;
+ 
 }
 
 .product-card__footer {

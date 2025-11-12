@@ -2,8 +2,11 @@
     background-color: var(--color-white);
     border-radius: 0.75rem;
     box-shadow: var(--shadow-lg);
-    padding: 1.5rem;
-    
+    padding: 1rem;
+    width: 18rem;
+    height: auto;
+    align-self: flex-start; 
+    flex-shrink: 0;
    
 }
 .filtros-header{
@@ -11,6 +14,7 @@
   font-weight: 600;
   color: var(--color-text-primary);
   padding-left: 1rem;
+    margin-bottom: 0rem;
 }
 
 .filter-button-group {
@@ -21,7 +25,7 @@
   align-items: left;
 }
 .filters-panel__fetch-btn{
-  width: 10rem;
+  width: 6rem;
   padding: 0.75rem 1.5rem;
   background-color: var(--color-accent-secondary);
   color: var(--color-white);
@@ -37,7 +41,7 @@
   box-shadow: var(--shadow-md);
 }
 .filters-panel__clear-btn {
-  width: 10rem;
+  width: auto ;
   padding: 0.75rem 1.5rem;
   background-color: var(--color-gray-200);
   color: var(--color-text-primary);
@@ -61,7 +65,18 @@
   }
 }
 
+.price_input_label{
+    margin-bottom: 0.5rem;
+    margin-left: 0.7rem;
+    
 
+}
+.price_input_label_text{
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: rgb(99, 99, 99);
+    margin-bottom: 0.25rem;
+}
 
 
 

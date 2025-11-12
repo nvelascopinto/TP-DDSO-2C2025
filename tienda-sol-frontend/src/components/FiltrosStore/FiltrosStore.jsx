@@ -14,6 +14,7 @@ import FilledInput from '@mui/material/FilledInput';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Add, Remove } from '@mui/icons-material';
+import { InputNumber } from 'antd';
 export const FiltrosStore = ({
     setMinPrecio,
     minPrecio,
@@ -32,8 +33,8 @@ export const FiltrosStore = ({
         <p className='filtros-header'>Filtros</p>
         <List dense={true}>
                 <ListItem>
-                         <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                            <InputLabel id="sort_label">Ordenar</InputLabel>
+                         <FormControl variant="standard" sx={{ m: 1, minWidth: 120, width: 200}} size="small">
+                            <InputLabel id="sort_label" sx={{ fontSize: '1rem', width: 200}} >Ordenar&nbsp;&nbsp;&nbsp; </InputLabel>
                             <Select
                                 inputProps={{
                                 'aria-label': 'Ordenar los productos'
@@ -42,23 +43,19 @@ export const FiltrosStore = ({
                                 id="sort_select"
                                 value={sortOrder}
                                 label="Ordenar"
+                                 sx={{ fontSize: '0.8rem'}}
                                 onChange= {(e) => setSortOrder(e.target.value)}
-                                 open={selectOpenOrden}
-                                 onOpen={() => setSelectOpenOrden(true)}
-                                 onClose={() => setSelectOpenOrden(false)}
-                                 IconComponent={() => (
-                                 selectOpenOrden ? <Remove fontSize="small" /> : <Add fontSize="small" />
-                                 )}
+                                 
                             >
-                                <MenuItem value="masVendido">Más vendidos</MenuItem>
-                                <MenuItem value="asc">Precio: Menor a Mayor</MenuItem>
-                                <MenuItem value="desc">Precio: Mayor a Menor</MenuItem>
+                                <MenuItem value="masVendido"  sx={{ fontSize: '0.775rem'}}>Más vendidos</MenuItem>
+                                <MenuItem value="asc"  sx={{ fontSize: '0.775rem'}}>Precio: Menor a Mayor</MenuItem>
+                                <MenuItem value="desc"  sx={{ fontSize: '0.775rem'}}>Precio: Mayor a Menor</MenuItem>
                             </Select>
                         </FormControl>
                 </ListItem>
                 <Divider />
                 <ListItem>
-                         <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                         <FormControl variant="standard" sx={{ m: 1, minWidth: 120, width: 200 }} size="small">
                             <InputLabel id="categoria_label">Categoria</InputLabel>
                             <Select
                                 inputProps={{
@@ -68,13 +65,9 @@ export const FiltrosStore = ({
                                 id="categoria_select"
                                 value={categoria}
                                 label="Categoria"
+                                 sx={{ fontSize: '0.8rem'}}
                                 onChange= {(e) => setCategoria(e.target.value)}
-                                 open={selectOpenCategoria}
-                                 onOpen={() => setSelectOpenCategoria(true)}
-                                 onClose={() => setSelectOpenCategoria(false)}
-                                 IconComponent={() => (
-                                 selectOpenCategoria ? <Remove fontSize="small" /> : <Add fontSize="small" />
-                                 )}
+                                
                             >
                                 <MenuItem value="all">Todas las categorías</MenuItem>
                                 {Object.entries(CATEGORIAS).map(([key, value]) => (
@@ -83,42 +76,40 @@ export const FiltrosStore = ({
                             </Select>
                         </FormControl>
                 </ListItem>
+                <Divider />
                <ListItem>
                 <div className = "price_input_group">
-                         <FormControl fullWidth sx={{ m: 1 }}>
-                            <InputLabel htmlFor="minPrecioFilter">Precio mínimo</InputLabel>
-                            <OutlinedInput
-                                id="minPrecioFilter"
-                                type="number"
-                                placeholder="$ 0"
+                        <div className="price_input_label">
+                            <p className = "price_input_label_text">Precio Mínimo</p>
+                            <InputNumber 
+                                prefix="$" 
+                                style={{ width: '100%' }}
+                                onChange={(value) => setMinPrecio(value)} // value directamente, no e.target.value
                                 value={minPrecio}
-                                onChange={(e) => setMinPrecio(e.target.value)}
-                                startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                                label="Precio mínimo"
-                                inputProps={{
-                                min: 0,
-                                step: 0.01,
-                                'aria-label': 'Precio mínimo'
-                                }}
+                                placeholder="Mínimo"
+                                id="minPrecioFilter"
+                                min={0}
+                                step={1}
+                                controls={true} // Opcional: oculta los botones +/-
+                                aria-label="Precio mínimo"
                             />
-                        </FormControl>
-                        <FormControl fullWidth sx={{ m: 1 }}>
-                            <InputLabel htmlFor="maxPrecioFilter">Precio máximo</InputLabel>
-                            <OutlinedInput
-                                id="maxPrecioFilter"
-                                type="number"
-                                placeholder="$ 999"
+                            </div>
+                        <div className="price_input_label">
+                            <p className = "price_input_label_text">Precio Máximo</p>
+                            <InputNumber 
+                                prefix="$" 
+                                style={{ width: '100%' }}
+                                onChange={(value) => setMaxPrecio(value)} // value directamente, no e.target.value
                                 value={maxPrecio}
-                                onChange={(e) => setMaxPrecio(e.target.value)}
-                                startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                                label="Precio máximo"
-                                inputProps={{
-                                min: 0,
-                                step: 0.01,
-                                'aria-label': 'Precio máximo'
-                                }}
+                                placeholder="Maximo"
+                                id="maxPrecioFilter"
+                                min={0}
+                                step={1}
+                                controls={true} // Opcional: oculta los botones +/-
+                                aria-label="Precio máximo"
                             />
-                        </FormControl>
+                            </div>
+                        
                 </div>
                 </ListItem>
             </List>
