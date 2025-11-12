@@ -23,10 +23,11 @@ class UsuarioService {
   buscar(id) {
     return usuarioRepository.findById(id)
       .then((usuarioBuscado) => {
-        console.log("USUARIO COMPLETO:", JSON.stringify(usuarioBuscado, null, 2))
-      console.log("KEYS:", Object.keys(usuarioBuscado))
-      console.log("PASSWORD:", usuarioBuscado.password)
         if (!usuarioBuscado) throw new UsuarioInexistenteError(id)
+        console.log("USUARIO COMPLETO:", JSON.stringify(usuarioBuscado, null, 2))
+        console.log("KEYS:", Object.keys(usuarioBuscado))
+        console.log("PASSWORD:", usuarioBuscado.password)
+
         return usuarioBuscado
       })
   }
@@ -52,10 +53,11 @@ class UsuarioService {
 
   consultarTiendas() {
     return usuarioRepository.findTiendas()
-    }
-  
-   
+  }
 
+  consultarTienda(tiendaNombre) {
+    return usuarioRepository.findTiendaByName(tiendaNombre)
+  }
   
 }
 

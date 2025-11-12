@@ -7,10 +7,6 @@ usuarioRouter.post("/", (req, res) => {
   return usuarioController.crearUsuario(req, res)
 })
 
-usuarioRouter.get("/tiendas", (req, res) => {
-  return usuarioController.verTiendas(req, res)
-})
-
 
 usuarioRouter.get("/:id", (req, res) => {
   return usuarioController.verUsuario(req, res)

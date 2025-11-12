@@ -1,19 +1,21 @@
-import TiendaRepository from "../models/repositories/tiendaRepository.js"
+import usuarioService from "./usuarioService.js"
 import { idValidator } from "../validators/idValidator.js"
 import { ZodValidationError } from "../errors/validationError.js"
 import {TiendaInexistenteError} from "../errors/notFoundError.js"
 
-export class TiendaService{
+class TiendaService{
     getTiendas(){
-        return TiendaRepository.getTiendas()
-    
+      return usuarioService.consultarTiendas()
     }
 
     getTiendaByName(tiendaNombre){
-    return TiendaRepository.findByName(tiendaNombre)
-      .then((tienda) => {
-        if (!tienda) throw new TiendaInexistenteError(tiendaNombre);
-        return tienda;
-      });
+      return usuarioService.consultarTienda(tiendaNombre)
+      .then((tiendaBuscada) => {
+        if (!tiendaBuscada) throw new TiendaInexistenteError(tiendaBuscada)
+        return tiendaBuscada
+      })
+    
   }
 }
+
+export default new TiendaService()

@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../../services/mockService.js';
 import Spinner from '../../components/Spinner/Spinner.jsx';
 import './HomePage.css';
-import { getVendedores } from '../../services/userService.js';
+//import { getVendedores } from '../../services/userService.js';
+import {getTiendas} from '../../services/tiendaService.js';
 import { TiendaCard } from '../../components/TiendaCard/TiendaCard.jsx';
 import Skeleton from '@mui/material/Skeleton';
 
@@ -15,7 +16,7 @@ const HomePage = ({ onStoreSelect, onError }) => {
     const fetchVendedores = async () => {
       try {
         setLoading(true);
-        const data = await getVendedores();
+        const data = await getTiendas();
         setVendedores(data);
       } catch (error) {
         console.error("Error fetching vendedores:", error);

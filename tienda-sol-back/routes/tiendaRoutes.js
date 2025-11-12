@@ -1,11 +1,14 @@
 import { Router } from "express"
-import {TiendaController} from "../controllers/tiendaController.js"
-export const tiendaRouter = Router()
+import tiendaController from "../controllers/tiendaController.js"
+
+const tiendaRouter = Router()
 
 tiendaRouter.get("/", (req, res) => {
-  return TiendaController.getTiendas(req, res)
+  return tiendaController.getTiendas(req, res)
 })
 
 tiendaRouter.get("/:id", (req, res) => {
-  return TiendaController.getTiendaByName(req, res)
+  return tiendaController.getTiendaByName(req, res)
 })
+
+export default tiendaRouter

@@ -22,3 +22,4 @@ export const tiendaSchema = new mongoose.Schema(
 
 tiendaSchema.loadClass(Tienda)
 
+export const TiendaModel = mongoose.model("Tienda", tiendaSchema)

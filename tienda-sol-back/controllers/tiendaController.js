@@ -1,11 +1,11 @@
-//import TiendaService from "../services/tiendaService.js"
+import tiendaService from "../services/tiendaService.js"
 
-export class TiendaController {
+class TiendaController {
 
     getTiendas(req,res){
-        return Promise.resolve()
+      return Promise.resolve()
       .then(() => 
-        usuarioService.consultarTiendas()
+        tiendaService.getTiendas()
       )
       .then((tiendas) =>
         res.status(200).json(tiendas)
@@ -13,13 +13,16 @@ export class TiendaController {
     }
 
     getTiendaByName(req, res) {
-       /* return Promise.resolve()
+        return Promise.resolve()
       .then(() =>
-        {return tiendaService.getTiendaByName()}
-      ) .then((prod)=>{
-        res.status(200).json(prod)
-      })*/
+        tiendaService.getTiendaByName(req.params.id)
+      ) 
+      .then((tienda)=>{
+        res.status(200).json(tienda)
+      })
     }
 
 }
+
+export default new TiendaController()
     

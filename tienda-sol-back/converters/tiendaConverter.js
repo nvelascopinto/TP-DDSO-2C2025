@@ -3,6 +3,7 @@ export function toTiendaDTO(tienda) {
     if (!tienda) {
         return null
     }
+
     return new tiendaDTO(
         tienda.nombre,
         tienda.descripcion,
