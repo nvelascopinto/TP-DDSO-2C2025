@@ -27,7 +27,7 @@ export function fromUsuarioDTO(usuarioDTO) {
       usuarioDTO.email,
       usuarioDTO.telefono,
       usuarioDTO.tipoUsuario,
-      new Tienda(usuarioDTO.tienda.nombre, usuarioDTO.tienda.descripcion, usuarioDTO.tienda.logo) // por cada vendedor al crear su usuario crea su tienda a la que se asocia el
+      new Tienda(usuarioDTO.username, usuarioDTO.tienda.nombre, usuarioDTO.tienda.descripcion) // por cada vendedor al crear su usuario crea su tienda a la que se asocia el
     )
   }
     return new Usuario(usuarioDTO.username, usuarioDTO.password, usuarioDTO.nombre, usuarioDTO.email, usuarioDTO.telefono, usuarioDTO.tipoUsuario)

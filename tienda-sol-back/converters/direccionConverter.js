@@ -11,8 +11,6 @@ export function toDireccionDTO(direccionJSON) {
     direccionJSON.ciudad,
     direccionJSON.provincia,
     direccionJSON.pais,
-    direccionJSON.latitud,
-    direccionJSON.longitud
   )
 }
 
@@ -25,8 +23,6 @@ export function fromDireccionDTO(direccionDTO) {
     direccionDTO.codigoPostal,
     direccionDTO.ciudad,
     direccionDTO.provincia,
-    direccionDTO.pais,
-    direccionDTO.latitud,
-    direccionDTO.longitud
+    direccionDTO.pais
   )
 }

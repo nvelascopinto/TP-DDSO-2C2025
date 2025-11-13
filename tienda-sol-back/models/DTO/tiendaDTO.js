@@ -1,7 +1,6 @@
 export class tiendaDTO {
-    constructor(nombre, descripcion, logo){
+    constructor(nombre, descripcion){
         this.nombre = nombre
         this.descripcion = descripcion
-        this.logo = logo
     }   
 }

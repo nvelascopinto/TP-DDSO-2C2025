@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../../services/mockService.js';
 import Spinner from '../../components/Spinner/Spinner.jsx';
 import './HomePage.css';
-//import { getVendedores } from '../../services/userService.js';
 import {getTiendas} from '../../services/tiendaService.js';
 import { TiendaCard } from '../../components/TiendaCard/TiendaCard.jsx';
 import Skeleton from '@mui/material/Skeleton';
@@ -99,11 +98,11 @@ const HomePage = ({ onStoreSelect, onError }) => {
         </div>
       ) : (
         <div className="homepage__store-grid" role="region" aria-label="Listado de tiendas disponibles"> 
-          {vendedores.filter(v => v.tienda)
+          {vendedores
           .map((vendedor) => (
             <TiendaCard
-              key={vendedor.username}
-              vendedor={vendedor}
+              key={vendedor.tienda.username}
+              vendedor={vendedor.tienda}
               onStoreSelect={onStoreSelect}
             />
           ))}

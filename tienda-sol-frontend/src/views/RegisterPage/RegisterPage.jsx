@@ -23,6 +23,7 @@ const RegisterPage = ({ onRegister }) => {
       tipoUsuario: userType,
       ...(userType === 'Vendedor' && {
         tienda: {
+        username: formData.get('username'),
         nombre: formData.get('storeName'),
         descripcion: formData.get('descripcion'),
     }

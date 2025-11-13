@@ -69,9 +69,7 @@ describe("PedidosService", () => {
           codigoPostal: 1000,
           ciudad: "Buenos Aires",
           provincia: "Buenos Aires",
-          pais: "Argentina",
-          latitud: -34.6037,
-          longitud: -58.3816
+          pais: "Argentina"
         }
       }
 
@@ -140,9 +138,7 @@ describe("PedidosService", () => {
           codigoPostal: 1000,
           ciudad: "Buenos Aires",
           provincia: "Buenos Aires",
-          pais: "Argentina",
-          latitud: -34.6037,
-          longitud: -58.3816
+          pais: "Argentina"
         }
       }
 
@@ -210,9 +206,7 @@ describe("PedidosService", () => {
           codigoPostal: 1000,
           ciudad: "Buenos Aires",
           provincia: "Buenos Aires",
-          pais: "Argentina",
-          latitud: -34.6037,
-          longitud: -58.3816
+          pais: "Argentina"
         }
       }
 
@@ -280,9 +274,7 @@ describe("PedidosService", () => {
           codigoPostal: 1000,
           ciudad: "Buenos Aires",
           provincia: "Buenos Aires",
-          pais: "Argentina",
-          latitud: -34.6037,
-          longitud: -58.3816
+          pais: "Argentina"
         }
       }
 
@@ -327,9 +319,7 @@ describe("PedidosService", () => {
           codigoPostal: 1000,
           ciudad: "Buenos Aires",
           provincia: "Buenos Aires",
-          pais: "Argentina",
-          latitud: -34.6037,
-          longitud: -58.3816
+          pais: "Argentina"
         }
       }
 

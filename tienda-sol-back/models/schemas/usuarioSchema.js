@@ -42,7 +42,6 @@ const usuarioSchema = new mongoose.Schema(
       type: tiendaSchema,
       required: false
     }
-    
   },
   {
     collection: "usuarios",

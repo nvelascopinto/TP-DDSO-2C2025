@@ -181,12 +181,6 @@ components:
         pais:
           type: string
           example: "Argentina"
-        latitud:
-          type: number
-          example: -34.6037
-        longitud:
-          type: number
-          example: -58.3816
 
     PedidoDTO:
       type: object

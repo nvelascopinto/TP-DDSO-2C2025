@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import './FiltrosStore.css';
 import {CATEGORIAS} from '../../../enums.js'
 import { useState } from "react";
@@ -15,6 +15,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Add, Remove } from '@mui/icons-material';
 import { InputNumber } from 'antd';
+import { Slider } from 'antd';
 export const FiltrosStore = ({
     setMinPrecio,
     minPrecio,
@@ -27,8 +28,8 @@ export const FiltrosStore = ({
     fetchProductos,
     handleClearFilters
 }) => {
-    const [selectOpenCategoria, setSelectOpenCategoria] = useState(false);
-    const [selectOpenOrden, setSelectOpenOrden] = useState(false);
+   
+    
     return <div className = "filter_box">
         <p className='filtros-header'>Filtros</p>
         <List dense={true}>
@@ -111,19 +112,60 @@ export const FiltrosStore = ({
                             </div>
                         
                 </div>
+                
                 </ListItem>
+                
+                <div className="precio-slider-wrapper">
+                    <Slider
+                        range
+                        min={0}
+                        max={10000}
+                        value={[
+                            minPrecio === '' ? 0 : parseFloat(minPrecio),
+                            maxPrecio === '' ? 10000 : parseFloat(maxPrecio)
+                        ]}
+                        onChange={(values) => {
+                            setMinPrecio(values[0].toString());
+                            setMaxPrecio(values[1].toString());
+                        }}
+                        tooltip={{ open: false }}
+                        allowCross={false}
+                        className="custom-slider"
+                    />
+                    
+                    {/* Números posicionados dinámicamente */}
+                    <div className="slider-values">
+                        <span 
+                        className="slider-value" 
+                        style={{ 
+                            left: `${((minPrecio === '' ? 0 : parseFloat(minPrecio)) / 10000) * 100}%` 
+                        }}
+                        >
+                        ${minPrecio === '' ? 0 : minPrecio}
+                        </span>
+                        <span 
+                        className="slider-value" 
+                        style={{ 
+                            left: `${((maxPrecio === '' ? 10000 : parseFloat(maxPrecio)) / 10000) * 100}%` 
+                        }}
+                        >
+                        ${maxPrecio === '' ? 10000 : maxPrecio}
+                        </span>
+                    </div>
+                </div>
             </List>
-            <div className='filter-button-group'>
+            
+            <div className='filter-buttons-container'>
           <button 
           onClick={handleClearFilters}
-          className="filters-panel__clear-btn"
+          className="btn-limpiar"
           aria-label="Limpiar todos los filtros"
         >
           Limpiar filtros
         </button>
         <button 
           onClick={fetchProductos}
-          className="filters-panel__fetch-btn"
+          className="btn-filtrar"
           aria-label="Aplicar filtros"
         >
           Filtrar

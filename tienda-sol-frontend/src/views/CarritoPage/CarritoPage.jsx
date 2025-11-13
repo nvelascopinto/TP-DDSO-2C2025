@@ -11,49 +11,16 @@ const CarritoPage = ({ onLoginRequest, navigateTo }) => {
   const { cartItems, getCartTotal, clearCart } = useCart();
   const { currentUser } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [orderPlaced, setOrderPlaced] = useState(false);
 
-  const handleCheckout = async () => {
+  const handleDireccion = (() =>{
     if (!currentUser) {
       onLoginRequest();
       return;
     }
     if (cartItems.length === 0) return;
-
-    setIsProcessing(true);
-    try {
-      const vendedorId = cartItems[0].producto.vendedor;
-      const items = cartItems.map(item => ({
-        productoId: item.producto._id,
-        cantidad: item.cantidad,
-        precioUnitario: item.producto.precio
-      }));
-      const total = getCartTotal();
-
-      await api.crearPedido(currentUser.username, vendedorId, items, total);
-
-      setOrderPlaced(true);
-      clearCart();
-    } catch (error) {
-      console.error("Error creando la orden: ", error);
-      alert("Hubo un error al procesar tu pedido. Intenta de nuevo.");
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  if (orderPlaced) {
-    return (
-      <div className="order-success-message" role="status" aria-live="polite">
-        <h1 className="order-success-message__title">¡Gracias por tu compra!</h1>
-        <p>Tu pedido ha sido realizado con éxito.</p>
-        <p>Recibirás notificaciones sobre su estado.</p>
-        <Button onClick={() => navigateTo('home')} variant="primary" className="button--margin-top">
-          Volver a la tienda
-        </Button>
-      </div>
-    );
-  }
+    navigateTo("checkout")
+  })
+ 
 
   return (
     <div>
@@ -78,7 +45,7 @@ const CarritoPage = ({ onLoginRequest, navigateTo }) => {
                 Total: <span>${getCartTotal().toFixed(2)}</span>
               </div>
             
-              <Button onClick={handleCheckout} disabled={isProcessing || cartItems.length === 0}>
+              <Button onClick={handleDireccion} disabled={isProcessing || cartItems.length === 0}>
                 <span aria-busy={isProcessing ? 'true' : 'false'}> 
                 {isProcessing ? 'Procesando...' : 'Finalizar Compra'}
                 </span>

@@ -7,7 +7,7 @@ export const authenticateUser = (fieldName) => (req, _res, next) => {
     .then(() => {
       //header X-User
       const fieldNameLC = fieldName.toLowerCase()
-const idUser = req.get(fieldNameLC) || req.params?.[fieldName] || req.query?.[fieldName]
+      const idUser = req.get(fieldNameLC) || req.params?.[fieldName] || req.query?.[fieldName]
       if (idUser == null) {
         throw new ValidationError("Username es requerido")
       }

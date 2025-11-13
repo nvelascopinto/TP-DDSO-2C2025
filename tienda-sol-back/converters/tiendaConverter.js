@@ -7,6 +7,5 @@ export function toTiendaDTO(tienda) {
     return new tiendaDTO(
         tienda.nombre,
         tienda.descripcion,
-        tienda.logo
     )
 }

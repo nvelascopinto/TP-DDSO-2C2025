@@ -1,0 +1,32 @@
+
+.checkOut__style {
+    display: flex !important;
+    flex-direction: row !important; /* ✅ Forzar horizontal */
+    gap: 1rem;
+}
+
+
+.checkOut__direccion {
+    background-color: var(--color-white);
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    
+}
+
+.checkOut__resumen {
+    padding: 1rem;
+    
+}
+
+.form-wrapper, .table-wrapper {
+  width: 100%;
+  max-width: 100%;
+}
+
+.checkOut__total {
+    align-items: right;
+    justify-content: right;
+}
+.checkOut__total_value {
+    font-size: 3rem;
+}

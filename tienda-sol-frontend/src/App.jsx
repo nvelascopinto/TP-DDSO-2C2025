@@ -15,6 +15,9 @@ import './App.css';
 import DetailsPedido from './views/DetailsPedido/DetailsPedido.jsx';
 import ErrorPage from './views/Errors/Errors';
 import { authenticate, registerUser } from './services/userService.js';
+import { ConfigProvider } from 'antd';
+import esES from 'antd/locale/es_ES';
+import { CheckOut } from './views/CheckOut/CheckOut';
 
 
 // Componente interno que usa los hooks de routing
@@ -128,8 +131,14 @@ const AppContent = () => {
             path="/tienda" 
             element={
               selectedStore 
-                ? <StorePage vendedor={selectedStore} />
+                ? <StorePage tienda={selectedStore} />
                 : <Navigate to="/" replace />
+            } 
+          />
+
+          <Route 
+            path="/checkout" 
+            element={ <CheckOut navigateTo={navigateTo}  />
             } 
           />
 
@@ -210,9 +219,38 @@ const AppContent = () => {
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <AppContent />
-    </BrowserRouter>
+    <ConfigProvider
+      locale={esES}
+      theme={{
+        token: {
+          colorPrimary: '#3E1917', // Cambia estos valores a tus colores
+          colorPrimaryHover: '#5A2523',
+          colorLink: '#3E1917',
+        },
+        components: {
+          Input: {
+            controlHeight: 40,
+            colorBorder: '#3E1917',
+            activeBorderColor: '#3E1917',
+            hoverBorderColor: '#5A2523',
+            activeShadow: '0 0 0 3px rgba(110, 36, 32, 0.1)',
+            paddingBlock: 4
+          },
+          Button: {
+            colorPrimary: '#75162D',
+            colorPrimaryHover: '#5A2523',
+          },
+          Slider: {
+            handleLineWidth: 2, 
+            railSize : 3
+          } 
+        },
+      }}
+    >
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
+    </ConfigProvider>
   );
 };
 

@@ -1,7 +1,7 @@
 import sesionService from "../services/sesionService.js"
 import {loginValidator} from "../validators/loginValidator.js"
 
-class sesionController {
+class SesionController {
   login(req,res) {
     return Promise.resolve()
       .then(()=>{
@@ -16,4 +16,4 @@ class sesionController {
   }
 }
 
-export default sesionController
+export default new SesionController()

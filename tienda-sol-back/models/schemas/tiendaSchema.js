@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 import { Tienda } from "../entities/tienda.js";
 export const tiendaSchema = new mongoose.Schema(
   {
+    username: {
+      type:String,
+      requiered: true
+    },
     nombre: {
       type: String,
       required: true
@@ -9,10 +13,6 @@ export const tiendaSchema = new mongoose.Schema(
     descripcion: {
       type: String,
       required: true
-    },
-    logo: {
-      type: String,
-      required: false
     }
   },
   {

@@ -8,7 +8,5 @@ export const direccionEntregaValidator = z.object({
   codigoPostal: z.number(),
   ciudad: z.string(),
   provincia: z.string(),
-  pais: z.string(),
-  latitud: z.number(),
-  longitud: z.number()
+  pais: z.string()
 })

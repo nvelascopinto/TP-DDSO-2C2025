@@ -34,11 +34,5 @@ export const direccionEntregaSchema = new mongoose.Schema({
   pais: {
     type: String,
     required: true
-  },
-  latitud: {
-    type: Number
-  },
-  longitud: {
-    type: Number
   }
 })

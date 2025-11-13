@@ -1,7 +1,7 @@
 export class Tienda { 
-    constructor(nombre, descripcion, logo){
+    constructor(username, nombre, descripcion){
+        this.username = username
         this.nombre = nombre
         this.descripcion = descripcion
-        this.logo = logo
     }   
 }

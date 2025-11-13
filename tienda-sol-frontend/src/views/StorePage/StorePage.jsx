@@ -13,8 +13,11 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {FiltrosStore} from '../../components/FiltrosStore/FiltrosStore.jsx';
 import { Add, Remove } from '@mui/icons-material';
+import { AudioOutlined } from '@ant-design/icons';
+import { Input, Space } from 'antd';
+const { Search } = Input;
 
-const StorePage = ({ vendedor }) => {
+const StorePage = ({ tienda  }) => {
   // CAMBIO IMPORTANTE: Inicializa con null para detectar cuando no hay datos
   const [productos, setProductos] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -35,7 +38,7 @@ const StorePage = ({ vendedor }) => {
       try {
         setLoading(true);
         const filters = {
-          vendedor: vendedor.username,
+          vendedor: tienda.username,
           pagina: currentPage,
           limite: productsPerPage,
         };
@@ -114,10 +117,10 @@ const StorePage = ({ vendedor }) => {
       <div className='store-page__box'>
       <div className='store-page__header_box'>
           <div className="store-page__header">
-            <h1 id="store-title" className="store-page__title">{vendedor.tienda?.nombre || vendedor.nombre}</h1>
+            <h1 id="store-title" className="store-page__title">{tienda.nombre}</h1>
           </div>
 
-          <div className="store-page__search-bar">
+          {/* <div className="store-page__search-bar">
             <input
               type="text"
               id="titulo"
@@ -137,6 +140,22 @@ const StorePage = ({ vendedor }) => {
                           />
             </IconButton>
             </div>
+        </div> */}
+        <div className="store-page__search-bar">
+            <Search 
+              placeholder="Buscar productos..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onSearch={fetchProductos
+              }
+              enterButton 
+              size="large"
+               style={{ 
+                height: '2.5rem',
+                display: 'flex',
+                alignItems: 'stretch'
+              }}
+            />
         </div>
       </div>
       </div>
