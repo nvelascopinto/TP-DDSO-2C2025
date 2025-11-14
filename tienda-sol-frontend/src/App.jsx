@@ -56,11 +56,11 @@ const AppContent = () => {
       console.log('Usuario logueado:', userData);
       
       // Navegar según el tipo de usuario
-      if (userData?.tipo === 'Vendedor') {
-        navigate('/productos');
-      } else {
+      // if (userData?.tipo === 'Vendedor') {
+      //   navigate('/productos');
+      // } else {
         navigate('/');
-      }
+      //}
       
       return userData;
     })
@@ -157,15 +157,6 @@ const AppContent = () => {
           />
 
           <Route 
-            path="/pedidos" 
-            element={
-             
-                 <OrderHistoryPage />
-                
-            } 
-          />
-
-          <Route 
             path="/notificaciones" 
             element={
               currentUser 
@@ -177,7 +168,7 @@ const AppContent = () => {
           <Route 
             path="/historial-pedidos" 
             element={
-              currentUser?.tipo === 'Comprador' 
+              currentUser
                 ? <OrderHistoryPage navigateTo={navigateTo} />
                 : <Navigate to="/" replace />
             } 
@@ -185,8 +176,8 @@ const AppContent = () => {
           <Route 
             path="/historial-pedidos/:id" 
             element={
-              currentUser?.tipo === 'Comprador' 
-                ? <DetailsPedido />
+              currentUser
+                ? <DetailsPedido navigateTo={navigateTo}/>
                 : <Navigate to="/" replace />
             } 
           />

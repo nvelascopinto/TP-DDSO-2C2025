@@ -54,7 +54,7 @@ const OrderHistoryPage = ({ navigateTo }) => {
                 <div className="order-list">
                     {pedidos.map((pedido) => {
                         return (
-                            <div key={pedido.id} className ="order-form" role="listitem" aria-labelledby={`order-id-${pedido.id}`}>
+                            <div key={pedido._id} className ="order-form" role="listitem" aria-labelledby={`order-id-${pedido._id}`}>
                                 <div className="order-item__header">
                                     <div>
                                         <p className="order-item__date">
@@ -63,20 +63,20 @@ const OrderHistoryPage = ({ navigateTo }) => {
                                     </div>
                                     <div className = "order-state-id">
                                         <div className="order-item__actions" role="group" aria-label="Identificación del pedido">
-                                                <h2 className="order-item__id">Pedido #{pedido.id}</h2>
-                                                <span className={`status-badge ${getStatusClass(pedido.estado)}`} role="status" aria-live="polite" aria-label={`Estado del pedido: ${pedido.estado}`}>
-                                                    {pedido.estado}
+                                                <h2 className="order-item__id">Pedido #{pedido._id}</h2>
+                                                <span className={`status-badge ${getStatusClass(pedido.estadoNombre)}`} role="status" aria-live="polite" aria-label={`Estado del pedido: ${pedido.estadoNombre}`}>
+                                                    {pedido.estadoNombre}
                                                 </span>
                                         </div>
                                     </div>
                                 </div>
                                 <div className = "order-change-state">
-                                        <div role="region" aria-label={`Acciones del pedido ${pedido.id}`}>
+                                        <div role="region" aria-label={`Acciones del pedido ${pedido._id}`}>
                                             <PedidoAcciones pedido={pedido} />
                                         </div>
                                 </div>
                                 <div className="order-item__body">
-                                        <Button onClick={() =>  navigateTo(`historial-pedidos/${pedido.id}`)} aria-label={`Ver detalles del pedido ${pedido.id}`}>
+                                        <Button onClick={() =>  navigateTo(`historial-pedidos/${pedido._id}`, null, pedido._id)} aria-label={`Ver detalles del pedido ${pedido._id}`}>
                                             Ver Pedido
                                         </Button>
                                         <div>

@@ -52,9 +52,9 @@ class PedidoController {
         throw new ZodValidationError(e)
       })
       .then(({ idPedido, cambioEstado }) => {
-        return pedidoService.cambioEstado(cambioEstado.estado, cambioEstado.usuario, cambioEstado.motivo, idPedido)
+        return pedidoService.cambioEstado(cambioEstado.estado, req.user, cambioEstado.motivo, idPedido)
       })
-      .then((mensaje) => res.status(200).json(mensaje))
+      .then((pedidoActualizado) => res.status(200).json(pedidoActualizado))
   }
 }
 

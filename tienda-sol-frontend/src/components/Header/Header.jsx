@@ -59,9 +59,9 @@ const Header = ({ navigateTo, currentRoute }) => {
         <div
           className="header__logo"
           onClick={() => { 
-            if (currentUser?.tipo != 'Vendedor') {
+            //if (currentUser?.tipo != 'Vendedor') {
               navigateTo('');
-            }
+            //}
           }}
         >
           <img src={logo} alt="Logo Tienda Sol" className="header__logo-image" />
@@ -98,8 +98,8 @@ const Header = ({ navigateTo, currentRoute }) => {
                 Productos
               </button>
               <button
-                onClick={() => handleNavigate('pedidos')}
-                className={`header__nav-link ${activeTab === "pedidos" ? "active" : ""}`}
+                onClick={() => handleNavigate('historial-pedidos')}
+                className={`header__nav-link ${activeTab === "historial-pedidos" ? "active" : ""}`}
               >
                 Pedidos
               </button>

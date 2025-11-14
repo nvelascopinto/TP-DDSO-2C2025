@@ -7,7 +7,7 @@ import Spinner from '../../components/Spinner/Spinner.jsx';
 import Button from '../../components/Button/Button.jsx';
 
 
-const DetailsPedido = ({}) => {
+const DetailsPedido = ({navigateTo}) => {
   const { id } = useParams(); 
   const { pedidos } = usePedidos();
 
@@ -17,7 +17,7 @@ if (!pedidos || pedidos.length === 0) {
     </Spinner>
 }
 
-const pedido = pedidos.find(p => p.id === id);
+const pedido = pedidos.find(p => p._id === id);
 if (!pedido) return <p role="alert">No se encontró el pedido</p>;
   return (
     <div>
@@ -39,7 +39,7 @@ if (!pedido) return <p role="alert">No se encontró el pedido</p>;
              
             </table> 
               {pedido.items.map((item) => (
-                     <ProductoItem key={item.productoId} item={item} />
+                     <ProductoItem key={item.producto._id} item={item} />
                  ))}
           </div>
         
@@ -53,7 +53,7 @@ if (!pedido) return <p role="alert">No se encontró el pedido</p>;
       </div>
     </div >
       <div className = "button-pedidoDetails ">
-        <Button  onClick={() =>  navigateTo(`/historial-pedidos`)} aria-label={`Ver detalles del pedido ${pedido.id}`}>Volver</Button>
+        <Button  onClick={() => navigateTo('historial-pedidos')} aria-label={`Ver detalles del pedido ${pedido._id}`}>Volver</Button>
       </div>
     </div>
   );

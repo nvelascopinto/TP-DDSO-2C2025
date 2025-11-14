@@ -100,7 +100,7 @@ const SellerDashboard = () => {
               </thead>
               <tbody>
                 {currentProducts.map(p => (
-                  <tr key={p.id}>
+                  <tr key={p._id}>
                     <td data-label="Producto">{p.titulo}</td>
                     <td data-label="Precio">${p.precio.toFixed(2)}</td>
                     <td data-label="Stock">{p.stock}</td>

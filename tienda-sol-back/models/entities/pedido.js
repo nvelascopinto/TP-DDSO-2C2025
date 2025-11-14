@@ -15,6 +15,7 @@ export class Pedido {
     this.moneda = moneda
     this.direccionEntrega = direccionEntrega
     this.estado = estados["Pendiente"]
+    this.estadoNombre = this.estado.nombre
     this.fechaCreacion = new Date()
     this.historialCambioPedidos = []
   }
@@ -33,6 +34,7 @@ export class Pedido {
 
   actualizarEstado(nuevoEstado, quien, motivo) {
     this.estado.cambiarEstadoA(nuevoEstado, quien, this)
+    this.estadoNombre = nuevoEstado.nombre
     const cambio = new CambioEstadoPedido(nuevoEstado.nombre, this._id, quien.username, motivo)
     this.historialCambioPedidos.push(cambio)
   }

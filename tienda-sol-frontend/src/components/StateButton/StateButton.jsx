@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useAuth, usePedidos } from "../../contexts/AppContext.jsx";
 import './StateButton.css';
 import { TipoUsuario, EstadoPedido } from "../../../enums.js";
-import { api } from "../../services/mockService.js";
-import {cancelarPedido, cambiarEstadoPedido} from '../../services/pedidoService.js';
+// import { api } from "../../services/mockService.js";
+import {cambiarEstadoPedido} from '../../services/pedidoService.js';
 
 function PedidoAcciones({ pedido}) {
   const { currentUser } = useAuth();
-  const [estado, setEstado] = useState(pedido.estado);
+  const [estado, setEstado] = useState(pedido.estadoNombre);
   const {updatePedido} = usePedidos()
   useEffect(() => {
-      setEstado(pedido.estado)
-  }, [pedido.estado] )
+      setEstado(pedido.estadoNombre)
+  }, [pedido.estadoNombre] )
   const esComprador = currentUser?.tipo === TipoUsuario.COMPRADOR;
   const esVendedor = currentUser?.tipo === TipoUsuario.VENDEDOR;
 
@@ -28,7 +28,7 @@ function PedidoAcciones({ pedido}) {
   const handleCancelar = async () => {
     if (window.confirm("¿Estás seguro de que deseas cancelar este pedido?")) {
     try {
-          const pedidoActualizado = await api.cancelarPedido(pedido.id);
+          const pedidoActualizado = await cambiarEstadoPedido(pedido._id, EstadoPedido.CANCELADO, currentUser.username);
           updatePedido(pedidoActualizado)
           setEstado(EstadoPedido.CANCELADO);
             } catch (error) {
@@ -42,7 +42,7 @@ function PedidoAcciones({ pedido}) {
     const nuevoEstado = siguienteEstado[estado];
     if (nuevoEstado) {
       setEstado(nuevoEstado);
-      const pedidoActualizado = await api.cambiarEstadoPedido(pedido.id, nuevoEstado)
+      const pedidoActualizado = await cambiarEstadoPedido(pedido._id, nuevoEstado, currentUser.username)
       updatePedido(pedidoActualizado)}
     };
     const puedeCancelar = ![

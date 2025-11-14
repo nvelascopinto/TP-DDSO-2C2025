@@ -11,12 +11,12 @@ export const Moneda = {
 };
 
 export const EstadoPedido = {
-  PENDIENTE: 'PENDIENTE',
-  CONFIRMADO: 'CONFIRMADO',
-  EN_PREPARACION: 'EN_PREPARACION',
-  ENVIADO: 'ENVIADO',
-  ENTREGADO: 'ENTREGADO',
-  CANCELADO: 'CANCELADO',
+  PENDIENTE: 'Pendiente',
+  CONFIRMADO: 'Confirmado',
+  EN_PREPARACION: 'En Preparación',
+  ENVIADO: 'Enviado',
+  ENTREGADO: 'Entregado',
+  CANCELADO: 'Cancelado',
 };
 
 

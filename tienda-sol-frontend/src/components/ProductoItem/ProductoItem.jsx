@@ -9,7 +9,7 @@ const ProductoItem = ({ item }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    getProductoById(item.productoId)
+    getProductoById(item.producto._id)
       .then((prod) => {
         setProducto(prod);
       })
@@ -20,7 +20,7 @@ const ProductoItem = ({ item }) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [item.productoId]);
+  }, [item.producto._id]);
 
   if (loading) {
     return (
@@ -55,7 +55,7 @@ const ProductoItem = ({ item }) => {
           {producto.titulo}
         </h4>
         <p className="producto__price-unit">
-          ${item.subtotal / item.cantidad} {producto.moneda || 'ARS'}
+          ${item.precioUnitario} {producto.moneda || 'ARS'}
         </p>
       </div>
 
@@ -67,7 +67,7 @@ const ProductoItem = ({ item }) => {
         <div className="producto__subtotal">
           <span className="producto__label">Subtotal:</span>
           <span className="producto__value producto__value--price">
-            ${item.subtotal} {producto.moneda || 'ARS'}
+            ${item.precioUnitario * item.cantidad} {producto.moneda || 'ARS'}
           </span>
         </div>
       </div>

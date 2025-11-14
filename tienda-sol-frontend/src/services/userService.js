@@ -10,6 +10,17 @@ export function authenticate(user, password) {
     })
 }
 
+export function getPedidos(id) {
+  return apiBack.get(`/usuarios/${id}/pedidos`,
+    {
+      headers: { 'X-User': id }
+    }
+  )
+  .then((response) => {
+    return response.data
+  })
+}
+
 export function registerUser(userData) {
   return apiBack.post('/usuarios', userData)
     .then((response) => {

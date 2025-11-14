@@ -2,13 +2,13 @@
 import React, { createContext, useState, useContext, useCallback, useEffect} from 'react';
 import { TipoUsuario } from '/enums';
 import Toast from '../components/Toast/Toast';
-import {api} from '../services/mockService.js'
+import { getPedidos } from '../services/userService.js';
 import {authenticate} from '../services/userService.js'
 
 
 // usuarios
-const mockComprador = { id: 'user-1', nombre: 'Ana (Compradora)', email: 'ana@example.com', telefono: '123456789', tipo: TipoUsuario.COMPRADOR, fechaAlta: new Date().toISOString() };
-const mockVendedor = { id: 'user-2', nombre: 'Boutique de Ropa "Estilo Urbano"', email: 'estilo@example.com', telefono: '987654321', tipo: TipoUsuario.VENDEDOR, fechaAlta: new Date().toISOString() };
+//const mockComprador = { id: 'user-1', nombre: 'Ana (Compradora)', email: 'ana@example.com', telefono: '123456789', tipo: TipoUsuario.COMPRADOR, fechaAlta: new Date().toISOString() };
+//const mockVendedor = { id: 'user-2', nombre: 'Boutique de Ropa "Estilo Urbano"', email: 'estilo@example.com', telefono: '987654321', tipo: TipoUsuario.VENDEDOR, fechaAlta: new Date().toISOString() };
 
 // contextos
 const AuthContext = createContext(undefined);
@@ -132,17 +132,17 @@ const login = (username, password) => {
 
   const getPedidosUser = useCallback(() => {
 
-    if (!currentUser) return;
-      api.getPedidos() //mock
+    if (!currentUser) return 
+    getPedidos(currentUser.username)
       .then(data => {
         console.log(data)
         let userPedidos = [];
         if(currentUser.tipo === TipoUsuario.VENDEDOR) {
-          userPedidos = data.filter(p => p.vendedorId === currentUser.username);
+          userPedidos = data.filter(p => p.vendedor === currentUser.username);
           
           
         }else if(currentUser.tipo === TipoUsuario.COMPRADOR) {
-          userPedidos = data.filter(p => p.compradorId === currentUser.username);
+          userPedidos = data.filter(p => p.comprador === currentUser.username);
           
         }
         setPedidos(userPedidos);
@@ -154,7 +154,7 @@ const login = (username, password) => {
 
   const updatePedido = useCallback((pedidoActualizado) => {
     setPedidos(prev =>
-      prev.map(p => (p.id === pedidoActualizado.id ? pedidoActualizado : p))
+      prev.map(p => (p._id === pedidoActualizado._id ? pedidoActualizado : p))
     );
   }, []);
   return (

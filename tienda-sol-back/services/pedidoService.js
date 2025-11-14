@@ -58,10 +58,7 @@ class PedidoService {
         return pedidoRepository.update(pedido)
       })
       .then((pedidoActualizado) =>
-        notificacionService.crearSegunEstadoPedido(estadoNuevo.nombre, pedidoActualizado)
-      )
-      .then(() =>
-        "El pedido cambio a estado " + estadoNuevo.nombre + " correctamente."
+        notificacionService.crearSegunEstadoPedido(estadoNuevo.nombre, pedidoActualizado).then(() => pedidoActualizado)
       )
   }
 }

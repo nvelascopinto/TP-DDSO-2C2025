@@ -23,10 +23,9 @@ export async function getProductoById(id){
 //get producto by id
 
 export async function actualizarProducto (id, productData){
-    return apiBack.patch(`/productos/${id}`, {
-
-        body : productData
-        })
+    return apiBack.patch(`/productos/${id}`,
+        productData
+    )
     .then((response) => {
         return response.data
     })
@@ -37,12 +36,14 @@ export async function actualizarProducto (id, productData){
 }
 
 export async function crearProducto (usuario, productData){
-    return apiBack.post('/productos',{
-    body : productData
-    }, {
-      headers: {
-        'X-User': usuario,
-      }})
+    return apiBack.post('/productos',
+        productData, 
+        {
+            headers: {
+                'X-User': usuario,
+            }
+        }
+    )
     .then((response) => {
         return response.data
     })

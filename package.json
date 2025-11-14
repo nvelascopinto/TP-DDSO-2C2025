@@ -1,5 +1,13 @@
 {
-  "dependencies": {
-    "axios": "^1.13.0"
+  "name": "tienda-sol",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "tienda-sol-back",
+    "tienda-sol-frontend"
+  ],
+  "scripts": {
+    "back": "npm run dev --workspace=tienda-sol-back",
+    "front": "npm start --workspace=tienda-sol-frontend"
   }
 }

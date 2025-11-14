@@ -11,8 +11,16 @@ class PedidoRepository {
   }
 
   consultarHistorial(id) {
-    const historial = this.modelPedido.find({ comprador: id }).populate("items.producto")
-    return historial
+    const historial = this.modelPedido
+      .find({
+        // con el id que le llega del header busca los pedidos en caso de q sea el comprador o el vendedor
+        $or: [
+          { comprador: id },
+          { vendedor: id }   
+        ]
+      })
+      .populate("items.producto")
+    return historial;
   }
 
   update(pedido) {
