@@ -16,7 +16,6 @@ if (!pedidos || pedidos.length === 0) {
     Cargando ... 
     </Spinner>
 }
-
 const pedido = pedidos.find(p => p._id === id);
 if (!pedido) return <p role="alert">No se encontró el pedido</p>;
   return (
@@ -38,6 +37,9 @@ if (!pedido) return <p role="alert">No se encontró el pedido</p>;
               
              
             </table> 
+
+              
+            
               {pedido.items.map((item) => (
                      <ProductoItem key={item.producto._id} item={item} />
                  ))}

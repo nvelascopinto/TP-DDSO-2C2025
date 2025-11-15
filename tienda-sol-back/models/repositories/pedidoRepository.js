@@ -10,12 +10,13 @@ class PedidoRepository {
     return pedidoGuardado.save()
   }
 
-  getNumeroPedido() {
-    return this.modelPedido
+  async getNumeroPedido() {
+    const ultimoPedido = await this.modelPedido
       .findOne()
       .sort({ numero: -1 })
       .select('numero')
       .lean();
+    return ultimoPedido ? ultimoPedido.numero : 0;
 }
 
   consultarHistorial(id) {

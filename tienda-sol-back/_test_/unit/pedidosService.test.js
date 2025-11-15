@@ -1,27 +1,28 @@
-import { DireccionEntrega } from "../models/entities/direccionEntrega.js"
-import { ItemPedido } from "../models/entities/itemPedido.js"
-import { Pedido } from "../models/entities/pedido.js"
-import { Producto } from "../models/entities/producto.js"
-import { Usuario } from "../models/entities/usuario.js"
-import { Vendedor } from "../models/entities/vendedor.js"
-import { estados } from "../models/entities/estadosPedido.js"
-import { UsuarioSinPermisoError } from "../errors/authorizationError.js"
-import { DomainMultipleErrors, EstadoInvalidoError } from "../errors/domainValidationError.js"
-import { PedidoInexistenteError, ProductoInexistenteError } from "../errors/notFoundError.js"
-import { ProductoStockInsuficienteError, CambioEstadoInvalidoError, ProductoInactivoError } from "../errors/conflicError.js"
+import { DireccionEntrega } from "../../models/entities/direccionEntrega.js"
+import { ItemPedido } from "../../models/entities/itemPedido.js"
+import { Pedido } from "../../models/entities/pedido.js"
+import { Producto } from "../../models/entities/producto.js"
+import { Usuario } from "../../models/entities/usuario.js"
+import { Vendedor } from "../../models/entities/vendedor.js"
+import { estados } from "../../models/entities/estadosPedido.js"
+import { UsuarioSinPermisoError } from "../../errors/authorizationError.js"
+import { DomainMultipleErrors, EstadoInvalidoError } from "../../errors/domainValidationError.js"
+import { PedidoInexistenteError, ProductoInexistenteError } from "../../errors/notFoundError.js"
+import { ProductoStockInsuficienteError, CambioEstadoInvalidoError, ProductoInactivoError } from "../../errors/conflicError.js"
 
-jest.mock("../models/repositories/pedidoRepository.js", () => ({
+jest.mock("../../models/repositories/pedidoRepository.js", () => ({
   __esModule: true,
   default: {
     crear: jest.fn(),
     findById: jest.fn(),
     consultarHistorial: jest.fn(),
     cantidadVentasProducto: jest.fn(),
-    update: jest.fn()
+    update: jest.fn(),
+    getNumeroPedido: jest.fn().mockResolvedValue(1)
   }
 }))
 
-jest.mock("../services/productoService.js", () => ({
+jest.mock("../../services/productoService.js", () => ({
   __esModule: true,
   default: {
     obtenerProducto: jest.fn(),
@@ -30,7 +31,7 @@ jest.mock("../services/productoService.js", () => ({
   }
 }))
 
-jest.mock("../services/notificacionService.js", () => ({
+jest.mock("../../services/notificacionService.js", () => ({
   __esModule: true,
   default: {
     crearSegunEstadoPedido: jest.fn(),
@@ -38,10 +39,10 @@ jest.mock("../services/notificacionService.js", () => ({
   }
 }))
 
-import pedidoService from "../services/pedidoService.js"
-import mockPedidoRepository from "../models/repositories/pedidoRepository.js"
-import mockProductoService from "../services/productoService.js"
-import mockNotificacionService from "../services/notificacionService.js"
+import pedidoService from "../../services/pedidoService.js"
+import mockPedidoRepository from "../../models/repositories/pedidoRepository.js"
+import mockProductoService from "../../services/productoService.js"
+import mockNotificacionService from "../../services/notificacionService.js"
 
 describe("PedidosService", () => {
   beforeEach(() => {
@@ -465,6 +466,8 @@ describe("PedidosService", () => {
     it("deberia cambiar de estado de pendiente a enviado", async () => {
       const mockPedido = new Pedido("juancho", "juancito", [itemPed], "PESO_ARG", direEntrega)
       mockPedido._id = 1
+      mockPedido.estadoNombre = "Pendiente"
+      mockPedido.historialCambioPedidos = []  // ← IMPORTANTE
       mockPedidoRepository.findById.mockResolvedValue(mockPedido)
 
       const cambioEstadoJSON = {
@@ -473,9 +476,14 @@ describe("PedidosService", () => {
       }
 
       const mockPedidoEnviado = new Pedido("juancho", "juancito", [itemPed], "PESO_ARG", direEntrega)
-
       mockPedidoEnviado._id = 1
+      mockPedidoEnviado.estadoNombre = "Enviado"
       mockPedidoEnviado.estado = estados["Enviado"]
+
+      mockPedidoEnviado.historialCambioPedidos = [
+        { motivo: "enviado", estado: "Enviado" }
+      ]
+
       mockPedidoRepository.update.mockResolvedValue(mockPedidoEnviado)
       mockNotificacionService.crearSegunEstadoPedido.mockResolvedValue({
         mensaje: "El pedido 1 cambio a estado ENVIADO"
@@ -483,7 +491,8 @@ describe("PedidosService", () => {
 
       const result = await pedidoService.cambioEstado(cambioEstadoJSON.estado, vendedor, cambioEstadoJSON.motivo, 1)
 
-      expect(result).toBe("El pedido cambio a estado Enviado correctamente.")
+      expect(result.estadoNombre).toBe("Enviado")
+      expect(result.historialCambioPedidos).toHaveLength(1)
       expect(mockPedidoRepository.findById).toHaveBeenCalledTimes(1)
       expect(mockNotificacionService.crearSegunEstadoPedido).toHaveBeenCalledTimes(1)
     })

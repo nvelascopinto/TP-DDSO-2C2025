@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import './FiltrosStore.css';
 import {CATEGORIAS} from '../../../enums.js'
@@ -16,6 +15,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { Add, Remove } from '@mui/icons-material';
 import { InputNumber } from 'antd';
 import { Slider } from 'antd';
+
 export const FiltrosStore = ({
     setMinPrecio,
     minPrecio,

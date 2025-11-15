@@ -18,7 +18,7 @@ afterAll(async () => {
 
 describe("pedidosController", () => {
 
-  it("Crea un pedido correctamente", async () => {
+  it("Crear un pedido correctamente", async () => {
     // ------------------------------
     // BASE DE DATOS PARA LOS TESTS
     // ------------------------------
@@ -30,6 +30,7 @@ describe("pedidosController", () => {
       email: "comprador@gmail.com",
       telefono: "+5491112345678",
       tipoUsuario: "Comprador",
+      fechaAlta: new Date()
     })
 
     const vendedor = await UsuarioModel.create({
@@ -39,6 +40,7 @@ describe("pedidosController", () => {
       email: "vendedor@gmail.com",
       telefono: "+5491112345678",
       tipoUsuario: "Vendedor",
+      fechaAlta: new Date()
     })
     
     const producto = await ProductoModel.create({
@@ -58,7 +60,7 @@ describe("pedidosController", () => {
     // ------------------------------
 
     const body = {
-      vendedor: vendedor._id,
+      vendedor: vendedor.username,
       items: [
         { producto: producto._id, cantidad: 2 }
       ],
@@ -70,7 +72,7 @@ describe("pedidosController", () => {
         provincia: "Provincia falsa",
         pais: "Pais falso"
       },
-      moneda: "ARS"
+      moneda: "PESO_ARG"
     }
 
     const res = await request(app)
@@ -82,16 +84,20 @@ describe("pedidosController", () => {
     // VALIDACIONES
     // ------------------------------
 
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(201)
 
-    expect(res.body).toHaveProperty("_id");
-    expect(res.body.moneda).toBe("PESO_ARS");
+    expect(res.body).toHaveProperty("_id")
+    expect(res.body.direccionEntrega).toHaveProperty("_id")
+    expect(res.body.items[0]).toHaveProperty("_id")
+    expect(res.body.items[0].producto).toHaveProperty("_id")
 
-    expect(res.body.items).toHaveLength(1);
-    expect(res.body.items[0].cantidad).toBe(2);
+    expect(res.body.moneda).toBe("PESO_ARG")
+    expect(res.body.items).toHaveLength(1)
+    expect(res.body.items[0].cantidad).toBe(2)
+    expect(res.body.numero).toBe(1)
+    expect(res.body.total).toBe(200)
 
-    expect(res.body.vendedor).toBe(vendedor._id);
-
-    expect(res.body.comprador).toBe("usuarioTest");
+    expect(res.body.vendedor).toBe(vendedor.username)
+    expect(res.body.comprador).toBe(comprador.username)
   })
 })

@@ -23,7 +23,7 @@ const LoginPage = ({ onLogin }) => {
             data.username,
             data.password
         ).then(()=>{}).catch((error) => {
-        if (errpr?.response) {
+        if (error?.response) {
         const msg = error.response.message.toLowerCase();
         if (msg.includes('contraseña') || msg.includes('password')) {
           setErrorMsg('La contraseña ingresada es incorrecta.');

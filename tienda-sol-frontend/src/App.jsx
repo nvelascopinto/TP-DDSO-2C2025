@@ -160,7 +160,7 @@ const AppContent = () => {
             path="/notificaciones" 
             element={
               currentUser 
-                ? <NotificationsPage navigateTo={() => navigateTo('home')} />
+                ? <NotificationsPage navigateTo={navigateTo} />
                 : <Navigate to="/login" replace />
             } 
           />

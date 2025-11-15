@@ -141,7 +141,7 @@ const StorePage = ({ tienda  }) => {
             </IconButton>
             </div>
         </div> */}
-        <div className="store-page__search-bar">
+        <div className="store-page__search-bar" >
             <Search 
               placeholder="Buscar productos..." 
               value={searchTerm}

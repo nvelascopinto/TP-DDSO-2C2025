@@ -64,9 +64,9 @@ const ProductoItem = ({ item }) => {
           <span className="producto__label">Cantidad: {item.cantidad}</span>
         </div>
         <div className="producto__subtotal">
-          <span className="producto__label">Subtotal:</span>
+          <span className="producto__label">Subtotal:  ${item.precioUnitario * item.cantidad} {producto.moneda || 'ARS'}</span>
           <span className="producto__value producto__value--price">
-            ${item.precioUnitario * item.cantidad} {producto.moneda || 'ARS'}
+           
           </span>
         </div>
       </div>

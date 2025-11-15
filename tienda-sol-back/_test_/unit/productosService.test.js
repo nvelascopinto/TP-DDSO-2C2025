@@ -4,7 +4,7 @@ import { Usuario } from "../../models/entities/usuario.js"
 import { Vendedor } from "../../models/entities/vendedor.js"
 import { UsuarioSinPermisoError } from "../../errors/authorizationError.js"
 
-jest.mock("../models/repositories/productoRepository.js", () => ({
+jest.mock("../../models/repositories/productoRepository.js", () => ({
   __esModule: true,
   default: {
     findById: jest.fn(),
@@ -13,7 +13,7 @@ jest.mock("../models/repositories/productoRepository.js", () => ({
   }
 }))
 
-jest.mock("../services/pedidoService.js", () => ({
+jest.mock("../../services/pedidoService.js", () => ({
   __esModule: true,
   default: {
     cantidadVentasProducto: jest.fn()

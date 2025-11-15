@@ -160,7 +160,7 @@ const RegisterPage = ({ onRegister }) => {
           <div className="register-form__actions">
             <Button
               type="submit"
-              variant={userType === 'Comprador' ? 'primary' : 'secondary'}
+              variant="primary"
               className="button--full-width" aria-label={
               userType === 'Comprador'
               ? 'Registrarse como Comprador'

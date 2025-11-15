@@ -3,7 +3,7 @@ import { UserDTO } from "../../models/DTO/userDTO.js"
 import { Usuario } from "../../models/entities/usuario.js"
 import { UsuarioInexistenteError } from "../../errors/notFoundError.js"
 
-jest.mock("../models/repositories/usuarioRepository.js", () => ({
+jest.mock("../../models/repositories/usuarioRepository.js", () => ({
   __esModule: true,
   default: {
     findById: jest.fn(),

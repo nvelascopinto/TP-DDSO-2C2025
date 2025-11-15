@@ -157,13 +157,13 @@ const Header = ({ navigateTo, currentRoute }) => {
                 open={open}
                 width={500}
               >
-              <Cart handle={handleFinalizarCompra} onClose={onClose} isProcessing={isProcessing} />
+              <Cart handle={handleFinalizarCompra} onClose={onClose} isProcessing={isProcessing} navigateTo={navigateTo} />
 
           </Drawer>
 
           <Button
           className={`header__nav-link header__home-icon ${activeTab === "home" ? "active" : ""}`}
-          onClick={() => handleNavigate("home")} variant="secondary">
+          onClick={() => handleNavigate("home")}>
             <span className="material-symbols-outlined">home</span>
           </Button>
 

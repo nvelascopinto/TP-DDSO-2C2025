@@ -8,18 +8,17 @@
   color: var(--color-accent-secondary);
   opacity: 0.9;
   transition: color 0.2s ease-in-out, opacity 0.2s ease-in-out;
-
 }
 
 .notification-bell:hover .icon {
   opacity: 1;
-  
 }
 
 .notification-bell__badge {
   position: absolute;
-  top: -0.4rem;  
-  right: -0.4rem; 
+  top: 0;
+  right: 0.5;
+  transform: translate(50%, -50%);
   background-color: var(--color-accent-highlight);
   color: var(--color-bordo-negro);
   font-size: 0.75rem;

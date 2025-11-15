@@ -4,7 +4,7 @@ import { UsuarioSinPermisoError } from "../../errors/authorizationError.js"
 import { YaLeidaError } from "../../errors/conflicError.js"
 import { Notificacion } from "../../models/entities/notificacion.js"
 
-jest.mock("../models/repositories/notificacionRepository.js", () => ({
+jest.mock("../../models/repositories/notificacionRepository.js", () => ({
   __esModule: true,
   default: {
     crear: jest.fn((notificacion) => Promise.resolve(notificacion)),
@@ -37,21 +37,22 @@ describe("NotificacionService", () => {
     pedidoMock = {
       comprador: compradorMock,
       vendedor: vendedorMock,
+      numero: 1,
       _id: 1
     }
   })
 
   it("debe notificar si el estado es en_preparacion", async () => {
-    const resultado = await notificacionService.crearSegunEstadoPedido(estados["En Preparación"], pedidoMock)
+    const resultado = await notificacionService.crearSegunEstadoPedido(estados["En Preparación"].nombre, pedidoMock)
 
-    const notificacionMock = new Notificacion(vendedorMock, "El pedido 1 cambio a estado En Preparación",pedidoMock._id)
+    const notificacionMock = new Notificacion(vendedorMock, "El pedido # 1 cambio a estado En Preparación",pedidoMock._id)
     notificacionMock.fechaAlta = fechaFija
 
     expect(resultado).toEqual(notificacionMock)
   })
 
   it("debe crear una notificación con el mensaje correcto y enviarla al repositorio", async () => {
-  const notificacionMock = new Notificacion(vendedorMock, "Un nuevo pedido fue realizado: #1",pedidoMock._id)
+  const notificacionMock = new Notificacion(compradorMock, "Un nuevo pedido fue realizado: #1",pedidoMock._id)
   notificacionMock.fechaAlta = fechaFija
 
   const resultado = await notificacionService.crearSegunPedido(pedidoMock)

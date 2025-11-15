@@ -141,7 +141,8 @@ if (loading) {
               )}
                 {notif.pedido && (
                 <Button 
-                  onClick={() => navigateTo(`historial-pedidos/${notif.pedido}`, null, notif.pedido)} 
+                  onClick={() => { 
+                        navigateTo(`historial-pedidos/${notif.pedido}`, null, notif.pedido)}}
                   aria-label={`Ver detalles del pedido ${notif.pedido}`}
                   className="notification-item__action"
                 >
