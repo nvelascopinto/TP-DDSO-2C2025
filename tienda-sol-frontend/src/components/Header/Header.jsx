@@ -5,6 +5,7 @@ import './Header.css';
 import logo from "../../assets/logo.svg";
 import {Drawer } from 'antd';
 import { Cart } from '../Cart/Cart.jsx';
+import Button from "../Button/Button.jsx";
 
 const Header = ({ navigateTo, currentRoute }) => {
   const { currentUser, logout } = useAuth();
@@ -14,6 +15,7 @@ const Header = ({ navigateTo, currentRoute }) => {
   const [activeTab, setActiveTab] = useState("home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  
   const handleLogout = () => {
     logout();
     navigateTo('home');
@@ -158,6 +160,12 @@ const Header = ({ navigateTo, currentRoute }) => {
               <Cart handle={handleFinalizarCompra} onClose={onClose} isProcessing={isProcessing} />
 
           </Drawer>
+
+          <Button
+          className={`header__nav-link header__home-icon ${activeTab === "home" ? "active" : ""}`}
+          onClick={() => handleNavigate("home")} variant="secondary">
+            <span className="material-symbols-outlined">home</span>
+          </Button>
 
           {currentUser && (
             <button

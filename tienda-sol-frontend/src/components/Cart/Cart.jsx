@@ -3,12 +3,11 @@ import { useCart } from "../../contexts/AppContext.jsx";
 import CartItem from "../CartItem/CartItem.jsx";
 import Button from "../Button/Button.jsx";
 import './Cart.css';
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export const Cart = ({ handle, isProcessing , onClose}) => {
+export const Cart = ({ handle, isProcessing , onClose, navigateTo}) => {
   const { cartItems, getCartTotal, clearCart } = useCart();
-  
-
+  const navigate = useNavigate();
   
 
   return (
@@ -19,7 +18,7 @@ export const Cart = ({ handle, isProcessing , onClose}) => {
           <Button 
             onClick={() => {
               if (onClose) onClose();
-              navigateTo('home');
+              navigate('home');
             }}
             variant="primary"
           >

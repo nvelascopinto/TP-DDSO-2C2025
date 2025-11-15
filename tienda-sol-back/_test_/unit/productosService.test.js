@@ -1,8 +1,8 @@
-import { ProductoDTO } from "../models/DTO/productoDTO.js"
-import { Producto } from "../models/entities/producto.js"
-import { Usuario } from "../models/entities/usuario.js"
-import { Vendedor } from "../models/entities/vendedor.js"
-import { UsuarioSinPermisoError } from "../errors/authorizationError.js"
+import { ProductoDTO } from "../../models/DTO/productoDTO.js"
+import { Producto } from "../../models/entities/producto.js"
+import { Usuario } from "../../models/entities/usuario.js"
+import { Vendedor } from "../../models/entities/vendedor.js"
+import { UsuarioSinPermisoError } from "../../errors/authorizationError.js"
 
 jest.mock("../models/repositories/productoRepository.js", () => ({
   __esModule: true,
@@ -20,9 +20,9 @@ jest.mock("../services/pedidoService.js", () => ({
   }
 }))
 
-import productoService from "../services/productoService.js"
-import mockProductoRepository from "../models/repositories/productoRepository.js"
-import mockPedidoService from "../services/pedidoService.js"
+import productoService from "../../services/productoService.js"
+import mockProductoRepository from "../../models/repositories/productoRepository.js"
+import mockPedidoService from "../../services/pedidoService.js"
 
 describe("ProductosService", () => {
   beforeEach(() => {

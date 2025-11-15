@@ -1,7 +1,7 @@
-import { UsuarioDTO } from "../models/DTO/usuarioDTO.js"
-import { UserDTO } from "../models/DTO/userDTO.js"
-import { Usuario } from "../models/entities/usuario.js"
-import { UsuarioInexistenteError } from "../errors/notFoundError.js"
+import { UsuarioDTO } from "../../models/DTO/usuarioDTO.js"
+import { UserDTO } from "../../models/DTO/userDTO.js"
+import { Usuario } from "../../models/entities/usuario.js"
+import { UsuarioInexistenteError } from "../../errors/notFoundError.js"
 
 jest.mock("../models/repositories/usuarioRepository.js", () => ({
   __esModule: true,
@@ -11,8 +11,8 @@ jest.mock("../models/repositories/usuarioRepository.js", () => ({
   }
 }))
 
-import usuarioService from "../services/usuarioService.js"
-import mockUsuarioRepository from "../models/repositories/usuarioRepository.js"
+import usuarioService from "../../services/usuarioService.js"
+import mockUsuarioRepository from "../../models/repositories/usuarioRepository.js"
 
 describe("UsuarioService", () => {
   beforeEach(() => {

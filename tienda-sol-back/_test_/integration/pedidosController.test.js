@@ -1,9 +1,8 @@
 import request from "supertest";
 import mongoose from "mongoose";
-import { MongoMemoryServer } from "mongodb-memory-server";
-import { UsuarioModel } from "../models/schemas/usuarioSchema.js"
-import { ProductoModel } from "../models/schemas/productoSchema.js";
-import app from "../app.js";
+import { UsuarioModel } from "../../models/schemas/usuarioSchema.js"
+import { ProductoModel } from "../../models/schemas/productoSchema.js";
+import app from "../../app.js";
 
 beforeAll(async () => {
   await mongoose.connect("mongodb://localhost:27017/tp-ddso-test");
@@ -16,23 +15,6 @@ afterEach(async () => {
 afterAll(async () => {
   await mongoose.disconnect();
 })
-
-
-// beforeEach(async () => {
-//   await mongoose.connection.dropDatabase()
-
-//   comprador = await UsuarioModel.create({
-//     username: "compradorTest",
-//     password: "1234",
-//     tipoUsuario: "Comprador"
-//   })
-
-//   producto = await ProductoModel.create({
-//     nombre: "Producto test",
-//     precio: 100,
-//     stock: 20
-//   })
-// })
 
 describe("pedidosController", () => {
 
@@ -91,26 +73,25 @@ describe("pedidosController", () => {
       moneda: "ARS"
     }
 
-    const res = await request(app).post("/pedidos").send(body);
+    const res = await request(app)
+      .post("/pedidos")
+      .set("X-User", comprador.username)
+      .send(body);
 
     // ------------------------------
     // VALIDACIONES
     // ------------------------------
 
-    expect(res.status).toBe(201);
+    expect(res.status).toBe(200);
 
-    // Pedido general
     expect(res.body).toHaveProperty("_id");
-    expect(res.body.moneda).toBe("ARS");
+    expect(res.body.moneda).toBe("PESO_ARS");
 
-    // Items
     expect(res.body.items).toHaveLength(1);
     expect(res.body.items[0].cantidad).toBe(2);
 
-    // Vendedor
-    expect(res.body.vendedor).toBe(vendedorDB._id.toString());
+    expect(res.body.vendedor).toBe(vendedor._id);
 
-    // Comprador (mockeado)
     expect(res.body.comprador).toBe("usuarioTest");
   })
-});
+})

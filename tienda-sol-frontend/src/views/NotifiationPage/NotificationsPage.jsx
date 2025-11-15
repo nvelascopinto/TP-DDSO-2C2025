@@ -13,7 +13,7 @@ const NotificationsPage = ({ navigateTo }) => {
   //const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('unread');
-
+  
   /*const fetchNotifications = async () => {
     if (currentUser) {
       try {

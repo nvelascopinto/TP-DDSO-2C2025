@@ -172,7 +172,7 @@ describe("PedidosService", () => {
       )
       const itemPed = new ItemPedido(item1, 1, 15000)
       const itemPed2 = new ItemPedido(item2, 4, 1000)
-      const mockPedido = new Pedido("pepa", "pepe", [itemPed, itemPed2], "PESO_ARG", direEntrega)
+      const mockPedido = new Pedido("pepa", "pepe", [itemPed, itemPed2], "PESO_ARG", direEntrega, 1)
       mockPedido._id = 1
       mockProductoService.obtenerProducto.mockReturnValueOnce(item1).mockReturnValueOnce(item2)
 
