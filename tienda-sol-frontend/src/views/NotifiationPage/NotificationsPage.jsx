@@ -1,22 +1,24 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import { useAuth } from '../../contexts/AppContext.jsx';
-import { api } from '../../services/mockService.js';
+//import { api } from '../../services/mockService.js';
 import Spinner from '../../components/Spinner/Spinner.jsx';
 import Button from '../../components/Button/Button.jsx';
 import './NotificationsPage.css';
+import {getNotificaciones, getNotificacionesNoLeidas, getNotificacionesLeidas, marcarNotificacionComoLeida} from '../../services/notificacionService.js';
 
 const NotificationsPage = ({ navigateTo }) => {
   const { currentUser } = useAuth();
-  const [notifications, setNotifications] = useState([]);
+  const [filteredNotifications, setFilteredNotifications] = useState([]);
+  //const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('unread');
 
-  const fetchNotifications = async () => {
+  /*const fetchNotifications = async () => {
     if (currentUser) {
       try {
         setLoading(true);
-        const data = await api.getNotificaciones(currentUser.username);
+        const data = await notificacionService.getNotificaciones(currentUser.username);
         setNotifications(data);
       } catch (error) {
         console.error("Error fetching notifications:", error);
@@ -24,25 +26,56 @@ const NotificationsPage = ({ navigateTo }) => {
         setLoading(false);
       }
     }
-  };
+  };*/
 
-  useEffect(() => {
+  /*useEffect(() => {
     fetchNotifications();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser]);
+  }, [currentUser]);*/
+
+  useEffect(() => {
+  const fetchFilteredNotifications = async () => {
+    setLoading(true);
+    try {
+      let result;
+      switch (filter) {
+        case 'read':
+          result = await getNotificacionesLeidas(currentUser.username);
+          break;
+        case 'unread':
+          result = await getNotificacionesNoLeidas(currentUser.username);
+          break;
+        case 'all':
+        default:
+          result = await getNotificaciones(currentUser.username); 
+          break;
+      }
+      setFilteredNotifications(result);
+    } catch (error) {
+      console.error("Error al cargar notificaciones:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (currentUser?.username) {
+    fetchFilteredNotifications();
+  }
+}, [filter, currentUser.username]);
 
   const handleMarkAsRead = async (id) => {
     try {
-      await api.marcarNotificacionComoLeida(id);
-      setNotifications(prev =>
-        prev.map(n => n.id === id ? { ...n, leida: true } : n)
+      await marcarNotificacionComoLeida(id, currentUser.username);
+      setFilteredNotifications(prev =>
+       prev.map(n => n._id === id ? { ...n, leida: true } : n)
       );
     } catch (error) {
       console.error("Error marking notification as read:", error);
     }
   };
 
-  const filteredNotifications = useMemo(() => {
+
+  /*const filteredNotifications = useMemo(() => {
     switch (filter) {
       case 'read':
         return notifications.filter(n => n.leida);
@@ -52,9 +85,12 @@ const NotificationsPage = ({ navigateTo }) => {
       default:
         return notifications;
     }
-  }, [notifications, filter]);
+  }, [notifications, filter]); */
 
-  if (loading) {
+
+
+
+if (loading) {
     return <Spinner role="status"
         aria-busy="true"
         aria-live="polite"
@@ -87,7 +123,7 @@ const NotificationsPage = ({ navigateTo }) => {
       ) : (
         <div className="notifications-list">
           {filteredNotifications.map((notif) => (
-            <div key={notif.id} className={`notification-item ${notif.leida ? 'notification-item--read' : ''}`}>
+            <div key={notif._id} className={`notification-item ${notif.leida ? 'notification-item--read' : ''}`}>
               <div className="notification-item__content">
                 <p className="notification-item__message">{notif.mensaje}</p>
                 <p className="notification-item__date">
@@ -96,7 +132,7 @@ const NotificationsPage = ({ navigateTo }) => {
               </div>
               {!notif.leida && (
                 <button
-                  onClick={() => handleMarkAsRead(notif.id)}
+                  onClick={() => handleMarkAsRead(notif._id)}
                   className="notification-item__action"
                 >
                   Marcar como leída

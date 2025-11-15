@@ -38,6 +38,16 @@ class notificacionController {
         res.status(200).json(notificacionesNoLeidas)
       )
   }
+
+    getNotificaciones(req, res) {
+    return Promise.resolve()
+      .then(() => 
+        notificacionService.getNotificaciones(req.user.username)
+      )
+      .then((notificaciones) =>
+        res.status(200).json(notificaciones)
+      )
+  }
 }
 
 export default new notificacionController()

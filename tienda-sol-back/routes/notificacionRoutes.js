@@ -15,4 +15,8 @@ notificacionRouter.get("/noleidas", authenticateUser("X-User"), (req, res) => {
   return notificacionController.getNoLeidas(req, res)
 })
 
+notificacionRouter.get("/", authenticateUser("X-User"), (req, res) => {
+  return notificacionController.getNotificaciones(req, res)
+})
+
 export default notificacionRouter

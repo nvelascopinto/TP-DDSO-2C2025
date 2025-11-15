@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AppContext.jsx';
-import { api } from '../../services/mockService.js';
+//import { api } from '../../services/mockService.js';
 import './NotificationBell.css';
+import {getNotificacionesNoLeidas }from '../../services/notificacionService.js';
 
 const NotificationBell = ({ onClick }) => {
     const { currentUser } = useAuth();
@@ -10,7 +11,7 @@ const NotificationBell = ({ onClick }) => {
     useEffect(() => {
         if (currentUser) {
             const fetchNotifications = async () => {
-                const notifs = await api.getNotificacionesNoLeidas(currentUser.id);
+                const notifs = await getNotificacionesNoLeidas(currentUser.username);
                 setUnreadCount(notifs.length);
             };
             fetchNotifications();

@@ -14,6 +14,10 @@ class notificacionRepository {
     return this.model.find({ usuarioDestino: idUsuario, leida: true })
   }
 
+  getNotificaciones(idUsuario) {
+    return this.model.find({ usuarioDestino: idUsuario})
+  }
+
   getNotificacionesNoLeidas(idUsuario) {
     return this.model.find({
       usuarioDestino: idUsuario,

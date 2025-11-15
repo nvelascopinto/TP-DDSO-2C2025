@@ -15,7 +15,7 @@ class NotificacionService {
   }
 
   notificarEstadoPedido(estado, destinatario, idPedido) {
-    const notificacion = new Notificacion(destinatario, "El pedido " + idPedido + " cambio a estado " + estado.nombre)
+    const notificacion = new Notificacion(destinatario, "El pedido " + idPedido + " cambio a estado " + estado)
     return notificacionRepository.crear(notificacion)
   }
 
@@ -27,6 +27,10 @@ class NotificacionService {
     return notificacionRepository.getNotificacionesNoLeidas(idUsuario)
   }
 
+  getNotificaciones(idUsuario) {
+    return notificacionRepository.getNotificaciones(idUsuario)
+  }
+
   getNotificacion(idNotificacion) {
     return notificacionRepository.getById(idNotificacion).then((notificacion) => {
       if (!notificacion) throw new NotificacionInexistenteError(idNotificacion)
@@ -34,10 +38,10 @@ class NotificacionService {
     })
   }
 
-  marcarComoLeida(idNotificacion, usuario) {
+  marcarComoLeida(idNotificacion, idUsuario) {
     return this.getNotificacion(idNotificacion)
       .then((notificacion) => {
-        notificacion.marcarComoleida(usuario) //valida al marcar como leida
+        notificacion.marcarComoleida(idUsuario) //valida al marcar como leida
         return notificacionRepository.update(notificacion)
       })
   }

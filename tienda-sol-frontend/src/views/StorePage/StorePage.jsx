@@ -18,7 +18,7 @@ import { Input, Space } from 'antd';
 const { Search } = Input;
 
 const StorePage = ({ tienda  }) => {
-  // CAMBIO IMPORTANTE: Inicializa con null para detectar cuando no hay datos
+  // Inicializa con null para detectar cuando no hay datos
   const [productos, setProductos] = useState(null);
   const [loading, setLoading] = useState(true);
     const [shouldFetch, setShouldFetch] = useState(true);
