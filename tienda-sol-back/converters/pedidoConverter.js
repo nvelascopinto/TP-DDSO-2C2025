@@ -17,7 +17,7 @@ export function toPedidoDTO(nuevoPedidoJSON) {
   )
 }
 
-export function fromPedidoDTO(pedidoDTO, comprador, productos) {
+export function fromPedidoDTO(pedidoDTO, comprador, productos, numeroPedido) {
   return Promise.resolve()
     .then(() => {
       let errores = []
@@ -35,7 +35,8 @@ export function fromPedidoDTO(pedidoDTO, comprador, productos) {
         vendedorUsername,
         fromItemsDTO(pedidoDTO.itemsDTO, productos),
         pedidoDTO.moneda,
-        fromDireccionDTO(pedidoDTO.direccionEntregaDTO)
+        fromDireccionDTO(pedidoDTO.direccionEntregaDTO),
+        numeroPedido
       )
     })
 }

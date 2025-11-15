@@ -183,6 +183,15 @@ const AppContent = () => {
           />
 
           <Route 
+            path="/notificaciones/:id" 
+            element={
+              currentUser
+                ? <DetailsPedido navigateTo={navigateTo}/>
+                : <Navigate to="/" replace />
+            } 
+          />
+
+          <Route 
             path="/login" 
             element={
               currentUser 

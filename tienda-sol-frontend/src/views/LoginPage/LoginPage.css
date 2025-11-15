@@ -27,14 +27,14 @@
   font-size: 1rem;
   border: none;
   background: none;
-  border-bottom: 2px solid var(--color-accent-primary);
-  color: var(--color-accent-primary);
+  border-bottom: 2px solid var(--color-accent-secondary);
+  color: var(--color-accent-secondary);
 }
 
 @media (min-width: 768px) {
   .login-form__tab  {
     font-size: 1rem;
-    border-bottom: 3px solid var(--color-accent-primary);
+    border-bottom: 3px solid var(--color-accent-secondary);
     font-weight: 590;
      padding: 0.7rem 0.25rem;
   }
@@ -43,15 +43,13 @@
 @media (min-width: 1024px) {
   .login-form__tab {
     font-size: 1.125rem;
-    border-bottom: 3.3px solid var(--color-accent-primary);
+    border-bottom: 3.3px solid var(--color-accent-secondary);
     font-weight: 600;
      padding: 1rem 0.25rem;
   }
 }
 
-.login-form__tab:hover {
-  background-color: var(--color-gray-100);
-}
+
 
 .login-form__tab--active {
   border-bottom-width: 4px;

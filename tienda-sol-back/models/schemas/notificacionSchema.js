@@ -22,6 +22,11 @@ const notificacionSchema = new mongoose.Schema(
     },
     fechaLeida: {
       type: Date
+    },
+    pedido: {
+      type: String,
+      ref: "Pedido",
+      required: true
     }
   },
   {

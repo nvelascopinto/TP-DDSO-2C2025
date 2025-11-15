@@ -17,6 +17,9 @@ const PedidosContext = createContext(undefined);
 
 // providers
 export const AppProvider = ({ children }) => {
+  
+    
+
   const [currentUser, setCurrentUser] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [toastMessage, setToastMessage] = useState(null);

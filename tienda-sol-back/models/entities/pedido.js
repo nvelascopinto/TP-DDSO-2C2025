@@ -7,7 +7,8 @@ import { ProductosDiferentesVendedorError } from "../../errors/domainValidationE
 import { UsuarioSinPermisoError } from "../../errors/authorizationError.js"
 
 export class Pedido {
-  constructor(comprador, vendedor, items, moneda, direccionEntrega) {
+  
+  constructor(comprador, vendedor, items, moneda, direccionEntrega, numero) {
     this.comprador = comprador
     this.vendedor = vendedor
     this.items = items
@@ -18,7 +19,9 @@ export class Pedido {
     this.estadoNombre = this.estado.nombre
     this.fechaCreacion = new Date()
     this.historialCambioPedidos = []
+    this.numero = numero 
   }
+
 
   asignarComprador(comprador) {
     this.comprador = comprador

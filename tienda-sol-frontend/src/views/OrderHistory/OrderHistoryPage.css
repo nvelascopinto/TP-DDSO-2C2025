@@ -198,7 +198,7 @@
 }
 
 .order-item__total span {
-  color: var(--color-accent-primary);
+  color: var(--color-accent-secondary);
 }
 
 @media (min-width: 768px) {

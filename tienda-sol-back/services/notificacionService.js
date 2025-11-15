@@ -4,18 +4,21 @@ import { NotificacionInexistenteError } from "../errors/notFoundError.js"
 
 class NotificacionService {
   crearSegunPedido(pedido) {
-    const mensaje = "ID NUEVO PEDIDO REALIZADO: " + pedido._id
-    const notificacion = new Notificacion(pedido.vendedor, mensaje)
+    return this.notificarCreacionPedido(pedido.vendedor, pedido)
+          .then(() => this.notificarCreacionPedido(pedido.comprador, pedido))
+  }
+  notificarCreacionPedido(destinatario, pedido) {
+    const mensaje = "Un nuevo pedido fue realizado: #" + pedido.numero
+    const notificacion = new Notificacion(destinatario, mensaje, pedido._id)
     return notificacionRepository.crear(notificacion)
   }
-
   crearSegunEstadoPedido(estadoActual, pedido) {
-    return this.notificarEstadoPedido(estadoActual, pedido.comprador, pedido._id)
-      .then(() => this.notificarEstadoPedido(estadoActual, pedido.vendedor, pedido._id))
+    return this.notificarEstadoPedido(estadoActual, pedido.comprador, pedido._id, pedido.numero)
+      .then(() => this.notificarEstadoPedido(estadoActual, pedido.vendedor, pedido._id, pedido.numero))
   }
 
-  notificarEstadoPedido(estado, destinatario, idPedido) {
-    const notificacion = new Notificacion(destinatario, "El pedido " + idPedido + " cambio a estado " + estado)
+  notificarEstadoPedido(estado, destinatario, idPedido, numero) {
+    const notificacion = new Notificacion(destinatario, "El pedido # " + numero + " cambio a estado " + estado, idPedido)
     return notificacionRepository.crear(notificacion)
   }
 

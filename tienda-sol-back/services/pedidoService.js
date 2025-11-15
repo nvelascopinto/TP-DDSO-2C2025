@@ -6,6 +6,26 @@ import { fromPedidoDTO } from "../converters/pedidoConverter.js"
 import { PedidoInexistenteError } from "../errors/notFoundError.js"
 import { estadoConverter } from "../converters/estadoConverter.js"
 class PedidoService {
+
+ 
+constructor(){
+  this.numeroPedido = this.getNumeroPed()
+}
+  getNumeroPed(){
+    return pedidoRepository.getNumeroPedido()
+      .then((pedido) => {
+        if (!pedido){ 
+          return 0
+        }
+        return pedido
+      })}
+  
+
+  incrementarNumeroPedido(){
+      this.numeroPedido = this.numeroPedido.then((num) => num + 1)
+  }
+    
+
   /************************** CREAR UN PEDIDO **************************/
   crear(pedidoDTO, comprador) {
     return Promise.resolve()
@@ -13,8 +33,14 @@ class PedidoService {
         comprador.validarRol([tipoUsuario.COMPRADOR])
         return Promise.all(pedidoDTO.itemsDTO.map((item) => productoService.obtenerProducto(item.productoID)))
       })
-      .then((productos) =>
-        fromPedidoDTO(pedidoDTO, comprador, productos)
+      .then((productos) => {
+        this.incrementarNumeroPedido()
+        return this.numeroPedido.then((numeroPedido) => {return {numeroPedido, productos}} )
+      })
+      .then(({productos, numeroPedido}) =>
+      {
+        return fromPedidoDTO(pedidoDTO, comprador, productos, numeroPedido)
+      }
       )
       .then((nuevoPedido) => {
         nuevoPedido.actualizarStock()

@@ -1,7 +1,7 @@
 :root {
   --color-background: #white;
   --color-text-primary: #0F0F0F;
-  --color-text-secondary: #4F7068;
+  --color-text-secondary: #260c35;
   --color-accent-primary: #f2ead8;
   --color-accent-secondary: #75162D; 
   /* --color-accent-secondary: #44B397; verde agua*/
@@ -13,7 +13,7 @@
   --color-accent-transparent:  rgba(255, 255, 255, 0.3);
   --color-white: #FFFFFF;
   --color-negro: #0F0F0F;
-  --color-bordo-negro: #260c35;
+  --color-bordo-negro: #1e0710;
   --color-gray-100: #f7fafc;
   --color-gray-200: #edf2f7;
   --color-gray-300: #e2e8f0;

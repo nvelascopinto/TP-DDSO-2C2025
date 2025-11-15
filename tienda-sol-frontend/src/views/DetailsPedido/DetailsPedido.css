@@ -19,17 +19,18 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: center;
+    align-items: left;
     gap: 1rem;
 }
 
 .pedidoDetails-page__total{
     font-size: 1.5rem;
     font-weight: 700;
+    align-items: left;
 }
 
 .pedidoDetails-page__total span {
-  color: var(--color-accent-primary);
+  color: var(--color-accent-secondary);
 }
 
 .table-container {
@@ -56,3 +57,7 @@
   justify-content: center;
   padding: 1rem;
 }
+.volver-button{
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }

@@ -130,20 +130,31 @@ if (loading) {
                   {new Date(notif.fechaAlta).toLocaleString()}
                 </p>
               </div>
+              <div className='buttons-notificaciones'>
               {!notif.leida && (
-                <button
+                
+                <Button
                   onClick={() => handleMarkAsRead(notif._id)}
-                  className="notification-item__action"
                 >
                   Marcar como leída
-                </button>
+                </Button>
               )}
+                {notif.pedido && (
+                <Button 
+                  onClick={() => navigateTo(`historial-pedidos/${notif.pedido}`, null, notif.pedido)} 
+                  aria-label={`Ver detalles del pedido ${notif.pedido}`}
+                  className="notification-item__action"
+                >
+                  Ver Pedido
+                </Button> 
+              )}
+            </div>
             </div>
           ))}
         </div>
       )}
       <div className="notifications-page__footer">
-        <Button onClick={() => navigateTo('home')} variant="secondary">
+        <Button onClick={() => navigateTo('home')} variant="primary">
           Volver a la tienda
         </Button>
       </div>

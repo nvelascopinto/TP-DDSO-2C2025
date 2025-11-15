@@ -10,6 +10,14 @@ class PedidoRepository {
     return pedidoGuardado.save()
   }
 
+  getNumeroPedido() {
+    return this.modelPedido
+      .findOne()
+      .sort({ numero: -1 })
+      .select('numero')
+      .lean();
+}
+
   consultarHistorial(id) {
     const historial = this.modelPedido
       .find({

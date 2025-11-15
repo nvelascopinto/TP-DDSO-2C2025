@@ -63,7 +63,7 @@ const OrderHistoryPage = ({ navigateTo }) => {
                                     </div>
                                     <div className = "order-state-id">
                                         <div className="order-item__actions" role="group" aria-label="Identificación del pedido">
-                                                <h2 className="order-item__id">Pedido #{pedido._id}</h2>
+                                                <h2 className="order-item__id">Pedido #{pedido.numero}</h2>
                                                 <span className={`status-badge ${getStatusClass(pedido.estadoNombre)}`} role="status" aria-live="polite" aria-label={`Estado del pedido: ${pedido.estadoNombre}`}>
                                                     {pedido.estadoNombre}
                                                 </span>

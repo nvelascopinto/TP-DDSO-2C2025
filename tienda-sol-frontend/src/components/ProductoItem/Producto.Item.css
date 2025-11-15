@@ -1,7 +1,7 @@
 .producto {
   background-color: var(--color-white, #ffffff);
   border-radius: 0.75rem;
-  box-shadow: var(--shadow-lg, 0 4px 6px rgba(0, 0, 0, 0.1));
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
   transition: all 0.3s ease-in-out;
   display: grid;
@@ -96,7 +96,7 @@
 }
 
 .producto__label {
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--color-text-secondary, #6b7280);
   text-transform: uppercase;
@@ -111,7 +111,7 @@
 
 .producto__value--price {
   font-size: 1rem;
-  color: var(--color-accent-primary, #3b82f6);
+  color: var(--color-accent-secondary);
 }
 
 /* ============================================
@@ -236,4 +236,5 @@
   .producto__value--price {
     font-size: 1.125rem;
   }
+  
 }

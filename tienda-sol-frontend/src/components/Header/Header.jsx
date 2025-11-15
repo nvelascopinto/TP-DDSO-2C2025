@@ -3,15 +3,17 @@ import { useAuth, useCart } from '../../contexts/AppContext.jsx';
 import NotificationBell from '../NotificationBell/NotificationBell.jsx';
 import './Header.css';
 import logo from "../../assets/logo.svg";
+import {Drawer } from 'antd';
+import { Cart } from '../Cart/Cart.jsx';
 
 const Header = ({ navigateTo, currentRoute }) => {
   const { currentUser, logout } = useAuth();
   const { getCartItemCount } = useCart();
   const cartItemCount = getCartItemCount();
-
+  const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const [isProcessing, setIsProcessing] = useState(false);
   const handleLogout = () => {
     logout();
     navigateTo('home');
@@ -21,6 +23,7 @@ const Header = ({ navigateTo, currentRoute }) => {
   const handleNavigate = (route) => {
     navigateTo(route);
     setIsMenuOpen(false);
+
   };
 
   useEffect(() => {
@@ -52,6 +55,27 @@ const Header = ({ navigateTo, currentRoute }) => {
   }, [isMenuOpen]);
 
   const showCart = currentUser?.tipo !== 'Vendedor';
+  
+  
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  const handleFinalizarCompra = () => {
+    setIsProcessing(true);
+    // Cerrar el drawer antes de navegar
+    if (onClose) {
+      onClose();
+    }
+    // Navegar a la página de carrito
+    navigateTo('carrito');
+    setIsProcessing(false);
+  };
 
   return (
     <header className="header">
@@ -81,6 +105,7 @@ const Header = ({ navigateTo, currentRoute }) => {
 
         <nav className={`header__nav ${isMenuOpen ? 'open' : ''}`}>
           {currentUser?.tipo === 'Comprador' && (
+              
             <button
               onClick={() => handleNavigate('historial-pedidos')}
               className={`header__nav-link ${activeTab === "historial-pedidos" ? "active" : ""}`}
@@ -109,7 +134,8 @@ const Header = ({ navigateTo, currentRoute }) => {
           {showCart && (
             <button
               className={`header__nav-link header__cart-icon ${activeTab === "carrito" ? "active" : ""}`}
-              onClick={() => handleNavigate('carrito')}
+              // onClick={() => handleNavigate('carrito')}
+               onClick={showDrawer}
             >
               <span className="material-symbols-outlined">
                 shopping_cart_checkout
@@ -119,8 +145,19 @@ const Header = ({ navigateTo, currentRoute }) => {
                   {cartItemCount}
                 </span>
               )}
+              
             </button>
           )}
+          <Drawer
+                title="Carrito"
+                closable={{ 'aria-label': 'Close Button' }}
+                onClose={onClose}
+                open={open}
+                width={500}
+              >
+              <Cart handle={handleFinalizarCompra} onClose={onClose} isProcessing={isProcessing} />
+
+          </Drawer>
 
           {currentUser && (
             <button

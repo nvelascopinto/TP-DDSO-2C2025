@@ -45,6 +45,10 @@ const pedidoSchema = new mongoose.Schema(
     fechaCreacion: {
       type: Date,
       required: true
+    },
+     numero: {
+      type: Number,
+      required: true
     }
   },
   {

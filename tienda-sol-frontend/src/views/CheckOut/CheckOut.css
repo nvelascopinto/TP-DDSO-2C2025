@@ -87,6 +87,11 @@
     font-weight: bold;
     color: #333;
 }
+.order-success-message__title{
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--color-accent-secondary);
+}
 
 .checkOut__total_value span {
     color: var(--color-primary, #8b1538); 

@@ -61,8 +61,7 @@ const ProductoItem = ({ item }) => {
 
       <div className="producto__summary">
         <div className="producto__quantity">
-          <span className="producto__label">Cantidad:</span>
-          <span className="producto__value">{item.cantidad}</span>
+          <span className="producto__label">Cantidad: {item.cantidad}</span>
         </div>
         <div className="producto__subtotal">
           <span className="producto__label">Subtotal:</span>

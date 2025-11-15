@@ -21,7 +21,7 @@ const pedido = pedidos.find(p => p._id === id);
 if (!pedido) return <p role="alert">No se encontró el pedido</p>;
   return (
     <div>
-    <div className="pedidoDetails-page" role="main"       aria-labelledby="pedidoDetails-title" aria-describedby="pedidoDetails-summary">
+    <div className="pedidoDetails-page" role="main" aria-labelledby="pedidoDetails-title" aria-describedby="pedidoDetails-summary">
       <h1 className="pedidoDetails-page__title">Pedido</h1>
 
 
@@ -53,7 +53,7 @@ if (!pedido) return <p role="alert">No se encontró el pedido</p>;
       </div>
     </div >
       <div className = "button-pedidoDetails ">
-        <Button  onClick={() => navigateTo('historial-pedidos')} aria-label={`Ver detalles del pedido ${pedido._id}`}>Volver</Button>
+        <Button  className = "volver-button" onClick={() => navigateTo('historial-pedidos')} aria-label={`Ver detalles del pedido ${pedido._id}`}>Volver</Button>
       </div>
     </div>
   );
