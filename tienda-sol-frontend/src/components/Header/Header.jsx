@@ -82,7 +82,8 @@ const Header = ({ navigateTo, currentRoute }) => {
   return (
     <header className="header">
       <div className="header__container container">
-        <div
+       <div className = 'heder__home'>
+        <div 
           className="header__logo"
           onClick={() => { 
             //if (currentUser?.tipo != 'Vendedor') {
@@ -92,20 +93,30 @@ const Header = ({ navigateTo, currentRoute }) => {
         >
           <img src={logo} alt="Logo Tienda Sol" className="header__logo-image" />
           <span className="header__logo-text">Tienda Sol</span>
+          </div>
         </div>
+        
+        
 
         {/* menú hamburguesa*/}
-        <button 
-          className="header__hamburger"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Menú"
-        >
-          <span className={`header__hamburger-line ${isMenuOpen ? 'open' : ''}`}></span>
-          <span className={`header__hamburger-line ${isMenuOpen ? 'open' : ''}`}></span>
-          <span className={`header__hamburger-line ${isMenuOpen ? 'open' : ''}`}></span>
-        </button>
-
+        
+          <button 
+            className="header__hamburger"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Menú"
+          >
+            <span className={`header__hamburger-line ${isMenuOpen ? 'open' : ''}`}></span>
+            <span className={`header__hamburger-line ${isMenuOpen ? 'open' : ''}`}></span>
+            <span className={`header__hamburger-line ${isMenuOpen ? 'open' : ''}`}></span>
+          </button>
+       
         <nav className={`header__nav ${isMenuOpen ? 'open' : ''}`}>
+          <Button
+          className={`header__nav-link header__home-icon ${activeTab === "home" ? "active" : ""}`}
+          onClick={() => handleNavigate("home")}>
+            <span className="material-symbols-outlined">home</span>
+            <span className="logo_inicio_title">Inicio</span>
+          </Button>
           {currentUser?.tipo === 'Comprador' && (
               
             <button
@@ -161,11 +172,7 @@ const Header = ({ navigateTo, currentRoute }) => {
 
           </Drawer>
 
-          <Button
-          className={`header__nav-link header__home-icon ${activeTab === "home" ? "active" : ""}`}
-          onClick={() => handleNavigate("home")}>
-            <span className="material-symbols-outlined">home</span>
-          </Button>
+          
 
           {currentUser && (
             <button

@@ -18,6 +18,7 @@ import { authenticate, registerUser } from './services/userService.js';
 import { ConfigProvider } from 'antd';
 import esES from 'antd/locale/es_ES';
 import { CheckOut } from './views/CheckOut/CheckOut';
+import { TipoUsuario } from '../enums';
 
 
 // Componente interno que usa los hooks de routing
@@ -36,10 +37,21 @@ const AppContent = () => {
     if (store) {
       setSelectedStore(store);
     }
-    // Navegar usando React Router
-    navigate(`/${newView === 'home' ? '' : newView}`);
+    if(newView === 'home'){
+      if(currentUser.tipo == TipoUsuario.VENDEDOR) {
+        console.log("USERRR : " + currentUser.tipo)
+        setSelectedStore(currentUser.tienda.nombre)
+        navigate("/tienda")
+      }
+      if(currentUser.tipo == TipoUsuario.COMPRADOR) {
+        navigate("/")
+      }
+    } else {
+      navigate(`/${newView}`);
+    }
+    
   };
-
+//VER COMO HACER PARA QUE NAVEGE SOLO AL VENDEDOR A LA TIENDA SOLO DE VENDEDOR
   const handleError = (errorDetails) => {
     console.error("Error capturado para navegación:", errorDetails);
     // Establecemos el error en el estado global
