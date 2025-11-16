@@ -1,7 +1,7 @@
 import {apiBack} from "./apiBack.js"
 
-export async function getTiendaByName(id){
-    return apiBack.get(`/tiendas/${id}`)
+export async function getTiendaByName(nombre){
+    return apiBack.get(`/tiendas/${nombre}`)
     .then((response) => {
         return response.data
     })

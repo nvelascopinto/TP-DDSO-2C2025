@@ -131,7 +131,7 @@ const AppContent = () => {
         <Routes>
           <Route 
             path="/" 
-            element={<HomePage onStoreSelect={(store) => navigateTo('tienda', store)} />} 
+            element={<HomePage onStoreSelect={(store) => navigateTo('tienda', store)} currentUser={currentUser}/>} 
           />
 
           <Route 

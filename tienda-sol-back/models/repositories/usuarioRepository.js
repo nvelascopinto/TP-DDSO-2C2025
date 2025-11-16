@@ -20,14 +20,6 @@ class UsuarioRepository {
     return this.model.findOne({username : id})
   }
 
-  findTiendas() {
-    return this.model.find({ tipoUsuario: "Vendedor" }, { tienda: 1, _id: 0 })
-  }
-
-  findTiendaByName(tiendaNombre) {
-    return this.model.findOne({ 'tienda.nombre': tiendaNombre }, { tienda: 1, _id: 0 } )  
-  }
-
   update(notificacion) {
     return this.model.findByIdAndUpdate(notificacion._id, notificacion, {
       new: true

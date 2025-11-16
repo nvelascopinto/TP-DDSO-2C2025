@@ -37,11 +37,12 @@ const usuarioSchema = new mongoose.Schema(
     fechaAlta: {
       type: Date,
       required: true
-    },
-    tienda : {
-      type: tiendaSchema,
-      required: false
     }
+    // ,
+    // tienda : {
+    //   type: tiendaSchema,
+    //   required: false
+    // }
   },
   {
     collection: "usuarios",

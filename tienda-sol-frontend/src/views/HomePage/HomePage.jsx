@@ -3,22 +3,30 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../../services/mockService.js';
 import Spinner from '../../components/Spinner/Spinner.jsx';
 import './HomePage.css';
-import {getTiendas} from '../../services/tiendaService.js';
+import { getTiendas } from '../../services/tiendaService.js';
 import { TiendaCard } from '../../components/TiendaCard/TiendaCard.jsx';
 import Skeleton from '@mui/material/Skeleton';
 
-const HomePage = ({ onStoreSelect, onError }) => {
-  const [vendedores, setVendedores] = useState([]);
+const HomePage = ({ onStoreSelect, currentUser, onError }) => {
+  const [tiendas, setTiendas] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchVendedores = async () => {
+    const fetchTiendas = async () => {
       try {
         setLoading(true);
-        const data = await getTiendas();
-        setVendedores(data);
+        const tiendas = await getTiendas()
+
+        if (currentUser?.tipo === "Vendedor") {
+          const tiendaVendedor = tiendas.filter(
+            (tienda) => tienda.username === currentUser.username
+          )
+          setTiendas(tiendaVendedor);
+        } else {
+          setTiendas(tiendas);
+        }
       } catch (error) {
-        console.error("Error fetching vendedores:", error);
+        console.error("Error fetching tiendas:", error);
       // Reportar el error al componente padre para que navegue
         if (onError) {
              
@@ -67,13 +75,13 @@ const HomePage = ({ onStoreSelect, onError }) => {
                 details: details
             });
         }
-        setVendedores([]);
+        setTiendas([]);
       } finally {
         setLoading(false);
       }
     };
-    fetchVendedores();
-  }, []);
+    fetchTiendas();
+  }, [currentUser]);
 
   return (
     <div className="homepage" role="main">
@@ -98,15 +106,15 @@ const HomePage = ({ onStoreSelect, onError }) => {
         </div>
       ) : (
         <div className="homepage__store-grid" role="region" aria-label="Listado de tiendas disponibles"> 
-          {vendedores
-          .map((vendedor) => (
+          {tiendas
+          .map((tienda) => (
             <TiendaCard
-              key={vendedor.tienda.username}
-              vendedor={vendedor.tienda}
+              key={tienda._id}
+              vendedor={tienda}
               onStoreSelect={onStoreSelect}
             />
           ))}
-          {vendedores.length === 0 && (
+          {tiendas.length === 0 && (
             <p className="homepage__no-stores" role="alert" aria-live="assertive">
               No se encontraron tiendas disponibles en este momento.
             </p>
