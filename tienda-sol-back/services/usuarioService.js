@@ -1,5 +1,6 @@
 import usuarioRepository from "../models/repositories/usuarioRepository.js"
 import pedidoService from "./pedidoService.js"
+import tiendaService from "./tiendaService.js"
 import { fromUsuarioDTO } from "../converters/usuarioConverter.js"
 import { UsuarioInexistenteError } from "../errors/notFoundError.js"
 import { YaExisteUsuarioError } from "../errors/conflicError.js"
@@ -8,13 +9,18 @@ import { create } from "domain"
 import { UserDTO } from "../models/DTO/userDTO.js"
 class UsuarioService {
   /************************** CREAR UN USUARIO **************************/
-  crearUsuario(usuarioDTO) {
+  crearUsuario(usuarioDTO) { // usuarioDTO contiene tanto al usuario como a la tienda 
     return Promise.resolve()
       .then(() => {
-         return fromUsuarioDTO(usuarioDTO)
-      }).then((user)=>{
-          return usuarioRepository.crear({ ...user })
-        }).then((createdUser)=>{
+        return fromUsuarioDTO(usuarioDTO)
+      })
+      .then((user) => {
+        return usuarioRepository.crear({ ...user })
+      })
+      .then((createdUser) => { // createdUser ya no contiene a la tienda
+        return tiendaService.crearTienda(usuarioDTO).then(() => createdUser)
+      })
+      .then((createdUser)=>{
         return new UserDTO(createdUser.username, createdUser.tipoUsuario)
       })
   }
@@ -50,15 +56,6 @@ class UsuarioService {
   consultarHistorial(id, usuario) {
     return pedidoService.consultarHistorial(id, usuario)
   }
-
-  consultarTiendas() {
-    return usuarioRepository.findTiendas()
-  }
-
-  consultarTienda(tiendaNombre) {
-    return usuarioRepository.findTiendaByName(tiendaNombre)
-  }
-  
 }
 
 export default new UsuarioService()

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Tienda } from "../entities/tienda.js";
+
 export const tiendaSchema = new mongoose.Schema(
   {
     username: {
