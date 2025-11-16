@@ -1,8 +1,11 @@
 .cart-page {
   background-color: var(--color-white);
-  padding: 1.5rem;
+  padding: 1.25rem;
   border-radius: 0.75rem;
   box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 56rem;
+  margin: 0 auto;
 }
 
 @media (min-width: 768px) {
@@ -12,12 +15,19 @@
 }
 
 .cart-page__title {
-  font-size: 1.875rem;
+  font-size: 1.7rem;
   font-weight: 700;
   color: var(--color-text-primary);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   border-bottom: 1px solid var(--color-gray-200);
-  padding-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .cart-page__title {
+    text-align: left;
+  }
 }
 
 .cart-page__empty-container {
@@ -25,21 +35,20 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.25rem;
   padding: 2rem 0;
+  text-align: center;
 }
 
 .cart-page__empty-message {
   color: var(--color-text-secondary);
-  text-align: center;
-  font-size: 1.125rem;
+  font-size: 1.1rem;
 }
 
 .cart-page__summary {
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
   gap: 1rem;
 }
@@ -47,11 +56,12 @@
 @media (min-width: 768px) {
   .cart-page__summary {
     flex-direction: row;
+    justify-content: space-between;
   }
 }
 
 .cart-page__total {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 700;
 }
 
@@ -60,26 +70,30 @@
 }
 
 .order-success-message {
-    text-align: center;
-    padding: 2.5rem;
-    background-color: var(--color-white);
-    border-radius: 0.5rem;
-    box-shadow: var(--shadow-xl);
+  text-align: center;
+  padding: 2rem;
+  background-color: var(--color-white);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-xl);
+  margin-top: 1.25rem;
 }
 
 .order-success-message__title {
-    font-size: 1.875rem;
-    font-weight: 700;
-    color: var(--color-accent-primary);
-    margin-bottom: 1rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-accent-primary);
+  margin-bottom: 0.75rem;
 }
 
 .button--margin-top {
-    margin-top: 1.5rem;
+  margin-top: 1.25rem;
 }
 
+.cart-page-volver {
+  margin-top: 1.5rem;
+  text-align: center;
+}
 
-.cart-page-volver{
-    margin-top: 1.5rem;
-    text-align: center;
+.cart-page-volver button {
+  min-width: 8rem;
 }

@@ -535,27 +535,27 @@
 .header__home-icon {
   position: relative;
   justify-content: center !important;
+  display: flex !important;
 }
-
-@media (min-width: 768px) {
-  .header__home-icon  {
-    display: none;
-  }
-}
-
 
 .header__home-icon .material-symbols-outlined {
   font-size: 24px !important;
-  color: var(--color-accent-secondary);
-  transition: color 0.2s ease;
-  margin-left: -8.5rem; 
 }
 
 @media (min-width: 768px) {
   .header__home-icon .material-symbols-outlined {
     font-size: 26px !important;
+  }
+}
+
+.header__home-icon .material-symbols-outlined {
+  color: var(--color-accent-secondary);
+  transition: color 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  .header__home-icon .material-symbols-outlined {
     color: rgba(255, 255, 255, 0.9);
-    margin-left: -50px; 
   }
 }
 
@@ -563,9 +563,16 @@
   color: var(--color-white);
 }
 
+@media (min-width: 768px) {
+  .header__home-icon:hover .material-symbols-outlined {
+    color: var(--color-white);
+  }
+}
+
 .header__nav-link.header__home-icon.active .material-symbols-outlined {
   color: var(--color-white) !important;
 }
+
 .logo_inicio_title{
   margin-left: 0.5rem;
 }

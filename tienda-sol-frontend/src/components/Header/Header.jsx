@@ -83,7 +83,7 @@ const Header = ({ navigateTo, currentRoute }) => {
     <header className="header">
       <div className="header__container container">
        <div className = 'heder__home'>
-        <div 
+       <div 
           className="header__logo"
           onClick={() => { 
             //if (currentUser?.tipo != 'Vendedor') {
@@ -94,10 +94,9 @@ const Header = ({ navigateTo, currentRoute }) => {
           <img src={logo} alt="Logo Tienda Sol" className="header__logo-image" />
           <span className="header__logo-text">Tienda Sol</span>
           </div>
+
         </div>
         
-        
-
         {/* menú hamburguesa*/}
         
           <button 
@@ -111,11 +110,10 @@ const Header = ({ navigateTo, currentRoute }) => {
           </button>
        
         <nav className={`header__nav ${isMenuOpen ? 'open' : ''}`}>
-          <Button
+            <Button
           className={`header__nav-link header__home-icon ${activeTab === "home" ? "active" : ""}`}
           onClick={() => handleNavigate("home")}>
             <span className="material-symbols-outlined">home</span>
-            <span className="logo_inicio_title">Inicio</span>
           </Button>
           {currentUser?.tipo === 'Comprador' && (
               
