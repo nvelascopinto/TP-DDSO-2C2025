@@ -9,8 +9,9 @@ class ProductoRepository {
     return productoNuevo.save()
   }
 
-  update(productoModificado) {
-    return this.model.findByIdAndUpdate(productoModificado._id, productoModificado, { new: true })
+  update(productoModificado, id) {
+    console.log("PRODUCTO MODIFICADO"+ productoModificado.precio)
+    return this.model.findByIdAndUpdate(id, productoModificado, { new: true })
   }
 
   findById(id) {

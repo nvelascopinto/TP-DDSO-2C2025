@@ -45,11 +45,11 @@ class ProductoService {
       .then((producto) => {
         producto.validarCreador(vendedor.username)
 
-        if (cambioProducto.precio !== undefined) producto.actualizarPrecio(cambioProducto.precio)
-        if (cambioProducto.activo !== undefined) producto.actualizarActivo(cambioProducto.activo)
-        if (cambioProducto.aumentoStock !== undefined) producto.aumentarStock(cambioProducto.aumentoStock)
+        // if (cambioProducto.precio !== undefined) producto.actualizarPrecio(cambioProducto.precio)
+        // if (cambioProducto.activo !== undefined) producto.actualizarActivo(cambioProducto.activo)
+        // if (cambioProducto.stock !== undefined) producto.aumentarStock(cambioProducto.aumentoStock)
 
-        return productoRepository.update(producto)
+        return productoRepository.update(cambioProducto, productoID)
       })
   }
 

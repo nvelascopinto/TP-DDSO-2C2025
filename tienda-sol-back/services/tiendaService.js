@@ -21,8 +21,8 @@ class TiendaService{
     return tiendaRepository.getTiendas()
   }
 
-  getTiendaByName(tiendaNombre){
-    return tiendaRepository.getTiendaByName(tiendaNombre)
+  getTiendaByName(username){
+    return tiendaRepository.getTiendaByUsername(username)
     .then((tiendaBuscada) => {
       if (!tiendaBuscada) throw new TiendaInexistenteError(tiendaBuscada)
       return tiendaBuscada

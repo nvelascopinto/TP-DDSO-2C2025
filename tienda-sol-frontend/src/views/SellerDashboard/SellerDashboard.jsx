@@ -58,9 +58,10 @@ const SellerDashboard = () => {
     if (!currentUser) return;
     try {
       if (isNew) {
+        console.log("PRODUCTO NUEVOOOO" + productData.stock)
         await crearProducto(currentUser.username, productData);
       } else {
-        await actualizarProducto(productData.id, productData);
+        await actualizarProducto(selectedProduct._id, productData,currentUser.username);
       }
       handleCloseModal();
       fetchProductos();

@@ -2,7 +2,6 @@ import productoService from "../services/productoService.js"
 import { toPaginadoResponse, toProductoDTO } from "../converters/productoConverter.js"
 import { productoValidator } from "../validators/productoValidator.js"
 import { idMongoValidator } from "../validators/idValidator.js"
-import { cambioProductoValidator } from "../validators/productoValidator.js"
 import { filtrosValidator } from "../validators/filtrosValidator.js"
 import { ZodValidationError } from "../errors/validationError.js"
 import { brotliDecompressSync } from "zlib"
@@ -54,7 +53,7 @@ class ProductoController {
     return Promise.resolve()
       .then(() => {
         const idProducto = idMongoValidator.parse(req.params.id)
-        const cambioProducto = cambioProductoValidator.parse(req.body)
+        const cambioProducto = productoValidator.parse(req.body)
         return { idProducto, cambioProducto }
       })
       .catch((e) => {

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, {useState} from 'react';
 import { useCart } from '../../contexts/AppContext.jsx';
 import './ProductCard.css';
 
@@ -11,9 +11,10 @@ const ProductCard = ({ producto }) => {
     showToast(`"${producto.titulo}" agregado al carrito`);
   };
 
+  
   return (
     <div className="product-card">
-      <img src={producto.fotos[0]} alt={producto.titulo} className="product-card__image" />
+        <img src={producto.fotos[0]} alt={producto.titulo} className="product-card__image" />
       <div className="product-card__content">
         <h3 className="product-card__title">{producto.titulo}</h3>
         <p className="product-card__description">{producto.descripcion}</p>

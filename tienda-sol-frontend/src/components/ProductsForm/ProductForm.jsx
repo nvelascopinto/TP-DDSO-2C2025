@@ -14,7 +14,57 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
     const [fotos, setFotos] = useState([]);
     const [activo, setActivo] = useState(true);
     const [categoria, setCategoria] = useState('');
+    const [cargando, setCargando] = useState(false);
 
+    // Función para subir imagen a Cloudinary
+    const subirImagenCloudinary = async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'productos_preset');
+        
+        try {
+            const response = await fetch(
+                `https://api.cloudinary.com/v1_1/dnzss87bx/image/upload`,
+                {
+                    method: 'POST',
+                    body: formData
+                }
+            );
+            
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error.message);
+            }
+            
+            return data.secure_url;
+        } catch (error) {
+            console.error('Error al subir imagen:', error);
+            throw error;
+        }
+    };
+
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        
+        if (!file) return;
+        
+        setCargando(true);
+        
+        try {
+            const url = await subirImagenCloudinary(file);
+            setFotos([...fotos, url]); // Agregar a las fotos existentes
+            alert('Imagen subida exitosamente');
+        } catch (error) {
+            alert('Error al subir imagen: ' + error.message);
+        } finally {
+            setCargando(false);
+        }
+    };
+
+    const handleRemoveImage = (index) => {
+        setFotos(prev => prev.filter((_, i) => i !== index));
+    };
 
     useEffect(() => {
         if (initialData) {
@@ -30,19 +80,10 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
         }
     }, [initialData]);
 
-    const handleAddImage = () => {
-        const newImageSeed = `newImg${Date.now()}`;
-        const newImageUrl = `https://picsum.photos/seed/${newImageSeed}/400/400`;
-        setFotos(prev => [...prev, newImageUrl]);
-    };
-
-    const handleRemoveImage = (index) => {
-        setFotos(prev => prev.filter((_, i) => i !== index));
-    };
-
-    const handleSubmit = (e) => {
+const handleSubmit = (e) => {
         e.preventDefault();
         const selectedCategoria = CATEGORIAS[categoria];
+        console.log("CATEGORIA"+ selectedCategoria)
         let productData = []
         if(!initialData) {
             productData = {
@@ -51,8 +92,9 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
             precio: parseFloat(precio),
             stock: parseInt(stock, 10),
             moneda : moneda,
-            categoria: CATEGORIAS[categoria],
-            activo: activo
+            categoria: selectedCategoria,
+            activo: activo,
+            fotos : fotos
         }
         }else {
             productData = {
@@ -62,8 +104,9 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
             precio: parseFloat(precio),
             stock: parseInt(stock, 10),
             moneda : moneda,
-            categoria: CATEGORIAS[categoria],
-            activo: activo
+            categoria: selectedCategoria,
+            activo: activo,
+            fotos : fotos
         }
         }
         
@@ -75,6 +118,7 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
 
         onSubmit(productData, !initialData);
     };
+
 
     return (
         <form onSubmit={handleSubmit} className="product-form">
@@ -125,7 +169,7 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
                     />
                 </div>
             </div>
-                        <div className="form-group">
+            <div className="form-group">
                 <label htmlFor="categoria" className="form-label">Categoría</label>
                 <select
                     id="categoria"
@@ -134,25 +178,66 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
                     className="form-select"
                     required
                 >
+                    <option value="" disabled>Selecciona una categoría</option>
                     {Object.entries(CATEGORIAS).map(([key, value]) => (
                         <option key={key} value={key}>{value}</option>
                     ))}
                 </select>
             </div>
+            
+            {/* Input de archivos */}
             <div className="form-group">
                 <label className="form-label">Imágenes</label>
-                <div className="image-preview-container">
-                    {fotos.map((foto, index) => (
-                        <div key={index} className="image-preview">
-                            <img src={foto} alt={`Preview ${index + 1}`} />
-                            <button type="button" onClick={() => handleRemoveImage(index)} className="image-remove-button">&times;</button>
-                        </div>
-                    ))}
-                </div>
-                <Button type="button" variant="secondary" onClick={handleAddImage}>
-                    Agregar Imagen
-                </Button>
+                <input
+                    type="file"
+                    id="fotos"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="form-input"
+                    disabled={cargando}
+                />
+                {cargando && <p>Subiendo imagen...</p>}
+                
+                {/* Mostrar imágenes subidas */}
+                {fotos.length > 0 && (
+                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '1rem' }}>
+                        {fotos.map((url, index) => (
+                            <div key={index} style={{ position: 'relative' }}>
+                                <img 
+                                    src={url} 
+                                    alt={`Imagen ${index}`} 
+                                    style={{ 
+                                        width: '100px', 
+                                        height: '100px', 
+                                        objectFit: 'cover',
+                                        borderRadius: '0.5rem'
+                                    }} 
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => handleRemoveImage(index)}
+                                    style={{
+                                        position: 'absolute',
+                                        top: '5px',
+                                        right: '5px',
+                                        background: 'red',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '50%',
+                                        width: '25px',
+                                        height: '25px',
+                                        cursor: 'pointer',
+                                        fontSize: '14px'
+                                    }}
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
+            
             <div className="form-actions">
                 <button type="button" onClick={onCancel} className="button-cancel">
                     Cancelar

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { useAuth } from './contexts/AppContext';
+import { useAuth, useTienda } from './contexts/AppContext';
 import Header from './components/Header/Header.jsx';
 import Footer from './components/Footer/Footer.jsx';
 import HomePage from './views/HomePage/HomePage.jsx';
@@ -21,6 +21,7 @@ import { CheckOut } from './views/CheckOut/CheckOut';
 import { TipoUsuario } from '../enums';
 
 
+
 // Componente interno que usa los hooks de routing
 const AppContent = () => {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ const AppContent = () => {
   const [selectedStore, setSelectedStore] = useState(null);
   const { currentUser, login, register } = useAuth();
   const [appError, setAppError] = useState(null);
+  const {tienda} = useTienda();
 
   // Obtener la ruta actual sin el "/"
   const currentRoute = location.pathname.slice(1) || 'home';
@@ -35,23 +37,14 @@ const AppContent = () => {
   const navigateTo = (newView, store) => {
     setAppError(null);
     if (store) {
-      setSelectedStore(store);
-    }
-    if(newView === 'home'){
-      if(currentUser.tipo == TipoUsuario.VENDEDOR) {
-        console.log("USERRR : " + currentUser.tipo)
-        setSelectedStore(currentUser.tienda.nombre)
-        navigate("/tienda")
-      }
-      if(currentUser.tipo == TipoUsuario.COMPRADOR) {
-        navigate("/")
-      }
-    } else {
-      navigate(`/${newView}`);
+      navigate('/tienda', { state: { tienda: store } });
+      return
     }
     
+        navigate(`/${newView === "home" ? '' : newView}`);
+      
+    
   };
-//VER COMO HACER PARA QUE NAVEGE SOLO AL VENDEDOR A LA TIENDA SOLO DE VENDEDOR
   const handleError = (errorDetails) => {
     console.error("Error capturado para navegación:", errorDetails);
     // Establecemos el error en el estado global
@@ -64,15 +57,17 @@ const AppContent = () => {
 
   const handleLogin = (tipo, user, password) => {
   return login(user, password)
-    .then((userData) => {
-      console.log('Usuario logueado:', userData);
+   .then(({ user: userData, tienda: tiendaData }) => {
       
-      // Navegar según el tipo de usuario
-      // if (userData?.tipo === 'Vendedor') {
-      //   navigate('/productos');
-      // } else {
-        navigate('/');
-      //}
+      // if (((userData.tipo == TipoUsuario.VENDEDOR) && tiendaData != null)) {
+      //  console.log("Usuario logueado:"+ tiendaData.nombre);
+
+      //   navigate('/tienda', { state: { tienda: tiendaData } });
+        
+      // } else if (userData.tipo == TipoUsuario.COMPRADOR) {
+      //   navigate('/');
+      // }
+      navigate('/');
       
       return userData;
     })
@@ -142,9 +137,9 @@ const AppContent = () => {
           <Route 
             path="/tienda" 
             element={
-              selectedStore 
-                ? <StorePage tienda={selectedStore} />
-                : <Navigate to="/" replace />
+              
+                 <StorePage />
+               
             } 
           />
 
@@ -230,6 +225,7 @@ const AppContent = () => {
 };
 
 const App = () => {
+  const isMobile = window.innerWidth < 768;
   return (
     <ConfigProvider
       locale={esES}
@@ -241,7 +237,8 @@ const App = () => {
         },
         components: {
           Input: {
-            controlHeight: 40,
+            controlHeight: isMobile ? 36 : 40,
+            fontSize: isMobile ? 14 : 16,
             colorBorder: '#3E1917',
             activeBorderColor: '#3E1917',
             hoverBorderColor: '#5A2523',

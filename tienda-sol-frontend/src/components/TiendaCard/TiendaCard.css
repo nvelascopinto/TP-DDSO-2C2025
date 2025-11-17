@@ -76,7 +76,7 @@
   cursor: pointer;
   transform: translateY(0);
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-  width:16.5rem;
+  width:100%;
 }
 .homepage__store-card:hover {
   transform: translateY(-0.5rem);

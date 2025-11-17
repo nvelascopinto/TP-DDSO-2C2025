@@ -11,7 +11,7 @@ class tiendaRepository {
   }
 
   getTiendaByUsername(idUsuario) {
-    return this.model.find({username: idUsuario})
+    return this.model.findOne({username: idUsuario}, {_id: 0, __v:0})
   }
   
   getTiendas() {

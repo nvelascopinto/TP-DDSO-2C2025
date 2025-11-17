@@ -38,7 +38,7 @@ export class Producto {
   }
 
   validarCreador(idUsuario) {
-    console.log(this.vendedor)
+
     if (!(idUsuario == this.vendedor)) {
       throw new UsuarioSinPermisoError(idUsuario)
     }

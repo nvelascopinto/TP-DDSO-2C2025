@@ -6,6 +6,7 @@ import logo from "../../assets/logo.svg";
 import {Drawer } from 'antd';
 import { Cart } from '../Cart/Cart.jsx';
 import Button from "../Button/Button.jsx";
+import { TipoUsuario } from '../../../enums.js';
 
 const Header = ({ navigateTo, currentRoute }) => {
   const { currentUser, logout } = useAuth();
@@ -18,7 +19,14 @@ const Header = ({ navigateTo, currentRoute }) => {
   
   const handleLogout = () => {
     logout();
-    navigateTo('home');
+    console.log("CURRENT USER" + currentUser.tipo)
+    if(currentUser.tipo == TipoUsuario.VENDEDOR) {
+      navigateTo('login');
+    }
+     if(currentUser.tipo == TipoUsuario.COMPRADOR) {
+      navigateTo('home');
+    }
+    
     setIsMenuOpen(false);
   };
 
@@ -87,7 +95,7 @@ const Header = ({ navigateTo, currentRoute }) => {
           className="header__logo"
           onClick={() => { 
             //if (currentUser?.tipo != 'Vendedor') {
-              navigateTo('');
+              navigateTo('home');
             //}
           }}
         >
@@ -110,11 +118,13 @@ const Header = ({ navigateTo, currentRoute }) => {
           </button>
        
         <nav className={`header__nav ${isMenuOpen ? 'open' : ''}`}>
+          <div className='button_home'>
             <Button
-          className={`header__nav-link header__home-icon ${activeTab === "home" ? "active" : ""}`}
-          onClick={() => handleNavigate("home")}>
-            <span className="material-symbols-outlined">home</span>
-          </Button>
+              className={`header__nav-link header__home-icon ${activeTab === "home" ? "active" : ""}`}
+              onClick={() => handleNavigate("home")}>
+              <span className="material-symbols-outlined">home</span>
+            </Button>
+          </div>
           {currentUser?.tipo === 'Comprador' && (
               
             <button

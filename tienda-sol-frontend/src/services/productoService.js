@@ -22,9 +22,14 @@ export async function getProductoById(id){
 
 //get producto by id
 
-export async function actualizarProducto (id, productData){
+export async function actualizarProducto (id, productData, usuario){
     return apiBack.patch(`/productos/${id}`,
-        productData
+        productData, 
+        {
+            headers: {
+                'X-User': usuario,
+            }
+        }
     )
     .then((response) => {
         return response.data

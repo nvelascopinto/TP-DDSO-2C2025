@@ -1,20 +1,57 @@
 .filter_box{
     background-color: var(--color-white);
-    border-radius: 0.75rem;
-    box-shadow: var(--shadow-lg);
+     box-shadow: var(--shadow-lg);
+     border-radius: 1rem;
     padding: 1rem;
-    width: 18rem;
     height: auto;
     align-self: flex-start; 
     flex-shrink: 0;
-   
 }
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .filter_box {
+    padding: 0.875rem;
+  }
+}
+
+/* Tablets pequeñas */
+@media (max-width: 768px) {
+  .filter_box {
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+  }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+  .filter_box {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Móviles muy pequeños */
+@media (max-width: 360px) {
+  .filter_box {
+    padding: 0.4rem;
+    font-size: 0.75rem;
+  }
+}
+
+
 .filtros-header{
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--color-text-primary);
   padding-left: 1rem;
     margin-bottom: 0rem;
+}
+
+@media (max-width: 1020px) {
+  .filtros-header {
+    display: none;
+  }
 }
 
 

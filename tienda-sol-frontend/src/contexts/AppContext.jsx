@@ -4,6 +4,7 @@ import { TipoUsuario } from '/enums';
 import Toast from '../components/Toast/Toast';
 import { getPedidos } from '../services/userService.js';
 import {authenticate} from '../services/userService.js'
+import { getTiendaByVendedor } from '../services/tiendaService';
 
 
 // usuarios
@@ -14,7 +15,7 @@ import {authenticate} from '../services/userService.js'
 const AuthContext = createContext(undefined);
 const CartContext = createContext(undefined);
 const PedidosContext = createContext(undefined);
-
+const TiendaContext = createContext(undefined)
 // providers
 export const AppProvider = ({ children }) => {
   
@@ -24,13 +25,20 @@ export const AppProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [toastMessage, setToastMessage] = useState(null);
   const [pedidos, setPedidos] = useState([]);
+  const [tienda, setTienda] = useState(null);
 
   // Cargar usuario Y carrito al montar
   useEffect(() => {
     const storedUser = localStorage.getItem('currentUser');
+    const storedTienda = localStorage.getItem('tienda');
     if (storedUser) {
       setCurrentUser(JSON.parse(storedUser));
     }
+
+    if (storedTienda) {
+      setTienda(JSON.parse(storedTienda));
+    }
+
 
     const storedCart = localStorage.getItem('cartItems');
     if (storedCart) {
@@ -44,8 +52,18 @@ export const AppProvider = ({ children }) => {
       localStorage.setItem('currentUser', JSON.stringify(currentUser));
     } else {
       localStorage.removeItem('currentUser');
+      
     }
   }, [currentUser]);
+   useEffect(() => {
+    if (tienda) {
+      
+      localStorage.setItem('tienda', JSON.stringify(tienda));
+    } else {
+     
+      localStorage.removeItem('tienda');
+    }
+  }, [tienda]);
 
   // Guardar carrito cada vez que cambia
   useEffect(() => {
@@ -56,11 +74,19 @@ export const AppProvider = ({ children }) => {
     }
   }, [cartItems]);
   
-const login = (username, password) => {
+const login =(username, password) =>  {
   return authenticate(username, password)
     .then((user) => {
       setCurrentUser(user);
-      return user;
+      if(user.tipo == TipoUsuario.VENDEDOR){
+        return getTiendaByVendedor(user.username).then((tienda) => {
+         setTienda(tienda)
+          return {user, tienda}; // Retornar ambos
+       })
+      }
+           return { user, tienda: null}; // Retornar ambos
+      
+      
     })
     .catch((error) => {
       console.error("Error al autenticarse:", error);
@@ -72,14 +98,24 @@ const login = (username, password) => {
    const register = (user) => {
   
       setCurrentUser(user)
-    
+      if(user.tipo == TipoUsuario.VENDEDOR){
+        getTiendaByVendedor(user.username).then((tienda) => {
+         setTienda(tienda)
+       })
+      }
   };
 
   const logout = useCallback(() => {
     setCurrentUser(null);
     setCartItems([]); 
+    setTienda(null);
+    const storedTienda = localStorage.getItem('tienda');
     localStorage.removeItem('currentUser');
     localStorage.removeItem('cartItems');
+    if(storedTienda){
+      localStorage.removeItem('tienda')
+    }
+
   }, []);
 
   
@@ -162,6 +198,7 @@ const login = (username, password) => {
   }, []);
   return (
     <AuthContext.Provider value={{ currentUser, login, logout, register }}>
+      <TiendaContext.Provider value={{tienda}}>
       <CartContext.Provider
         value={{
           cartItems,
@@ -181,6 +218,7 @@ const login = (username, password) => {
 
         {toastMessage && <Toast message={toastMessage} />}
       </CartContext.Provider>
+      </TiendaContext.Provider>
     </AuthContext.Provider>
   );
 };
@@ -192,7 +230,13 @@ export const useAuth = () => {
   }
   return context;
 };
-
+export const useTienda = () => {
+  const context = useContext(TiendaContext);
+  if (context === undefined) {
+    throw new Error('useTienda must be used within an AppProvider');
+  }
+  return context;
+};
 export const useCart = () => {
   const context = useContext(CartContext);
   if (context === undefined) {

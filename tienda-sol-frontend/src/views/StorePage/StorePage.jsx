@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import ProductCard from '../../components/ProductCard/ProductCard.jsx';
 import Spinner from '../../components/Spinner/Spinner.jsx';
 import './StorePage.css';
@@ -17,12 +19,14 @@ import { AudioOutlined } from '@ant-design/icons';
 import { Input, Space } from 'antd';
 const { Search } = Input;
 
-const StorePage = ({ tienda  }) => {
+const StorePage = () => {
   // Inicializa con null para detectar cuando no hay datos
   const [productos, setProductos] = useState(null);
   const [loading, setLoading] = useState(true);
-    const [shouldFetch, setShouldFetch] = useState(true);
-  
+  const [shouldFetch, setShouldFetch] = useState(true);
+  const location = useLocation();
+  const tienda = location.state?.tienda;
+  console.log(tienda)
   // Estados de filtros
   const [searchTerm, setSearchTerm] = useState('');
   const [minPrecio, setMinPrecio] = useState('');
@@ -116,6 +120,7 @@ const StorePage = ({ tienda  }) => {
     <div className="store-page" role="main" aria-labelledby="store-title">
       <div className='store-page__box'>
       <div className='store-page__header_box'>
+        
           <div className="store-page__header">
             <h1 id="store-title" className="store-page__title">{tienda.nombre}</h1>
           </div>
@@ -142,38 +147,61 @@ const StorePage = ({ tienda  }) => {
             </div>
         </div> */}
         <div className="store-page__search-bar" >
-            <Search 
-              placeholder="Buscar productos..." 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onSearch={fetchProductos
-              }
-              enterButton 
-              size="large"
-               style={{ 
-                height: '2.5rem',
-                display: 'flex',
-                alignItems: 'stretch'
-              }}
-            />
+          <Search 
+            placeholder="Buscar productos..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onSearch={fetchProductos}
+            enterButton 
+            size="large"
+            className="search-bar"
+            style={{ 
+              width: '100%',
+              maxWidth: '600px'
+            }}
+          />
+      
         </div>
       </div>
       </div>
       <div className = "filters_and_products_box">
+              <div className="filter_box_store filter-desktop">
+                 <FiltrosStore 
+                    minPrecio={minPrecio}
+                    setMinPrecio={setMinPrecio}
+                    maxPrecio={maxPrecio}
+                    setMaxPrecio={setMaxPrecio}
+                    categoria={categoria}
+                    setCategoria={setCategoria}
+                    sortOrder={sortOrder}
+                    setSortOrder={setSortOrder}
+                    handleClearFilters={handleClearFilters}
+                    fetchProductos={fetchProductos}
+                  />
             
-              <FiltrosStore 
-                minPrecio={minPrecio}
-                setMinPrecio={setMinPrecio}
-                maxPrecio={maxPrecio}
-                setMaxPrecio={setMaxPrecio}
-                categoria={categoria}
-                setCategoria={setCategoria}
-                sortOrder={sortOrder}
-                setSortOrder={setSortOrder}
-                handleClearFilters={handleClearFilters}
-                fetchProductos={fetchProductos}
-              />
-            
+              </div>
+              <details className="filter-accordion filter-mobile">
+                <summary className="filter-accordion-header">
+                 Filtros
+                </summary>
+                <div className="filter-accordion-content">
+                   <FiltrosStore 
+                    minPrecio={minPrecio}
+                    setMinPrecio={setMinPrecio}
+                    maxPrecio={maxPrecio}
+                    setMaxPrecio={setMaxPrecio}
+                    categoria={categoria}
+                    setCategoria={setCategoria}
+                    sortOrder={sortOrder}
+                    setSortOrder={setSortOrder}
+                    handleClearFilters={handleClearFilters}
+                    fetchProductos={fetchProductos}
+                  />
+                
+                </div>
+              </details>
+                        
+             
            {loading ? (
             <Spinner role="status" aria-live="polite" aria-label="Cargando productos"/>
           ) : (

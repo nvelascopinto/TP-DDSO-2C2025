@@ -544,33 +544,40 @@
 
 @media (min-width: 768px) {
   .header__home-icon .material-symbols-outlined {
-    font-size: 26px !important;
+    display: none;
   }
 }
 
 .header__home-icon .material-symbols-outlined {
-  color: var(--color-accent-secondary);
+  color: var(--color-white);
   transition: color 0.2s ease;
 }
 
-@media (min-width: 768px) {
-  .header__home-icon .material-symbols-outlined {
-    color: rgba(255, 255, 255, 0.9);
-  }
-}
 
 .header__home-icon:hover .material-symbols-outlined {
-  color: var(--color-white);
+  color: var(--color-accent-secondary);
 }
 
-@media (min-width: 768px) {
-  .header__home-icon:hover .material-symbols-outlined {
-    color: var(--color-white);
-  }
-}
 
 .header__nav-link.header__home-icon.active .material-symbols-outlined {
   color: var(--color-white) !important;
+}
+.header__nav-link.header__home-icon.active:hover .material-symbols-outlined {
+  color: var(--color-accent-secondary) !important;
+}
+
+@media (min-width: 768px) {
+  .header__nav-link.header__home-icon.active .material-symbols-outlined {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .button_home{
+    display: none;
+}}
+.button_home{
+  width : 100%;
 }
 
 .logo_inicio_title{

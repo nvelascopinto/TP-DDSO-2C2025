@@ -1,8 +1,9 @@
 import {apiBack} from "./apiBack.js"
 
-export async function getTiendaByName(nombre){
+export async function getTiendaByVendedor(nombre){
     return apiBack.get(`/tiendas/${nombre}`)
     .then((response) => {
+        console.log("PEGADA AL BACK" + response.data.nombre)
         return response.data
     })
     .catch((error) => {
