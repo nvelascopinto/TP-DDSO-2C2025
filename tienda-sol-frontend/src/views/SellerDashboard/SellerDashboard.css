@@ -81,6 +81,22 @@
   font-weight: 600;
 }
 
+.material-symbols-outlined {
+  font-size: 1rem;
+  margin-left: 0.3rem;;
+}
+
+.button-delete{
+  margin-left: 1.5rem;
+  padding: 0.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color:var(--color-red-500);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
 .table-action-button {
   color: var(--color-bordo-negro);
   background: none;

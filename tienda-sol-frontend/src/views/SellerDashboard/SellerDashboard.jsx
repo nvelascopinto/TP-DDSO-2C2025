@@ -6,7 +6,7 @@ import Modal from '../../components/Modal/Modal.jsx';
 import ProductForm from '../../components/ProductsForm/ProductForm.jsx';
 import Button from '../../components/Button/Button.jsx';
 import './SellerDashboard.css';
-import { getProductosByVendedor, actualizarProducto, crearProducto } from '../../services/productoService.js';
+import { getProductosByVendedor, actualizarProducto, crearProducto, eliminarProducto } from '../../services/productoService.js';
 import { Pagination } from 'antd';
 
 
@@ -82,6 +82,41 @@ const SellerDashboard = () => {
       alert("No se pudo guardar el producto.");
     }
   };
+  
+  const handleDeleteProduct = async (productId) => {
+  if (!currentUser) return;
+/*
+  const confirmDelete = window.confirm("¿Está seguro de que quiere eliminar este producto?");
+  if (!confirmDelete) return;*/
+
+  try {
+
+    await eliminarProducto(productId, currentUser.username);
+    fetchProductos();
+    alert("Producto eliminado exitosamente.");
+    return;
+  } catch (error) {
+
+    console.error("Error eliminando producto:", error);
+    //alert("No se pudo eliminar el producto.");
+    return;
+  }
+};
+
+const handleToggleActive = async (productData, value) => {
+  if (!currentUser) return;
+
+  try {
+    const nuevoEstado = value === "true";
+
+    await actualizarProducto(selectedProduct._id, productData, currentUser.username);
+    
+
+  } catch (error) {
+    console.error("Error actualizando estado:", error);
+    alert("No se pudo actualizar el estado del producto.");
+  }
+};
 
   if (!currentUser) return null;
 
@@ -116,9 +151,22 @@ const SellerDashboard = () => {
                     <td data-label="Producto">{p.titulo}</td>
                     <td data-label="Precio">${p.precio.toFixed(2)}</td>
                     <td data-label="Stock">{p.stock}</td>
-                    <td data-label="Activo">{p.activo ? 'Sí' : 'No'}</td>
+                    <td data-label="Activo" className=''>
+                        <select
+                          value={p.activo ? "true" : "false"}
+                          onChange={(e) => handleToggleActive(p._id, e.target.value)}
+                        >
+                          <option value="true">Activo</option>
+                          <option value="false">Inactivo</option>
+                        </select>
+                      </td>
                     <td data-label="Acciones">
-                      <button onClick={() => handleOpenEditModal(p)} className="table-action-button" aria-label={`Editar producto ${p.titulo}`}>Editar</button>
+                      <button onClick={() => handleOpenEditModal(p)} className="table-action-button" aria-label={`Editar producto ${p.titulo}`}>Editar
+                      <span class="material-symbols-outlined">edit</span>
+                      </button>
+                      <button type="button" onClick={() => handleDeleteProduct(p._id)} className="button-delete">
+                          <span class="material-symbols-outlined">delete</span>
+                      </button>
                     </td>
                   </tr>
                 ))}

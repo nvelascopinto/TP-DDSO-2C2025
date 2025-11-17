@@ -9,6 +9,11 @@ class ProductoRepository {
     return productoNuevo.save()
   }
 
+  eliminar(productoID){
+    return this.model.findByIdAndDelete(productoID)
+  }
+
+
   update(productoModificado, id) {
     console.log("PRODUCTO MODIFICADO"+ productoModificado.precio)
     return this.model.findByIdAndUpdate(id, productoModificado, { new: true })

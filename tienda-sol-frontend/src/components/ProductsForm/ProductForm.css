@@ -1,8 +1,10 @@
 .product-form {
-  padding: 1.25rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   width: 100%;
 }
 
@@ -13,10 +15,9 @@
 }
 
 .form-label {
-  font-size: 0.9rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: var(--color-text-secondary);
-  margin-bottom: 0.35rem;
 }
 
 .form-input,
