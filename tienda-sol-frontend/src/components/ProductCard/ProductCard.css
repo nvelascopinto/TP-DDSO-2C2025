@@ -73,5 +73,11 @@
 }
 
 .product-card__button:hover {
-  background-color: rgba(68, 179, 151, 0.9);
+  background-color: var(--color-gray-500);
 }
+
+.product-card__button:disabled {
+  background-color:var(--color-gray-700);
+  opacity: 0.5;
+}
+

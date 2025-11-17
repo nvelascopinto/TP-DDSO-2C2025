@@ -50,6 +50,7 @@
   width: 100%;
   text-align: left;
   border-collapse: collapse;
+  overflow-x: auto; 
 }
 
 .products-table th,
@@ -161,4 +162,10 @@
   .table-action-button {
     font-size: 0.9rem;
   }
+}
+
+.paginacion {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }

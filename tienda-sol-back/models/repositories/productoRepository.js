@@ -18,10 +18,10 @@ class ProductoRepository {
     return this.model.findById(id)
   }
 
-  obtenerTodosDeVendedor(idVendedor, filtros = {}, pagina, limite) {
+  obtenerTodosDeVendedor(idVendedor, filtros = {}, pagina = 1 , limite = 10) {
   const query = this.mapFilter(filtros, idVendedor)
   const sort = this.mapSort(filtros.orden)
-  const desplazamiento = (pagina - 1) * limite
+  const desplazamiento = (pagina -1 ) * limite
 
   return this.model.countDocuments(query)
     .then((total) => {
@@ -64,18 +64,17 @@ mapFilter(filtros, idVendedor) {
 }
 
 mapSort(orden) {
-  // CORREGIDO: ahora acepta tanto el formato viejo como el nuevo
   switch (orden) {
     case "asc":
     case "precioAsc":
-      return { precio: 1 }
+      return { precio: 1, _id: 1 }
     case "desc":
     case "precioDesc":
-      return { precio: -1 }
+      return { precio: -1, _id: 1 }
     case "masVendido":
-      return { cantVentas: -1 }
+      return { cantVentas: -1, _id: 1 }
     default:
-      return { cantVentas: -1 } // Por defecto más vendidos
+      return { cantVentas: -1, _id: 1  }
   }
 } 
 }

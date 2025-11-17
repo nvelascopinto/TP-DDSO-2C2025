@@ -116,7 +116,7 @@ const RegisterPage = ({ onRegister }) => {
             <div className="form-group">
               <label htmlFor="telefono" className="form-label">Teléfono*</label>
               <input
-                type="tel"
+                type="number"
                 id="telefono"
                 name="telefono"
                 className="form-input"

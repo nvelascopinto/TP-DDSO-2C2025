@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-
 import ProductCard from '../../components/ProductCard/ProductCard.jsx';
 import Spinner from '../../components/Spinner/Spinner.jsx';
 import './StorePage.css';
@@ -18,6 +17,7 @@ import { Add, Remove } from '@mui/icons-material';
 import { AudioOutlined } from '@ant-design/icons';
 import { Input, Space } from 'antd';
 const { Search } = Input;
+import { Pagination } from 'antd';
 
 const StorePage = () => {
   // Inicializa con null para detectar cuando no hay datos
@@ -33,9 +33,11 @@ const StorePage = () => {
   const [maxPrecio, setMaxPrecio] = useState('');
   const [categoria, setCategoria] = useState('all');
   const [sortOrder, setSortOrder] = useState('masVendido');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalElements, setTotalElements] = useState('');
+  const [limite, setLimite] = useState(6);
   
   // Paginación
-  const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 6;
 
   const fetchProductos = async () => {
@@ -44,7 +46,7 @@ const StorePage = () => {
         const filters = {
           vendedor: tienda.username,
           pagina: currentPage,
-          limite: productsPerPage,
+          limite: limite,
         };
 
         // Agregar orden
@@ -77,6 +79,10 @@ const StorePage = () => {
         const data = await getProductosByVendedor(filters);
         console.log('Respuesta del backend:', data); // Para debug
         setProductos(data);
+        setTotalElements(data.pagina.totalElementos);
+        console.log("PAGINAS TOTALES : " + data.pagina.totalPaginas)
+
+
       } catch (error) {
         console.error("Error fetching products:", error);
         // En caso de error, establece un objeto vacío para evitar crashes
@@ -96,16 +102,7 @@ const StorePage = () => {
   const currentProducts = 
                          productos?._embedded?.productos ||
                          [];
-  
-  const totalPages = productos?.pagina?.totalPaginas ||  
-                    1;
-
-  // Resetear página si cambian filtros
-  // useEffect(() => {
-  //   setCurrentPage(1);
-  // }, [searchTerm, minPrecio, maxPrecio, categoria, sortOrder]);
-
-  // Limpiar todos los filtros
+ 
   const handleClearFilters = () => {
     setSearchTerm('');
     setMinPrecio('');
@@ -116,6 +113,11 @@ const StorePage = () => {
     setShouldFetch(true);
   };
 
+    const onChange = page => {
+    setShouldFetch(true);
+    setCurrentPage(page);
+  };
+
   return (
     <div className="store-page" role="main" aria-labelledby="store-title">
       <div className='store-page__box'>
@@ -124,28 +126,6 @@ const StorePage = () => {
           <div className="store-page__header">
             <h1 id="store-title" className="store-page__title">{tienda.nombre}</h1>
           </div>
-
-          {/* <div className="store-page__search-bar">
-            <input
-              type="text"
-              id="titulo"
-              placeholder="Buscar por titulo del producto..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-              aria-label="Buscar productos por titulo"
-            />
-            <div className = 'search-icon-button'>
-            <IconButton aria-label="search icon"
-                        sx={{ color: 'white' }}
-                        onClick={fetchProductos}>
-              <SearchIcon 
-                          
-                          fontSize="large"
-                          />
-            </IconButton>
-            </div>
-        </div> */}
         <div className="store-page__search-bar" >
           <Search 
             placeholder="Buscar productos..." 
@@ -207,6 +187,7 @@ const StorePage = () => {
           ) : (
             <>
           {currentProducts.length > 0 ? (
+            <div>
             <div className="store-page__product-grid" role="grid" aria-label="Lista de productos disponibles">
               {currentProducts.map((producto) => (
                 <ProductCard 
@@ -216,7 +197,19 @@ const StorePage = () => {
                   producto={producto} 
                 />
               ))}
+             
             </div>
+             <div className='paginacion'>
+                    <Pagination 
+                            current={currentPage} 
+                            onChange={onChange} 
+                            total={totalElements} // Total de elementos, no páginas
+                            pageSize={limite}
+                            showSizeChanger={false}
+                            style={{ marginTop: '20px', textAlign: 'center' }}
+                          /> 
+                      </div> </div>
+              
           ) : (
             <div className="store-page__no-results">
               <p>No se encontraron productos con los filtros seleccionados.</p>
@@ -225,7 +218,7 @@ const StorePage = () => {
         </>
         )}
       </div>
-      {!loading && (
+      {/* {!loading && (
         <>
           {totalPages > 1 && (
             <div className="pagination" role="navigation" aria-label="Controles de paginación de productos">
@@ -262,7 +255,7 @@ const StorePage = () => {
           )}
         </>
       )}
-       
+        */}
     </div>
   );
 };

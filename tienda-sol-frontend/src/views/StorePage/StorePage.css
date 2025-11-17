@@ -362,41 +362,9 @@
   color: var(--color-text-secondary);
 }
 
-.pagination {
+.paginacion {
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
-  margin: 2rem 0;
-  flex-wrap: wrap;
+  margin-top: 20px;
 }
 
-.pagination__button {
-  background-color: var(--color-white);
-  border: 1px solid var(--color-gray-300);
-  color: var(--color-text-primary);
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  font-weight: 500;
-  min-width: 40px;
-  transition: all 0.2s ease;
-  box-shadow: var(--shadow-sm);
-}
-
-.pagination__button:hover:not(:disabled) {
-  border-color: var(--color-accent-primary);
-  color: var(--color-accent-primary);
-  box-shadow: 0 0 0 2px rgba(68, 179, 151, 0.15);
-}
-
-.pagination__button.active {
-  background-color: var(--color-accent-primary);
-  color: var(--color-white);
-  border-color: var(--color-accent-primary);
-  box-shadow: var(--shadow-md);
-}
-
-.pagination__button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}

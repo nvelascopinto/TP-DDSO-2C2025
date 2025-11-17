@@ -7,6 +7,8 @@ import ProductForm from '../../components/ProductsForm/ProductForm.jsx';
 import Button from '../../components/Button/Button.jsx';
 import './SellerDashboard.css';
 import { getProductosByVendedor, actualizarProducto, crearProducto } from '../../services/productoService.js';
+import { Pagination } from 'antd';
+
 
 const SellerDashboard = () => {
   const { currentUser } = useAuth();
@@ -14,16 +16,23 @@ const SellerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalElements, setTotalElements] = useState('');
+  const [limite, setLimite] = useState(5);
 
   const fetchProductos = useCallback(async () => {
     if (currentUser) {
       try {
         setLoading(true);
          const filters = {
-          vendedor: currentUser.username
+          vendedor: currentUser.username,
+          limite : limite,
+          pagina :currentPage
         };
         const data = await getProductosByVendedor(filters);
         setProductos(data);
+        setTotalElements(data.pagina.totalElementos);
+        console.log("PAGINAS TOTALES : " + data.pagina.totalPaginas)
       } catch (error) {
         console.error("Error fetching seller products:", error);
       } finally {
@@ -31,14 +40,17 @@ const SellerDashboard = () => {
       }
     }
       
-  }, [currentUser]);
+  }, [currentUser, currentPage, limite]);
   const currentProducts = 
                          productos?._embedded?.productos ||
                          [];
   useEffect(() => {
     fetchProductos();
   }, [fetchProductos]);
-
+  
+  const onChange = page => {
+    setCurrentPage(page);
+  };
   const handleOpenAddModal = () => {
     setSelectedProduct(null);
     setIsModalOpen(true);
@@ -124,6 +136,16 @@ const SellerDashboard = () => {
           />
         </Modal>
       )}
+      <div className='paginacion'>
+      <Pagination 
+              current={currentPage} 
+              onChange={onChange} 
+              total={totalElements} // Total de elementos, no páginas
+              pageSize={limite}
+              showSizeChanger={false}
+              style={{ marginTop: '20px', textAlign: 'center' }}
+            /> 
+        </div>
     </div>
   );
 };

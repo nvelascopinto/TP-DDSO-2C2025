@@ -33,7 +33,7 @@ const LoginPage = ({ onLogin }) => {
         }
     })
     .catch(() => {
-      setErrorMsg('La contraseña ingresada es incorrecta.');
+      setErrorMsg('La contraseña/usuarios ingresados son incorrectos.');
     });
 };
     
