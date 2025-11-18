@@ -19,6 +19,7 @@ import { ConfigProvider } from 'antd';
 import esES from 'antd/locale/es_ES';
 import { CheckOut } from './views/CheckOut/CheckOut';
 import { TipoUsuario } from '../enums';
+import UserProfile from './views/userInfo/userInfo.jsx';
 
 
 
@@ -168,6 +169,14 @@ const AppContent = () => {
             element={
               currentUser 
                 ? <NotificationsPage navigateTo={navigateTo} />
+                : <Navigate to="/login" replace />
+            } 
+          />
+          <Route 
+            path="/user" 
+            element={
+              currentUser 
+                ? <UserProfile  navigateTo={navigateTo}/>
                 : <Navigate to="/login" replace />
             } 
           />

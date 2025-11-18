@@ -22,11 +22,12 @@ export const DireccionEntregaForm = (({setData, onFormValidChange})=>{
         }
     }
     
-    return <div>
+    return <div aria-label="Formulario de dirección de entrega"> 
         <Form
             layout="vertical"
             onFinish={onFinish}
             form={form}
+            aria-label="Datos de dirección de entrega"
         >
             <Row gutter={16}>
                 <Col xs={24} sm={16}>
@@ -56,6 +57,7 @@ export const DireccionEntregaForm = (({setData, onFormValidChange})=>{
                             placeholder="Número" 
                             type="number"
                             aria-label="Numero de calle destino"
+                            aria-required="true"
                             disabled={isSubmitted}
                             size="large"
                         />
@@ -106,6 +108,7 @@ export const DireccionEntregaForm = (({setData, onFormValidChange})=>{
                         <Input 
                             placeholder="Código postal" 
                             type="number"
+                            aria-required="true"
                             aria-label="Codigo Postal"
                             disabled={isSubmitted}
                             size="large"
@@ -122,6 +125,7 @@ export const DireccionEntregaForm = (({setData, onFormValidChange})=>{
                             placeholder="Ciudad" 
                             type="text"
                             aria-label="Ciudad"
+                            aria-required="true"
                             disabled={isSubmitted}
                             size="large"
                         />
@@ -139,6 +143,7 @@ export const DireccionEntregaForm = (({setData, onFormValidChange})=>{
                         <Input 
                             placeholder="Provincia" 
                             type="text"
+                            aria-required="true"
                             aria-label="Provincia"
                             disabled={isSubmitted}
                             size="large"
@@ -155,6 +160,7 @@ export const DireccionEntregaForm = (({setData, onFormValidChange})=>{
                             placeholder="País" 
                             type="text"
                             aria-label="Pais"
+                            aria-required="true"
                             disabled={isSubmitted}
                             size="large"
                         />

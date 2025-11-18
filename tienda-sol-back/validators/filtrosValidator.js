@@ -13,5 +13,6 @@ export const filtrosValidator = z.object({
   titulo: z.string().optional(),
   categoria: z.string().optional(),
   descripcion: z.string().optional(),
-  orden: z.string().optional()
+  orden: z.string().optional(),
+  active : z.string().optional()
 })

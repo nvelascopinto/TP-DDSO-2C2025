@@ -8,9 +8,11 @@
   width: 100%;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 768px) {
   .order-history-page {
-    padding: 2rem;
+    padding: 0rem;
+    border-radius: 0rem;
+     box-shadow: none;  
   }
 }
 
@@ -209,17 +211,17 @@
 }
 
 .order-item__body button {
-  width: 100%;
+  width: auto;
   max-width: 280px;
   padding: 0.65rem 1.5rem;
   font-size: 0.85rem;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 768px) {
   .order-item__body button {
     width: auto;
     max-width: none;
-    padding: 0.5rem 1.25rem;
+    padding: 0.3rem 3.5rem;
     font-size: 0.9rem;
   }
 }

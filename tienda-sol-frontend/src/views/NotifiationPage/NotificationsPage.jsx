@@ -75,21 +75,6 @@ const NotificationsPage = ({ navigateTo }) => {
   };
 
 
-  /*const filteredNotifications = useMemo(() => {
-    switch (filter) {
-      case 'read':
-        return notifications.filter(n => n.leida);
-      case 'unread':
-        return notifications.filter(n => !n.leida);
-      case 'all':
-      default:
-        return notifications;
-    }
-  }, [notifications, filter]); */
-
-
-
-
 if (loading) {
     return <Spinner role="status"
         aria-busy="true"
@@ -98,7 +83,7 @@ if (loading) {
   }
 
   return (
-    <div className="notifications-page" role="main">
+    <div className="notifications-page" role="main" aria-labelledby="notifications-title">
       <div className="notifications-page__header">
         <h1 className="notifications-page__title">Notificaciones</h1>
         <div className="notifications-page__filter"  aria-label="Filtro de notificaciones">
@@ -108,7 +93,8 @@ if (loading) {
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
             className="filter-select"
-          >
+            aria-label="Filtrar notificaciones por estado"
+            >
             <option value="unread">No Leídas</option>
             <option value="read">Leídas</option>
             <option value="all">Todas</option>
@@ -117,7 +103,7 @@ if (loading) {
       </div>
 
       {filteredNotifications.length === 0 ? (
-        <p className="notifications-page__empty-message">
+        <p className="notifications-page__empty-message" role="status" aria-live="polite">
           {filter === 'read' ? 'No tienes notificaciones leídas.' : 'No tienes notificaciones nuevas.'}
         </p>
       ) : (
@@ -132,12 +118,13 @@ if (loading) {
               </div>
               <div className='buttons-notificaciones'>
               {!notif.leida && (
-                
+                <div aria-label="Marcar esta notificación como leída" >
                 <Button
                   onClick={() => handleMarkAsRead(notif._id)}
                 >
                   Marcar como leída
                 </Button>
+                </div>
               )}
                 {notif.pedido && (
                 <Button 

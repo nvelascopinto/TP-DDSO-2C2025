@@ -30,14 +30,21 @@ const getStatusClass = (status) => {
 const OrderHistoryPage = ({ navigateTo }) => {
     const { currentUser } = useAuth();
     const { pedidos, getPedidosUser, updatePedido} = usePedidos();
+     const [refreshKey, setRefreshKey] = useState(0);
+
 
     useEffect(() => {
         getPedidosUser();
-    }, [getPedidosUser]);
+    }, [getPedidosUser, refreshKey]);
 
     useEffect(() => {
         console.log('Pedidos actualizados:', pedidos);
     }, [pedidos]);
+
+    const handleEstadoActualizado = () => {
+        //setRefreshKey(prev => prev + 1);
+        getPedidosUser();
+    };
 
     // useEffect(() => {
     //     getPedidosUser();
@@ -45,13 +52,14 @@ const OrderHistoryPage = ({ navigateTo }) => {
     // }, [getPedidosUser]);
     
 
+
     return (
         <div className="order-history-page" role="main" aria-labelledby="order-history-title">
             <h1 className="order-history-page__title" id="order-history-title">Mi Historial de Pedidos</h1>
             {pedidos.length === 0 ? (
                 <p className="order-history-page__empty-message" role="status" aria-live="polite">Aún no has realizado ningún pedido.</p>
             ) : (
-                <div className="order-list">
+                <div className="order-list" role="list">
                     {pedidos.map((pedido) => {
                         return (
                             <div key={pedido._id} className ="order-form" role="listitem" aria-labelledby={`order-id-${pedido._id}`}>
@@ -72,13 +80,17 @@ const OrderHistoryPage = ({ navigateTo }) => {
                                 </div>
                                 <div className = "order-change-state">
                                         <div role="region" aria-label={`Acciones del pedido ${pedido._id}`}>
-                                            <PedidoAcciones pedido={pedido} />
+                                            <PedidoAcciones pedido={pedido} 
+                                            onEstadoActualizado={handleEstadoActualizado} 
+                                            />
                                         </div>
                                 </div>
                                 <div className="order-item__body">
+                                        <div aria-label={`Ver detalles del pedido número ${pedido.numero}`}>
                                         <Button onClick={() =>  navigateTo(`historial-pedidos/${pedido._id}`, null, pedido._id)} aria-label={`Ver detalles del pedido ${pedido._id}`}>
                                             Ver Pedido
                                         </Button>
+                                        </div>
                                         <div>
                                             <p className="order-item__total">Total: <span aria-label={`Total del pedido: ${pedido.total.toFixed(2)}`}>${pedido.total.toFixed(2)}</span></p>
                                         </div>

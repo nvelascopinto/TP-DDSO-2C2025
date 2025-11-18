@@ -5,12 +5,13 @@ import { tipoUsuario } from "../models/entities/tipoUsuario.js"
 import { fromPedidoDTO } from "../converters/pedidoConverter.js"
 import { PedidoInexistenteError } from "../errors/notFoundError.js"
 import { estadoConverter } from "../converters/estadoConverter.js"
+import { Estado } from "../models/entities/estado.js"
 class PedidoService {
 
- 
 constructor(){
   this.numeroPedido = this.getNumeroPed()
 }
+
   getNumeroPed(){
     return pedidoRepository.getNumeroPedido()
       .then((pedido) => {
@@ -43,7 +44,8 @@ constructor(){
       }
       )
       .then((nuevoPedido) => {
-        nuevoPedido.actualizarStock()
+        productoService.reducirStock(nuevoPedido.items)
+        
         return pedidoRepository.crear(nuevoPedido)
       })
       .then((pedidoGuardado) =>
@@ -81,6 +83,10 @@ constructor(){
         estadoNuevo = estadoConverter(estado)
         estadoNuevo.validarUsuario(usuario)
         pedido.actualizarEstado(estadoNuevo, usuario, motivo)
+        if(estadoNuevo.nombre == "Cancelado" ) {
+          productoService.aumentarStock(pedido.items)
+
+        }
         return pedidoRepository.update(pedido)
       })
       .then((pedidoActualizado) =>

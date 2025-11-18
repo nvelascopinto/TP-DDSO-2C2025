@@ -20,25 +20,27 @@ const { Search } = Input;
 import { Pagination } from 'antd';
 
 const StorePage = () => {
-  // Inicializa con null para detectar cuando no hay datos
+  
   const [productos, setProductos] = useState(null);
   const [loading, setLoading] = useState(true);
   const [shouldFetch, setShouldFetch] = useState(true);
   const location = useLocation();
   const tienda = location.state?.tienda;
   console.log(tienda)
-  // Estados de filtros
+
   const [searchTerm, setSearchTerm] = useState('');
   const [minPrecio, setMinPrecio] = useState('');
   const [maxPrecio, setMaxPrecio] = useState('');
+  //const [minPrecio, setMinPrecio] = useState(0);
+  //const [maxPrecio, setMaxPrecio] = useState(null);
   const [categoria, setCategoria] = useState('all');
   const [sortOrder, setSortOrder] = useState('masVendido');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalElements, setTotalElements] = useState('');
   const [limite, setLimite] = useState(6);
   
-  // Paginación
-  const productsPerPage = 6;
+
+const [precioMaximoProductos, setPrecioMaximoProductos] = useState('');
 
   const fetchProductos = async () => {
       try {
@@ -47,41 +49,56 @@ const StorePage = () => {
           vendedor: tienda.username,
           pagina: currentPage,
           limite: limite,
+          active : "true"
         };
 
-        // Agregar orden
         if (sortOrder && sortOrder !== 'masVendido') {
           filters.orden = sortOrder;
         } else if (sortOrder === 'masVendido') {
           filters.orden = 'masVendido';
         }
 
-        // Agregar categoría
         if (categoria !== 'all') {
           filters.categoria = categoria;
         }
 
-        // Agregar búsqueda por titulo
         if (searchTerm.trim()) {
           filters.titulo = searchTerm.trim();
         }
 
-        // Agregar precio mínimo
         if (minPrecio.trim() && !isNaN(minPrecio)) {
           filters.minPrecio = parseFloat(minPrecio);
         }
 
-        // Agregar precio máximo
+        //if (maxPrecio.trim() && !isNaN(maxPrecio)) {
+        //  filters.maxPrecio = parseFloat(maxPrecio);
+        //}
+
+        // Solo aplicar maxPrecio si el usuario lo modificó manualmente
         if (maxPrecio.trim() && !isNaN(maxPrecio)) {
-          filters.maxPrecio = parseFloat(maxPrecio);
+          const productosArray = productos?._embedded?.productos || [];
+          const precioMaximoActual = productosArray.length > 0 
+            ? Math.max(...productosArray.map(p => p.precio))
+            : 10000;
+          
+          // Solo filtrar si el usuario puso un valor menor al máximo
+          if (parseFloat(maxPrecio) < precioMaximoActual) {
+            filters.maxPrecio = parseFloat(maxPrecio);
+          }
         }
 
         const data = await getProductosByVendedor(filters);
-        console.log('Respuesta del backend:', data); // Para debug
         setProductos(data);
         setTotalElements(data.pagina.totalElementos);
-        console.log("PAGINAS TOTALES : " + data.pagina.totalPaginas)
-
+    
+        
+      // Calcular el precio máximo de los productos
+      const productosArray = data?._embedded?.productos || [];
+      if (productosArray.length > 0) {
+        const maxPrecio = Math.max(...productosArray.map(p => p.precio));
+        setPrecioMaximoProductos(maxPrecio);
+      }
+        
 
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -113,7 +130,7 @@ const StorePage = () => {
     setShouldFetch(true);
   };
 
-    const onChange = page => {
+    const onChange = page => {  
     setShouldFetch(true);
     setCurrentPage(page);
   };
@@ -139,18 +156,20 @@ const StorePage = () => {
               width: '100%',
               maxWidth: '600px'
             }}
+            aria-label="Buscar productos en la tienda"
           />
       
         </div>
       </div>
       </div>
       <div className = "filters_and_products_box">
-              <div className="filter_box_store filter-desktop">
+              <div className="filter_box_store filter-desktop" role="complementary" aria-label="Panel de filtros">
                  <FiltrosStore 
                     minPrecio={minPrecio}
                     setMinPrecio={setMinPrecio}
                     maxPrecio={maxPrecio}
                     setMaxPrecio={setMaxPrecio}
+                    precioMaximo={precioMaximoProductos}
                     categoria={categoria}
                     setCategoria={setCategoria}
                     sortOrder={sortOrder}
@@ -160,8 +179,8 @@ const StorePage = () => {
                   />
             
               </div>
-              <details className="filter-accordion filter-mobile">
-                <summary className="filter-accordion-header">
+              <details className="filter-accordion filter-mobile" aria-label="Menú de filtros">
+                <summary className="filter-accordion-header" aria-label="Expandir o contraer filtros">
                  Filtros
                 </summary>
                 <div className="filter-accordion-content">
@@ -170,6 +189,7 @@ const StorePage = () => {
                     setMinPrecio={setMinPrecio}
                     maxPrecio={maxPrecio}
                     setMaxPrecio={setMaxPrecio}
+                    precioMaximo={precioMaximoProductos}
                     categoria={categoria}
                     setCategoria={setCategoria}
                     sortOrder={sortOrder}
@@ -181,7 +201,7 @@ const StorePage = () => {
                 </div>
               </details>
                         
-             
+           <section aria-label="Productos de la tienda">   
            {loading ? (
             <Spinner role="status" aria-live="polite" aria-label="Cargando productos"/>
           ) : (
@@ -199,7 +219,7 @@ const StorePage = () => {
               ))}
              
             </div>
-             <div className='paginacion'>
+             <div className='paginacion'  aria-label="Paginación de productos">
                     <Pagination 
                             current={currentPage} 
                             onChange={onChange} 
@@ -207,55 +227,19 @@ const StorePage = () => {
                             pageSize={limite}
                             showSizeChanger={false}
                             style={{ marginTop: '20px', textAlign: 'center' }}
+                            aria-label={`Página ${currentPage} de ${Math.ceil(totalElements / limite)}`}
                           /> 
                       </div> </div>
               
           ) : (
-            <div className="store-page__no-results">
+            <div className="store-page__no-results" aria-live="polite">
               <p>No se encontraron productos con los filtros seleccionados.</p>
             </div>
           )}
         </>
         )}
+        </section>
       </div>
-      {/* {!loading && (
-        <>
-          {totalPages > 1 && (
-            <div className="pagination" role="navigation" aria-label="Controles de paginación de productos">
-              <button
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((p) => p - 1)}
-                aria-label="Ir a la página anterior"
-                className="pagination__button"
-              >
-                Anterior
-              </button>
-
-              {Array.from({ length: totalPages }, (_, i) => (
-                <button
-                  key={i + 1}
-                  className={`pagination__button ${currentPage === i + 1 ? 'active' : ''}`}
-                  onClick={() => setCurrentPage(i + 1)}
-                  aria-current={currentPage === i + 1 ? 'page' : undefined}
-                  aria-label={`Ir a la página ${i + 1}`}
-                >
-                  {i + 1}
-                </button>
-              ))}
-
-              <button
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((p) => p + 1)}
-                aria-label="Ir a la página siguiente"
-                className="pagination__button"
-              >
-                Siguiente
-              </button>
-            </div>
-          )}
-        </>
-      )}
-        */}
     </div>
   );
 };

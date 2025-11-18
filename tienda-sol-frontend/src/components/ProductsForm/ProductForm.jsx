@@ -193,7 +193,6 @@ const handleSubmit = (e) => {
                     id="fotos"
                     accept="image/*"
                     onChange={handleFileChange}
-                    className="form-input"
                     disabled={cargando}
                 />
                 {cargando && <p>Subiendo imagen...</p>}

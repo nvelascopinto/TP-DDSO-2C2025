@@ -14,11 +14,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* padding: 0.75rem 1rem; */
   width: 100%;
   max-width: 100%;
   position: relative;
-  /* min-height: 60px; */
 }
 
 .header__logo {
@@ -92,7 +90,7 @@
   padding: 0;
   z-index: 1002;
   position: relative;
-  flex-shrink: 0; /* no se comprime */
+  flex-shrink: 0;
   margin-left: auto;
 }
 
@@ -168,13 +166,13 @@
   overflow-y: auto;
   transition: transform 0.3s ease;
   transform: translateX(100%);
-  pointer-events: none; /* desactiva clicks cuando esta cerrado */
+  pointer-events: none;
   align-items: center;
 }
 
 .header__nav.open {
   transform: translateX(0);
-  pointer-events: auto; /* activa clicks cuando está abierto */
+  pointer-events: auto;
 }
 
 @media (min-width: 768px) {
@@ -273,9 +271,26 @@
 
 /* CARRITO Y NOTIFICACIONES - Iconos */
 .header__cart-icon,
-.header__notification-icon {
+.header__notification-icon,
+.header__profile-icon {
   position: relative;
   justify-content: center !important;
+}
+
+/* Estilos especiales para iconos en móvil */
+@media (max-width: 767px) {
+  .header__cart-icon,
+  .header__notification-icon,
+  .header__profile-icon {
+    justify-content: flex-start !important;
+    width: 100% !important;
+  }
+  
+  .header__cart-icon .material-symbols-outlined,
+  .header__notification-icon .notification-bell,
+  .header__profile-icon .material-symbols-outlined {
+    margin-left: 0 !important;
+  }
 }
 
 .header__cart-icon .material-symbols-outlined,
@@ -290,12 +305,37 @@
   }
 }
 
+.header__profile-icon .material-symbols-outlined {
+  font-size: 1.7rem !important;
+  color: var(--color-accent-secondary);
+  transition: color 0.2s ease;
+  margin-left: 0.5rem;
+}
+
+@media (max-width: 767px) {
+  .header__profile-icon .material-symbols-outlined {
+    margin-left: 0 !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .header__profile-icon .material-symbols-outlined {
+    font-size: 2rem !important;
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
 .header__notification-icon .notification-bell {
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
+  margin-left: 0.5rem;
+}
+
+@media (max-width: 767px) {
+  .header__notification-icon .notification-bell {
+    margin-left: 0 !important;
+  }
 }
 
 .header__notification-icon .notification-bell .icon {
@@ -528,7 +568,6 @@
     background-color: var(--color-accent-transparent);
     color: var(--color-white);
     transform: none;
-    
   }
 }
 
@@ -553,15 +592,14 @@
   transition: color 0.2s ease;
 }
 
-
 .header__home-icon:hover .material-symbols-outlined {
   color: var(--color-accent-secondary);
 }
 
-
 .header__nav-link.header__home-icon.active .material-symbols-outlined {
   color: var(--color-white) !important;
 }
+
 .header__nav-link.header__home-icon.active:hover .material-symbols-outlined {
   color: var(--color-accent-secondary) !important;
 }
@@ -573,13 +611,22 @@
 }
 
 @media (min-width: 768px) {
-  .button_home{
+  .button_home {
     display: none;
-}}
-.button_home{
-  width : 100%;
+  }
 }
 
-.logo_inicio_title{
+.button_home {
+  width: 100%;
+}
+
+.logo_inicio_title {
   margin-left: 0.5rem;
 }
+
+
+@media (max-width: 767px) {
+  .header__cart-icon:not(:has(~ .header__notification-icon)):not(:has(~ .header__profile-icon)) {
+    justify-content: center !important;
+    margin: 0 auto;
+  }}

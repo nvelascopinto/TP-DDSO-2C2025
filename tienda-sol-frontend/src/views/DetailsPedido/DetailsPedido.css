@@ -5,23 +5,43 @@
     box-shadow: var(--shadow-xl);
 }
 
-.lpedidoDetails-page__title{
+@media (max-width: 768px) {
+  .pedidoDetails-page{
+   padding: 0rem;
+   box-shadow: none;
+    
+  }
+  .pedidoDetails-page__title{
+    font-size: 1.6rem; 
+    padding: 0rem;
+  }
+
+  .pedidoDetails-page__total{
+    margin-top: 0rem;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .pedidoDetails-page__total span {
+     font-size: 1rem;
+    font-weight: 500;
+  }
+
+}
+
+.pedidoDetails-page__title{
     font-size: 1.875rem; 
     font-weight: 700;
     color: var(--color-text-primary);
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--color-gray-200);
-    padding-bottom: 1rem;
 }
 
 .product__table{
-
   padding-left: 4rem;
   padding-right: 4rem;
 }
 
 .pedidoDetails-page__summary{
-    margin-top: 2rem;
+    margin-top: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

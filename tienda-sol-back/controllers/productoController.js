@@ -42,7 +42,8 @@ class ProductoController {
         { const usuario = req.user
           return productoService.eliminar(idProducto, usuario)}
       ) .then(()=>{ 
-        res.status(204)
+        res.status(204).json()
+        return
       })
   }
   

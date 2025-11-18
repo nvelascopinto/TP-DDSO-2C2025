@@ -78,6 +78,7 @@ const RegisterPage = ({ onRegister }) => {
                 className="form-input"
                 placeholder="Ingresa tu nombre de usuario"
                 required
+                aria-required="true" 
               />
             </div>
 
@@ -90,6 +91,7 @@ const RegisterPage = ({ onRegister }) => {
                 className="form-input"
                 placeholder="Ingresa tu nombre y apellido"
                 required
+                aria-required="true" 
               />
             </div>
 
@@ -99,6 +101,7 @@ const RegisterPage = ({ onRegister }) => {
               placeholder="********"
               aria-label="Contraseña"
               aria-required="true"
+
             />
 
             <div className="form-group">
@@ -110,6 +113,7 @@ const RegisterPage = ({ onRegister }) => {
                 className="form-input"
                 placeholder="Ingresa tu email de contacto"
                 required
+                aria-required="true" 
               />
             </div>
 
@@ -122,6 +126,7 @@ const RegisterPage = ({ onRegister }) => {
                 className="form-input"
                 placeholder="Ingresa tu número de teléfono"
                 required
+                aria-required="true" 
               />
             </div>
           </div>
@@ -139,6 +144,7 @@ const RegisterPage = ({ onRegister }) => {
                     className="form-input"
                     placeholder="Ingresa el nombre de tu tienda"
                     required
+                    aria-required="true" 
                   />
                 </div>
 
@@ -151,6 +157,7 @@ const RegisterPage = ({ onRegister }) => {
                     className="form-input"
                     placeholder="Ingresa una descripción de tu tienda"
                     required
+                    aria-required="true" 
                   />
                 </div>
               </div>
@@ -161,11 +168,8 @@ const RegisterPage = ({ onRegister }) => {
             <Button
               type="submit"
               variant="primary"
-              className="button--full-width" aria-label={
-              userType === 'Comprador'
-              ? 'Registrarse como Comprador'
-              : 'Registrarse como Vendedor'
-          }
+              className="button--full-width" 
+              aria-label={`Registrarse como ${userType}`}
             >
               Registrarse
             </Button>

@@ -9,13 +9,37 @@ import Button from '../../components/Button/Button.jsx';
 
 const DetailsPedido = ({navigateTo}) => {
   const { id } = useParams(); 
-  const { pedidos } = usePedidos();
+  const { pedidos, getPedidosUser } = usePedidos();
+   const [loading, setLoading] = useState(true);
 
-if (!pedidos || pedidos.length === 0) {
-  return <Spinner role="status" aria-live="polite" aria-label="Cargando pedidos">
-    Cargando ... 
-    </Spinner>
-}
+// if (!pedidos || pedidos.length === 0) {
+  
+//   return <Spinner role="status" aria-live="polite" aria-label="Cargando pedidos">
+//     Cargando ... 
+//     </Spinner>
+// }
+  useEffect(() => {
+    const loadPedidos = async () => {
+      // Si no hay pedidos cargados, cargarlos
+      if (!pedidos || pedidos.length === 0) {
+        //console.log('📦 Cargando pedidos...');
+        await getPedidosUser();
+      }
+      setLoading(false);
+    };
+    
+    loadPedidos();
+  }, [pedidos, getPedidosUser]);
+
+  if (loading || !pedidos || pedidos.length === 0) {
+    return (
+      <Spinner role="status" aria-live="polite" aria-label="Cargando pedidos">
+        Cargando ... 
+      </Spinner>
+    );
+  }
+
+
 const pedido = pedidos.find(p => p._id === id);
 if (!pedido) return <p role="alert">No se encontró el pedido</p>;
   return (
@@ -25,7 +49,7 @@ if (!pedido) return <p role="alert">No se encontró el pedido</p>;
 
 
           <div className="table-container" role="region" aria-label="Detalle de los productos del pedido">
-            <table className="pedidos-table" role="table" aria-describedby="pedidoDetails-summary">
+            {/* <table className="pedidos-table" role="table" aria-describedby="pedidoDetails-summary">
               <thead>
                 <tr role="row">
                   <th scope="col">Producto</th>
@@ -36,7 +60,7 @@ if (!pedido) return <p role="alert">No se encontró el pedido</p>;
              
               
              
-            </table> 
+            </table>  */}
 
               
             
@@ -54,7 +78,7 @@ if (!pedido) return <p role="alert">No se encontró el pedido</p>;
         
       </div>
     </div >
-      <div className = "button-pedidoDetails ">
+      <div className = "button-pedidoDetails "  aria-label="Volver al historial de pedidos">
         <Button  className = "volver-button" onClick={() => navigateTo('historial-pedidos')} aria-label={`Ver detalles del pedido ${pedido._id}`}>Volver</Button>
       </div>
     </div>

@@ -21,11 +21,11 @@
 .toast-notification {
   position: fixed;
   top: 0.5rem;
-  right: 40%;
+  left: 25%;
   transform: translateX(-50%);
   background-color: var(--color-accent-primary);
   color: var(--color-bordo-negro);
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 1rem;
   border-radius: 9999px;
   box-shadow: var(--shadow-lg);
   z-index: 1000;
@@ -33,9 +33,51 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  max-width: 90%;
+  width: auto;
+  min-width: 200px;
+}
+
+/* Responsive para móviles pequeños */
+@media (max-width: 480px) {
+  .toast-notification {
+    top: 0.5rem;
+    left: 0.5rem;
+    right: 0.5rem;
+    transform: none;
+    width: calc(100% - 1rem);
+    max-width: none;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Responsive para tablets */
+@media (min-width: 481px) and (max-width: 768px) {
+  .toast-notification {
+    max-width: 400px;
+    padding: 0.75rem 1.25rem;
+  }
+}
+
+/* Responsive para desktop */
+@media (min-width: 769px) {
+  .toast-notification {
+    max-width: 500px;
+    padding: 0.75rem 1.5rem;
+  }
 }
 
 .toast-notification__message {
   margin: 0;
   font-weight: 500;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* Ajustar tamaño de texto en móvil */
+@media (max-width: 480px) {
+  .toast-notification__message {
+    font-size: 0.875rem;
+  }
 }

@@ -1,7 +1,7 @@
 .producto {
   background-color: var(--color-white, #ffffff);
-  border-radius: 0.75rem;
-  box-shadow: var(--shadow-lg);
+  border-top: 1px solid #7a7777;
+  border-bottom: 1px solid #7a7777;
   overflow: hidden;
   transition: all 0.3s ease-in-out;
   display: grid;
@@ -97,7 +97,7 @@
 
 .producto__label {
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 700;
   color: var(--color-text-secondary, #6b7280);
   text-transform: uppercase;
   letter-spacing: 0.025em;
@@ -121,7 +121,7 @@
   .producto {
     grid-template-columns: auto 1fr;
     gap: 0.75rem;
-    padding: 0.875rem;
+    padding: 0.3rem;
   }
 
   /* La imagen y info quedan en la primera fila */
@@ -181,6 +181,10 @@
 
   .producto__title {
     font-size: 0.875rem;
+    white-space: normal; /* Permite saltos de línea */
+  overflow: visible; /* Muestra todo el contenido */
+  text-overflow: clip; /* Quita los puntos suspensivos */
+  word-wrap: break-word; /* Rompe palabras largas si es necesario */
   }
 
   .producto__price-unit {

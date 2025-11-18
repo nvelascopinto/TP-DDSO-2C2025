@@ -1,38 +1,55 @@
 .product-form {
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 0.2rem;
-  padding-bottom: 0.2rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   width: 100%;
+  gap: 0.75rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
   width: 100%;
+  gap: 0.25rem;
 }
 
 .form-label {
-  font-size: 0.7rem;
+  font-size: 0.75rem; /* Más pequeño */
   font-weight: 600;
   color: var(--color-text-secondary);
+  margin-bottom: 0.125rem;
 }
 
 .form-input,
 .form-select,
 textarea.form-input {
   width: 100%;
-  padding: 0.6rem 0.75rem;
+  padding: 0.5rem 0.5rem; /* Más pequeño */
   border: 1px solid var(--color-gray-300);
   border-radius: 0.375rem;
   background-color: white;
-  font-size: 0.95rem;
+  font-size: 0.8125rem; /* Más pequeño */
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   resize: vertical;
+  box-sizing: border-box;
+  height: 2rem;
 }
+@media(min-width:768px) {
+  textarea.form-input {
+  width: 100%;
+  padding: 0.5rem 0.5rem; /* Más pequeño */
+  border: 1px solid var(--color-gray-300);
+  border-radius: 0.375rem;
+  background-color: white;
+  font-size: 0.8rem; /* Más pequeño */
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  resize: vertical;
+  box-sizing: border-box;
+  height: 2rem;
+}
+  }
 
 .form-input:focus,
 .form-select:focus {
@@ -48,11 +65,15 @@ textarea.form-input {
 .form-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
+  gap: 0.75rem;
 }
+
 .button_eliminar_image {
-  margin: 0.3rem;
+  margin: 0.5rem 0;
+  padding: 0.4rem 0.875rem;
+  font-size: 0.75rem;
 }
+
 @media (min-width: 640px) {
   .form-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -63,12 +84,14 @@ textarea.form-input {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
+  margin-top: 0.5rem;
 }
 
 .image-preview {
   position: relative;
-  width: 6rem;
-  height: 6rem;
+  width: 5rem;
+  height: 5rem;
+  flex-shrink: 0;
 }
 
 .image-preview img {
@@ -76,66 +99,183 @@ textarea.form-input {
   height: 100%;
   object-fit: cover;
   border-radius: 0.375rem;
+  border: 1px solid var(--color-gray-200);
 }
 
 .image-remove-button {
   position: absolute;
-  top: -0.4rem;
-  right: -0.4rem;
-  width: 1.35rem;
-  height: 1.35rem;
+  top: -0.5rem;
+  right: -0.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: 50%;
   background-color: var(--color-red-500);
   color: var(--color-white);
-  border: none;
+  border: 2px solid white;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s ease;
+}
+
+.image-remove-button:hover {
+  background-color: var(--color-red-600);
 }
 
 .form-actions {
   display: flex;
-  gap: 1rem;
+  gap: 0.625rem;
   justify-content: flex-end;
-  padding-top: 1rem;
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--color-gray-200);
   flex-wrap: wrap;
 }
 
 .button-cancel {
-  padding: 0.55rem 1.15rem;
-  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem; /* Más pequeño */
   font-weight: 600;
   border-radius: 0.375rem;
   border: none;
   cursor: pointer;
   background-color: var(--color-gray-200);
   transition: background-color 0.2s ease;
+  white-space: nowrap;
 }
 
 .button-cancel:hover {
   background-color: var(--color-gray-300);
 }
 
-@media (max-width: 480px) {
+/* Tablets */
+@media (max-width: 768px) {
   .product-form {
-    padding: 1rem;
+    padding: 0.75rem;
+    gap: 0.625rem;
+  }
+
+  .form-label {
+    font-size: 0.6875rem;
+  }
+
+  .form-input,
+  .form-select,
+  textarea.form-input {
+    padding: 0.4375rem 0.5rem;
+    font-size: 0.75rem;
   }
 
   .image-preview {
-    width: 5rem;
-    height: 5rem;
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+
+  .form-actions {
+    gap: 0.5rem;
+  }
+
+  .button-cancel {
+    padding: 0.4375rem 0.875rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+  .product-form {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+
+  .form-group {
+    gap: 0.25rem;
+  }
+
+  .form-label {
+    font-size: 0.625rem;
+  }
+
+  .form-input,
+  .form-select,
+  textarea.form-input {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  textarea.form-input {
+    min-height: 2rem;
+  }
+
+
+  .form-grid {
+    gap: 0.5rem;
+  }
+
+  .image-preview-container {
+    gap: 0.5rem;
+    justify-content: flex-start;
+  }
+
+  .image-preview {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .image-remove-button {
+    width: 1.125rem;
+    height: 1.125rem;
+    font-size: 0.75rem;
+    top: -0.375rem;
+    right: -0.375rem;
+  }
+
+  .button_eliminar_image {
+    margin: 0.375rem 0;
+    padding: 0.375rem;
+    font-size: 0.6875rem;
+    width: 100%;
   }
 
   .form-actions {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.5rem;
+    padding-top: 0.625rem;
   }
 
   .button-cancel,
   .form-actions button {
     width: 100%;
     text-align: center;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Móviles muy pequeños */
+@media (max-width: 360px) {
+  .product-form {
+    padding: 0.375rem;
+  }
+
+  .form-label {
+    font-size: 0.5625rem;
+  }
+
+  .form-input,
+  .form-select,
+  textarea.form-input {
+    padding: 0.3125rem 0.4375rem;
+    font-size: 0.625rem;
+    height :2rem;
+  }
+
+  .image-preview {
+    width: 3.5rem;
+    height: 3.5rem;
   }
 }

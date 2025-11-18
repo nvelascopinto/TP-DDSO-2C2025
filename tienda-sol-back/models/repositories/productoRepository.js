@@ -15,10 +15,10 @@ class ProductoRepository {
 
 
   update(productoModificado, id) {
-    console.log("PRODUCTO MODIFICADO"+ productoModificado.precio)
+    console.log("PRODUCTO MODIFICADO"+ productoModificado.stock)
     return this.model.findByIdAndUpdate(id, productoModificado, { new: true })
   }
-
+  
   findById(id) {
     return this.model.findById(id)
   }
@@ -63,6 +63,11 @@ mapFilter(filtros, idVendedor) {
   
   if (filtros.descripcion != null && filtros.descripcion.trim() !== '') {
     query.descripcion = { $regex: filtros.descripcion, $options: "i" }
+  }
+  if (filtros.active != null && filtros.active.trim() !== '') {
+if (filtros.active != null && filtros.active.trim() !== '') {
+    query.activo = filtros.active === "true";
+}
   }
   
   return query

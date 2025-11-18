@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '../../contexts/AppContext.jsx';
-//import { api } from '../../services/mockService.js';
 import Spinner from '../../components/Spinner/Spinner.jsx';
 import Modal from '../../components/Modal/Modal.jsx';
 import ProductForm from '../../components/ProductsForm/ProductForm.jsx';
@@ -8,7 +7,7 @@ import Button from '../../components/Button/Button.jsx';
 import './SellerDashboard.css';
 import { getProductosByVendedor, actualizarProducto, crearProducto, eliminarProducto } from '../../services/productoService.js';
 import { Pagination } from 'antd';
-
+import { Switch } from 'antd';
 
 const SellerDashboard = () => {
   const { currentUser } = useAuth();
@@ -85,9 +84,9 @@ const SellerDashboard = () => {
   
   const handleDeleteProduct = async (productId) => {
   if (!currentUser) return;
-/*
+
   const confirmDelete = window.confirm("¿Está seguro de que quiere eliminar este producto?");
-  if (!confirmDelete) return;*/
+  if (!confirmDelete) return;
 
   try {
 
@@ -98,20 +97,26 @@ const SellerDashboard = () => {
   } catch (error) {
 
     console.error("Error eliminando producto:", error);
-    //alert("No se pudo eliminar el producto.");
+    alert("No se pudo eliminar el producto.");
     return;
   }
 };
 
-const handleToggleActive = async (productData, value) => {
+const handleToggleActive = async (product,value) => {
   if (!currentUser) return;
-
+  const active = Boolean(value);
   try {
-    const nuevoEstado = value === "true";
-
-    await actualizarProducto(selectedProduct._id, productData, currentUser.username);
-    
-
+    const productData = {
+            titulo : product.titulo,
+            descripcion : product.descripcion,
+            precio: product.precio,
+            stock: product.stock,
+            moneda : product.moneda,
+            categoria: product.categoria,
+            activo: active,
+            fotos : product.fotos}
+    await actualizarProducto(product._id, productData, currentUser.username);
+    fetchProductos();
   } catch (error) {
     console.error("Error actualizando estado:", error);
     alert("No se pudo actualizar el estado del producto.");
@@ -135,7 +140,7 @@ const handleToggleActive = async (productData, value) => {
 
         {loading ? <Spinner role="status" aria-live="polite" aria-label="Cargando productos del vendedor"/> : (
           <div className="table-container" role="region" aria-label="Lista de productos del vendedor">
-            <table className="products-table">
+            <table className="products-table" aria-labelledby="dashboard-products-title">
               <thead>
                 <tr>
                   <th scope="col">Producto</th>
@@ -151,20 +156,19 @@ const handleToggleActive = async (productData, value) => {
                     <td data-label="Producto">{p.titulo}</td>
                     <td data-label="Precio">${p.precio.toFixed(2)}</td>
                     <td data-label="Stock">{p.stock}</td>
-                    <td data-label="Activo" className=''>
-                        <select
-                          value={p.activo ? "true" : "false"}
-                          onChange={(e) => handleToggleActive(p._id, e.target.value)}
-                        >
-                          <option value="true">Activo</option>
-                          <option value="false">Inactivo</option>
-                        </select>
-                      </td>
+                    <td data-label="Activo">
+                      <Switch 
+                        checked={p.activo} 
+                        onChange={(value) => handleToggleActive(p, value)}
+                        aria-label={`${p.activo ? 'Desactivar' : 'Activar'} producto ${p.titulo}`}
+                  
+                      />
+                    </td>
                     <td data-label="Acciones">
                       <button onClick={() => handleOpenEditModal(p)} className="table-action-button" aria-label={`Editar producto ${p.titulo}`}>Editar
                       <span class="material-symbols-outlined">edit</span>
                       </button>
-                      <button type="button" onClick={() => handleDeleteProduct(p._id)} className="button-delete">
+                      <button type="button" onClick={() => handleDeleteProduct(p._id)} className="button-delete" aria-label={`Eliminar producto ${p.titulo}`}>
                           <span class="material-symbols-outlined">delete</span>
                       </button>
                     </td>

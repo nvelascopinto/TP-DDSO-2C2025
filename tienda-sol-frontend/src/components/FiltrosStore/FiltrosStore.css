@@ -115,10 +115,27 @@
   position: relative;
   padding: 16px 0;
   padding-bottom: 35px;
-  margin-right: 2.5rem;
-  margin-left: 2.5rem;
+  margin-right: 3.5rem;
+  margin-left: 3.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+ 
 }
 
+@media (max-width: 768px) {
+  .precio-slider-wrapper {
+    margin-right: 1.5rem;
+    margin-left: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .precio-slider-wrapper {
+    margin-right: 1rem;
+    margin-left: 1rem;
+    padding-bottom: 40px; /* Más espacio para los valores */
+  }
+}
 .slider-values {
   position: relative;
   height: 20px;
@@ -132,6 +149,35 @@
   color: var(--color-accent-secondary);
   font-weight: 600;
   white-space: nowrap; /* Evita que el texto se parta en varias líneas */
+   transition: all 0.2s ease; /* Suaviza el movimiento */
+}
+
+/* Ajustar tamaño de fuente en mobile para evitar superposición */
+@media (max-width: 768px) {
+  .slider-value {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .slider-value {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .slider-value {
+    font-size: 0.7rem;
+  }
+}
+
+/* Prevenir superposición cuando los valores están muy cerca */
+.slider-value:first-child {
+  z-index: 1;
+}
+
+.slider-value:last-child {
+  z-index: 2;
 }
 
 .custom-slider .ant-slider-track {

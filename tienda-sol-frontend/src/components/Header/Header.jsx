@@ -16,7 +16,18 @@ const Header = ({ navigateTo, currentRoute }) => {
   const [activeTab, setActiveTab] = useState("home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   
+  // Detectar cambios en el tamaño de la pantalla
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleLogout = () => {
     logout();
     console.log("CURRENT USER" + currentUser.tipo)
@@ -33,7 +44,6 @@ const Header = ({ navigateTo, currentRoute }) => {
   const handleNavigate = (route) => {
     navigateTo(route);
     setIsMenuOpen(false);
-
   };
 
   useEffect(() => {
@@ -66,7 +76,15 @@ const Header = ({ navigateTo, currentRoute }) => {
 
   const showCart = currentUser?.tipo !== 'Vendedor';
   
-  
+  const handleCartClick = () => {
+    if (isMobile) {
+      // En móvil, navegar directamente al carrito
+      handleNavigate('carrito');
+    } else {
+      // En desktop, mostrar el drawer
+      showDrawer();
+    }
+  };
 
   const showDrawer = () => {
     setOpen(true);
@@ -78,11 +96,9 @@ const Header = ({ navigateTo, currentRoute }) => {
 
   const handleFinalizarCompra = () => {
     setIsProcessing(true);
-    // Cerrar el drawer antes de navegar
     if (onClose) {
       onClose();
     }
-    // Navegar a la página de carrito
     navigateTo('carrito');
     setIsProcessing(false);
   };
@@ -94,9 +110,7 @@ const Header = ({ navigateTo, currentRoute }) => {
        <div 
           className="header__logo"
           onClick={() => { 
-            //if (currentUser?.tipo != 'Vendedor') {
-              navigateTo('home');
-            //}
+            navigateTo('home');
           }}
         >
           <img src={logo} alt="Logo Tienda Sol" className="header__logo-image" />
@@ -155,8 +169,7 @@ const Header = ({ navigateTo, currentRoute }) => {
           {showCart && (
             <button
               className={`header__nav-link header__cart-icon ${activeTab === "carrito" ? "active" : ""}`}
-              // onClick={() => handleNavigate('carrito')}
-               onClick={showDrawer}
+              onClick={handleCartClick}
             >
               <span className="material-symbols-outlined">
                 shopping_cart_checkout
@@ -169,33 +182,44 @@ const Header = ({ navigateTo, currentRoute }) => {
               
             </button>
           )}
-          <Drawer
-                title="Carrito"
-                closable={{ 'aria-label': 'Close Button' }}
-                onClose={onClose}
-                open={open}
-                width={500}
-              >
-              <Cart handle={handleFinalizarCompra} onClose={onClose} isProcessing={isProcessing} navigateTo={navigateTo} />
-
-          </Drawer>
-
           
+          {!isMobile && (
+            <Drawer
+                  title="Carrito"
+                  closable={{ 'aria-label': 'Close Button' }}
+                  onClose={onClose}
+                  open={open}
+                  width={500}
+                >
+                <Cart handle={handleFinalizarCompra} onClose={onClose} isProcessing={isProcessing} navigateTo={navigateTo} />
+            </Drawer>
+          )}
 
           {currentUser && (
+            <>
             <button
               className={`header__nav-link header__notification-icon  ${activeTab === "notificaciones" ? "active" : ""}`}
               onClick={() => handleNavigate('notificaciones')}
             >
               <NotificationBell />
             </button>
+            <button
+               className={`header__nav-link header__profile-icon ${activeTab === "user" ? "active" : ""}`}
+                onClick={() => handleNavigate('user')}
+              >
+                <span className="material-symbols-outlined">
+                  account_circle
+                </span>
+            </button>
+            </>
           )}
+
 
           {currentUser ? (
             <div className="header__user-info">
-              <span className="header__user-greeting">
+              {/* <span className="header__user-greeting">
                 Hola, {currentUser.username.split(' ')[0]}
-              </span>
+              </span> */}
               <button onClick={handleLogout} className="header__logout-button">
                 Salir
               </button>

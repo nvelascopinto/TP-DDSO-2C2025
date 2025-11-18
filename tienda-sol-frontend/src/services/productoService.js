@@ -69,5 +69,34 @@ export async function eliminarProducto(productId, username) {
       console.error("Error actualizando producto:", error);
       throw error.response?.data || error;
     });
-}   
+}
+
+export async function verificarStockProductos(productos) {
+    try {
+        // productos es un array de { productoId, cantidadSolicitada }
+        const verificaciones = await Promise.all(
+            productos.map(async (item) => {
+                const producto = await getProductoById(item.productoId);
+                return {
+                    productoId: item.productoId,
+                    titulo: producto.titulo,
+                    stockDisponible: producto.stock,
+                    cantidadSolicitada: item.cantidadSolicitada,
+                    suficiente: producto.stock >= item.cantidadSolicitada
+                };
+            })
+        );
+
+        const productosSinStock = verificaciones.filter(v => !v.suficiente);
+        
+        return {
+            stockSuficiente: productosSinStock.length === 0,
+            productosSinStock: productosSinStock,
+            detalles: verificaciones
+        };
+    } catch (error) {
+        console.error("Error verificando stock:", error);
+        throw error;
+    }
+}
 

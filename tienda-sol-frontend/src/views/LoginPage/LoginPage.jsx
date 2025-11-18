@@ -18,6 +18,7 @@ const LoginPage = ({ onLogin }) => {
         username: formData.get('username'),
         password: formData.get('password')
         }
+
         onLogin(
             activeTab === 'comprador' ? TipoUsuario.COMPRADOR : TipoUsuario.VENDEDOR,
             data.username,
@@ -51,7 +52,7 @@ const LoginPage = ({ onLogin }) => {
                     <p className="login-form__subtitle">
                         Ingresa tus datos para continuar
                     </p>
-                    {errorMsg && <p className="login-form__error" role="alert"> {errorMsg} </p>}
+                    {errorMsg && <p className="login-form__error" role="alert"  aria-live="assertive"> {errorMsg} </p>}
                     <div className="login-form__fields">
                         <InputForm
                             label="Nombre de usuario"
@@ -69,7 +70,7 @@ const LoginPage = ({ onLogin }) => {
                         />
                     </div>
 
-                    <div className="login-form__actions"  role="group" aria-label="Acciones del formulario">
+                    <div className="login-form__actions"  role="group" aria-label="Ingresar al sistema">
                         <Button type="submit" variant={activeTab === 'comprador' ? 'primary' : 'secondary'} className="button--full-width">
                             Ingresar
                         </Button>

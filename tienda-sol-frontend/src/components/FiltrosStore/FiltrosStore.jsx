@@ -16,11 +16,13 @@ import { Add, Remove } from '@mui/icons-material';
 import { InputNumber } from 'antd';
 import { Slider } from 'antd';
 
+
 export const FiltrosStore = ({
     setMinPrecio,
     minPrecio,
     maxPrecio,
     setMaxPrecio,
+    precioMaximo,
     categoria,
     setCategoria,
     sortOrder,
@@ -28,9 +30,12 @@ export const FiltrosStore = ({
     fetchProductos,
     handleClearFilters
 }) => {
-   
-    
-    return <div className = "filter_box">
+
+ 
+const minValue = minPrecio === '' || minPrecio === null ? 0 : parseFloat(minPrecio);
+const maxValue = maxPrecio === '' || maxPrecio === null ? precioMaximo : parseFloat(maxPrecio);
+
+    return <div className = "filter_box" role="search" aria-label="Filtros de búsqueda de productos">
         <p className='filtros-header'>Filtros</p>
         <List dense={true}>
                 <ListItem>
@@ -85,13 +90,14 @@ export const FiltrosStore = ({
                             <InputNumber 
                                 prefix="$" 
                                 style={{ width: '100%' }}
-                                onChange={(value) => setMinPrecio(value)} // value directamente, no e.target.value
+                                onChange={(value) => setMinPrecio(value === null ? 0 : value)} // value directamente, no e.target.value
                                 value={minPrecio}
                                 placeholder="Mínimo"
                                 id="minPrecioFilter"
                                 min={0}
+                                max={maxValue}
                                 step={1}
-                                controls={true} // Opcional: oculta los botones +/-
+                                controls={true} 
                                 aria-label="Precio mínimo"
                             />
                             </div>
@@ -100,11 +106,12 @@ export const FiltrosStore = ({
                             <InputNumber 
                                 prefix="$" 
                                 style={{ width: '100%' }}
-                                onChange={(value) => setMaxPrecio(value)} // value directamente, no e.target.value
+                                onChange={(value) => setMaxPrecio(value === null ? precioMaximo : value)}
                                 value={maxPrecio}
-                                placeholder="Maximo"
+                                placeholder={"Máximo"}
                                 id="maxPrecioFilter"
-                                min={0}
+                                min={minValue}
+                                max={precioMaximo}
                                 step={1}
                                 controls={true} // Opcional: oculta los botones +/-
                                 aria-label="Precio máximo"
@@ -115,22 +122,30 @@ export const FiltrosStore = ({
                 
                 </ListItem>
                 
-                <div className="precio-slider-wrapper">
+                <div className="precio-slider-wrapper"  role="group" aria-labelledby="slider-label">
                     <Slider
                         range
                         min={0}
-                        max={10000}
-                        value={[
-                            minPrecio === '' ? 0 : parseFloat(minPrecio),
-                            maxPrecio === '' ? 10000 : parseFloat(maxPrecio)
-                        ]}
+                        max={precioMaximo}
+                        value={[minValue, maxValue]}
+                        // value={[
+                        //     minPrecio === '' ? 0 : parseFloat(minPrecio),
+                        //     maxPrecio === '' ? precioMaximo : parseFloat(maxPrecio)
+                        // ]}
                         onChange={(values) => {
                             setMinPrecio(values[0].toString());
                             setMaxPrecio(values[1].toString());
-                        }}
+                         }}
                         tooltip={{ open: false }}
                         allowCross={false}
                         className="custom-slider"
+
+                        aria-label="Ajustar rango de precios"
+                        aria-valuemin={0}
+                        aria-valuemax={precioMaximo}
+                        aria-valuenow={minValue}
+                        aria-valuetext={`Rango de ${minValue} a ${maxValue} pesos`}
+                       
                     />
                     
                     {/* Números posicionados dinámicamente */}
@@ -138,18 +153,34 @@ export const FiltrosStore = ({
                         <span 
                         className="slider-value" 
                         style={{ 
-                            left: `${((minPrecio === '' ? 0 : parseFloat(minPrecio)) / 10000) * 100}%` 
+                            left: `${precioMaximo > 0 ? (minValue / precioMaximo) * 100 : 0}%`,
+                            transform: 'translateX(-50%)',
+                            // Ocultar si está muy cerca del máximo
+                            opacity: Math.abs(maxValue - minValue) < precioMaximo * 0.1 ? 0 : 1
+                            //left: `${(minValue / precioMaximo) * 100}%` 
+                           // left: `${((minPrecio === '' ? 0 : parseFloat(minPrecio)) / precioMaximo) * 100}%` 
+                                               // }}
+                        //>
+                        
+                       //${minPrecio === '' ? 0 : minPrecio}
                         }}
                         >
-                        ${minPrecio === '' ? 0 : minPrecio}
+                        ${Math.round(minValue)}
                         </span>
                         <span 
                         className="slider-value" 
                         style={{ 
-                            left: `${((maxPrecio === '' ? 10000 : parseFloat(maxPrecio)) / 10000) * 100}%` 
-                        }}
+                        //left: `${(maxValue / precioMaximo) * 100}%` 
+                        left: `${precioMaximo > 0 ? (maxValue / precioMaximo) * 100 : 100}%`,
+                        transform: 'translateX(-50%)'
+                           // left: `${((maxPrecio === '' ? precioMaximo: parseFloat(maxPrecio)) / precioMaximo) * 100}%` 
+                        //                        }}
+                        // >
+                        // ${maxValue}
+                        // //${maxPrecio === '' ? precioMaximo : maxPrecio}
+                         }}
                         >
-                        ${maxPrecio === '' ? 10000 : maxPrecio}
+                          ${Math.round(maxValue)}
                         </span>
                     </div>
                 </div>
@@ -159,6 +190,7 @@ export const FiltrosStore = ({
           <button 
           onClick={handleClearFilters}
           className="btn-limpiar"
+          type="button"
           aria-label="Limpiar todos los filtros"
         >
           Limpiar filtros
@@ -166,6 +198,7 @@ export const FiltrosStore = ({
         <button 
           onClick={fetchProductos}
           className="btn-filtrar"
+          type="button"
           aria-label="Aplicar filtros"
         >
           Filtrar

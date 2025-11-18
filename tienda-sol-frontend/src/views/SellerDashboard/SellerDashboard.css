@@ -2,9 +2,18 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0rem;
+}
+
+@media(min-width: 786px){
+  .dashboard {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 1rem;
 }
 
+}
 .dashboard__title {
   font-size: 2rem;
   font-weight: 700;
@@ -21,10 +30,19 @@
 }
 
 .dashboard__content-box {
+ background-color: var(--color-white);
+  padding: 0 rem;
+  border-radius: 0rem;
+  box-shadow: none;
+}
+@media(min-width: 400px) {
+  .dashboard__content-box {
+  
   background-color: var(--color-white);
   padding: 1.25rem;
   border-radius: 0.5rem;
   box-shadow: var(--shadow-md);
+}
 }
 
 .dashboard__header {
@@ -51,11 +69,13 @@
   text-align: left;
   border-collapse: collapse;
   overflow-x: auto; 
+  gap :0.5rem;
 }
 
 .products-table th,
 .products-table td {
-  padding: 0.8rem;
+  padding: 0.5rem;
+  padding-bottom: 0.8rem;
 }
 
 .products-table thead {
@@ -82,19 +102,23 @@
 }
 
 .material-symbols-outlined {
-  font-size: 1rem;
-  margin-left: 0.3rem;;
+  font-size: 1.3rem;
+  margin-left: 0; /* Quita el margin si usas gap */
+  display: inline-flex;
+  align-items: center;
 }
 
-.button-delete{
-  margin-left: 1.5rem;
-  padding: 0.2rem;
-  font-size: 0.9rem;
+.button-delete {
+  margin-left: 0; /* Quita el margin-left */
+  padding: 0;
+  font-size: 1rem;
   font-weight: 600;
-  color:var(--color-red-500);
+  color: var(--color-red-500);
   background: none;
   border: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .table-action-button {
@@ -102,11 +126,15 @@
   background: none;
   border: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .table-action-button:hover {
   text-decoration: underline;
 }
+
 
 @media (max-width: 768px) {
   .dashboard__header {
@@ -145,10 +173,11 @@
     border-bottom: 1px solid var(--color-gray-200);
   }
 
-  .products-table td:last-child {
-    border-bottom: none;
-  }
-
+ .products-table td:last-child {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Espacio entre los botones */
+}
   .products-table td::before {
     content: attr(data-label);
     position: absolute;
@@ -184,4 +213,20 @@
   display: flex;
   justify-content: center;
   margin-top: 20px;
+}
+
+.ant-switch {
+  min-width: 40px;
+}
+
+.dashboard .ant-switch.ant-switch-checked {
+  background-color: var(--color-green-600) !important;
+}
+
+.dashboard .ant-switch:not(.ant-switch-checked) {
+  background-color: var(--color-red-600) !important;
+}
+
+.dashboard .ant-switch .ant-switch-handle::before {
+  background-color: white !important;
 }

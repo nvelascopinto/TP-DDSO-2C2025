@@ -27,11 +27,13 @@ const CarritoPage = ({ onLoginRequest, navigateTo }) => {
     <div>
       <div className="cart-page">
         <h1 className="cart-page__title">Tu Carrito de Compras</h1>
+        <div  aria-label="Contenido del carrito de compras">
         <Cart  isProcessing={isProcessing} handle = {handleDireccion} navigateTo={navigateTo}/>
+      </div> 
      </div> 
-     <div className = "cart-page-volver"> 
+     <div className = "cart-page-volver" aria-label="Volver a la página de inicio"> 
           {!(isProcessing || cartItems.length === 0) ? (
-            <Button onClick={() => navigateTo('home')} variant="primary">
+            <Button onClick={() => navigateTo('home')} variant="secondary">
             Volver
           </Button>
           ):(<div></div>)

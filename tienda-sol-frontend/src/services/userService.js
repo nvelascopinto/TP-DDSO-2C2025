@@ -40,3 +40,10 @@ export function getVendedores() {
       return response.data;
     })
 }
+
+export function getUserData(username) {
+  return apiBack.get(`/usuarios/${username}`)
+    .then((response) => {
+      return response.data;
+    })
+}

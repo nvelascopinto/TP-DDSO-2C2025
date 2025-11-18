@@ -20,8 +20,12 @@ class ProductoService {
   eliminar(productoID, vendedor) {
     return Promise.resolve()
       .then(() => {
+
         vendedor.validarRol([tipoUsuario.VENDEDOR])
-        productoRepository.eliminar(productoID)}) 
+        console.log("VALIDE VENDEDOR")
+        return productoRepository.eliminar(productoID)
+        
+      }) 
   }
 
   /************************** CONSULTAR UN PRODUCTO **************************/
@@ -66,7 +70,8 @@ class ProductoService {
       .then((producto) => {
         producto.reducirStock(item.cantidad)
         producto.aumentarVentas(item.cantidad)
-        return this.update(producto)
+        console.log("SE REDUCE EL STOCK " + item.cantidad)
+        return productoRepository.update(producto, producto._id)
       })
     ))
   }
@@ -76,7 +81,7 @@ class ProductoService {
       .then((producto) => {
         producto.aumentarStock(item.cantidad)
         producto.reducirVentas(item.cantidad)
-        return this.update(producto)
+        return productoRepository.update(producto, producto._id)
       })
     ))
   }
