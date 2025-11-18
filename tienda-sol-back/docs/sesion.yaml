@@ -1,0 +1,147 @@
+openapi: 3.0.1
+info:
+  title: API Sesiones
+  version: "1.0.0"
+  description: >
+    Endpoint para autenticación de usuarios.
+
+servers:
+  - url: http://localhost:3000
+
+tags:
+  - name: Sesiones
+    description: Manejo de inicio de sesión de usuarios ya registrados.
+
+paths:
+  /sesiones:
+    post:
+      tags:
+        - Sesiones
+      summary: Iniciar sesión de usuario
+      description: >
+        Autentica al usuario mediante username y password.  
+        Retorna información básica del usuario registrado.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+            examples:
+              ejemplo:
+                value:
+                  username: "juanperez"
+                  password: "12345678"
+
+      responses:
+        "200":
+          description: Usuario autenticado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginSuccess"
+              examples:
+                ejemplo:
+                  value:
+                    username: "juanperez"
+                    tipo: "Vendedor"
+
+        "404":
+          description: Usuario inexistente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsuarioInexistenteError"
+
+        "401":
+          description: Password incorrecto
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsuarioWrongPassword"
+
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: "juanperez"
+        password:
+          type: string
+          example: "12345678"
+
+    LoginSuccess:
+      type: object
+      properties:
+        username:
+          type: string
+          example: "juanperez"
+        tipo:
+          type: string
+          enum: [Comprador, Vendedor, Admin]
+          example: "Vendedor"
+
+    UsuarioInexistenteError:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "UsuarioInexistenteError"
+        message:
+          type: string
+          example: "El usuario solicitado no existe."
+        details:
+          type: string
+          example: "Intento de búsqueda del usuario pepito inexistente"
+
+    UsuarioWrongPassword:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "UsuarioWrongPassword"
+        message:
+          type: string
+          example: "La contraseña ingresada es incorrecta."
+        details:
+          type: string
+          example: "Intento de autenticación con contraseña incorrecta para usuario juanperez"
+
+    YaExisteUsuarioError:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "YaExisteUsuarioError"
+        message:
+          type: string
+          example: "El username ingresado ya existe."
+        details:
+          type: string
+          example: "Intento de registrar un usuario con USERNAME juanperez, ya existente."
+
+    Error:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "ServerError"
+        message:
+          type: string
+          example: "Error inesperado"
+        details:
+          type: object
+          nullable: true
