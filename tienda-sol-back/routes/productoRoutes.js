@@ -7,7 +7,6 @@ productoRouter.post("/", authenticateUser("X-User"), (req, res) => {
   return productoController.crear(req, res)
 })
 
-//autentico el vendedor que esta en el body ==>para poder luego obetnerlo y
 productoRouter.get("/", authenticateUser("vendedor"), (req, res) => {
   return productoController.obtenerTodosDeVendedor(req, res)
 })

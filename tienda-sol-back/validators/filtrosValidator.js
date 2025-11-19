@@ -1,7 +1,6 @@
 import { z } from "zod"
 
 export const filtrosValidator = z.object({
-  // Agregar al vendedor como queryparam ¿? 
   minPrecio: z.string().optional()
     .transform(val => val ? parseFloat(val) : undefined),
   maxPrecio: z.string().optional()

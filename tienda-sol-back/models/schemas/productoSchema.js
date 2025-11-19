@@ -48,7 +48,6 @@ export const productoSchema = new mongoose.Schema(
     }
   },
   {
-    //timestamps: true,
     collection: "productos"
   }
 )

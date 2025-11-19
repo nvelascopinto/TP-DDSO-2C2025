@@ -4,180 +4,81 @@ info:
   version: "1.0.0"
   description: >
     Documentación de los endpoints de usuarios.    
-    El parámetro **id** representa el **username** del usuario
+    El parámetro **id** representa el **username** del usuario.
 
 servers:
   - url: http://localhost:3000
 
 tags:
   - name: Usuarios
-    description: Operaciones sobre usuarios y su historial
-  - name: Tiendas
-    description: Operaciones sobre tiendas (vendedores)
+    description: Operaciones sobre usuarios
 
 paths:
+
   /usuarios:
     post:
       tags:
         - Usuarios
       summary: Crear un nuevo usuario
+      description: >
+        Crea un usuario nuevo y, si corresponde, su tienda asociada.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/UsuarioDTO"
-            examples:
-              ejemplo:
-                value:
-                  username: "jose50"
-                  password: "Secreto123"
-                  nombre: "Jose"
-                  email: "jose@gmail.com"
-                  telefono: "+54 11 3333 3333"
-                  tipoUsuario: "Comprador"
-                  tienda:
-                    nombre: "Mi Tienda"
-                    descripcion: "Tienda de ejemplo"
       responses:
         "201":
           description: Usuario creado correctamente
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Usuario"
-        "400":
-          description: Datos inválidos (validación fallida)
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-        "409":
-          description: Ya existe un usuario con ese username
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
-  /usuarios/login:
-    post:
-      tags:
-        - Usuarios
-      summary: Autenticar usuario (login)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - username
-                - password
-              properties:
-                username:
-                  type: string
-                  example: "jose50"
-                password:
-                  type: string
-                  example: "Secreto123"
-      responses:
-        "200":
-          description: Inicio de sesión exitoso (UserDTO)
-          content:
-            application/json:
-              schema:
                 $ref: "#/components/schemas/UserDTO"
         "400":
-          description: Datos inválidos (validación fallida)
+          description: Error de validación (Zod)
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-        "403":
-          description: Credenciales incorrectas o acceso denegado
+                $ref: "#/components/schemas/ZodValidationErrorExample"
+        "409":
+          description: Username duplicado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                password_incorrecta:
-                  value:
-                    name: "AuthorizationError"
-                    message: "La contraseña ingresada fue incorrecta"
-                    details: null
-                usuario_inexistente:
-                  value:
-                    name: "UsuarioNoAutorizado"
-                    message: "No existe el usuario especificado"
-                    details: null
-
-  /usuarios/tiendas:
-    get:
-      tags:
-        - Tiendas
-      summary: Listar tiendas de vendedores
-      description: Retorna una lista de vendedores con la información de tienda
-      responses:
-        "200":
-          description: Lista de tiendas de vendedores
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/VendedorTienda"
-              examples:
-                ejemplo:
-                  value:
-                    - username: "vendedor1"
-                      tienda:
-                        nombre: "Tienda Central"
-                        descripcion: "Tienda de ejemplo"
-                        logo: "https://example.com/logo.png"
-                    - username: "vendedor2"
-                      tienda:
-                        nombre: "Rincón Tech"
-                        descripcion: "Electrónica y accesorios"
-        "400":
-          description: Solicitud inválida
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/YaExisteUsuarioError"
 
   /usuarios/{id}:
     get:
       tags:
         - Usuarios
-      summary: Obtener un usuario por su username
-      description: Retorna los datos del usuario identificado por su username
+      summary: Obtener un usuario por username
       parameters:
         - name: id
           in: path
-          description: Username del usuario
           required: true
+          description: Username del usuario
           schema:
             type: string
-            example: "jose50"
       responses:
         "200":
           description: Usuario encontrado
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Usuario"
+                $ref: "#/components/schemas/UsuarioCompleto"
         "400":
-          description: Username inválido
+          description: Username inválido (Zod)
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ZodValidationErrorExample"
         "404":
           description: Usuario inexistente
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/UsuarioInexistenteError"
 
   /usuarios/{id}/pedidos:
     get:
@@ -185,51 +86,33 @@ paths:
         - Usuarios
       summary: Consultar historial de pedidos de un usuario comprador
       description: >
-        Retorna los pedidos asociados al usuario identificado por su username.  
-        Requiere autenticación mediante el header **X-User**.
+        Requiere autenticación por header **X-User**.
       parameters:
         - name: id
           in: path
-          description: Username del usuario cuyo historial se consulta
           required: true
           schema:
             type: string
-            example: "jose50"
         - name: X-User
           in: header
-          description: Username del usuario autenticado desde el middleware
           required: true
           schema:
             type: string
-            example: "jose50"
       responses:
         "200":
-          description: Lista de pedidos del usuario
+          description: Historial encontrado
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "./pedidos.yaml#/components/schemas/PedidoResumen"
-              examples:
-                ejemplo:
-                  value:
-                    - _id: "654a8f0c3e8f9b0a1d2c3e00"
-                      total: 1234
-                      moneda: "ARS"
-                      estado: "PENDIENTE"
-                      fechaCreacion: "2025-10-01T12:34:56Z"
-                    - _id: "654a8f0c3e8f9b0a1d2c3e11"
-                      total: 450
-                      moneda: "ARS"
-                      estado: "ENVIADO"
-                      fechaCreacion: "2025-09-15T09:10:00Z"
         "400":
-          description: Username inválido o ausente en el header
+          description: Error de validación
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ZodValidationErrorExample"
         "403":
           description: Usuario sin permiso
           content:
@@ -237,7 +120,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
         "404":
-          description: No existe el usuario o no hay historial
+          description: Usuario inexistente o sin historial
           content:
             application/json:
               schema:
@@ -245,19 +128,6 @@ paths:
 
 components:
   schemas:
-    TiendaDTO:
-      type: object
-      properties:
-        nombre:
-          type: string
-          example: "Mi Tienda"
-        descripcion:
-          type: string
-          example: "Tienda de ejemplo"
-        logo:
-          type: string
-          format: uri
-          example: "https://example.com/logo.png"
 
     UsuarioDTO:
       type: object
@@ -271,77 +141,78 @@ components:
       properties:
         username:
           type: string
-          example: "jose50"
-          description: Debe ser único. No puede estar vacío.
         password:
           type: string
-          example: "Secreto123"
-          description: Contraseña del usuario.
         nombre:
           type: string
-          example: "Jose"
-          description: Nombre del usuario no puede estar vacío.
         email:
           type: string
-          format: email
-          example: "jose@gmail.com"
         telefono:
           type: string
-          example: "+54 11 3333 3333"
         tipoUsuario:
           type: string
-          enum:
-            - Comprador
-            - Vendedor
-            - Admin
-          example: "Comprador"
+          enum: [Comprador, Vendedor, Admin]
         tienda:
-          $ref: "#/components/schemas/TiendaDTO"
+          $ref: "./tiendas.yaml#/components/schemas/TiendaDTO"
 
-    Usuario:
+    UsuarioCompleto:
       allOf:
         - $ref: "#/components/schemas/UsuarioDTO"
         - type: object
           properties:
             _id:
               type: string
-              example: "jose50"
             fechaAlta:
               type: string
               format: date-time
-              example: "2025-10-01T12:00:00Z"
 
     UserDTO:
       type: object
       properties:
         username:
           type: string
-          example: "jose50"
         tipo:
           type: string
-          example: "Comprador"
-
-    VendedorTienda:
-      type: object
-      properties:
-        username:
-          type: string
-          example: "vendedor1"
-        tienda:
-          $ref: "#/components/schemas/TiendaDTO"
+          enum: [Comprador, Vendedor, Admin]
 
     Error:
       type: object
       properties:
         name:
           type: string
-          example: "ValidationError"
         message:
           type: string
-          example: "Detalle del error"
         details:
-          type: object
           nullable: true
-          example:
-            campo: "username"
-            mensaje: "El username no puede estar vacío"
+
+    ZodValidationErrorExample:
+      type: object
+      example:
+        name: "ValidationError"
+        message: "Los datos ingresados no son correctos"
+        details:
+          - "El username no puede estar vacío"
+          - "La contraseña debe tener 8 dígitos"
+
+    UsuarioInexistenteError:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "UsuarioInexistenteError"
+        message:
+          type: string
+          example: "El usuario solicitado no existe."
+        details:
+          type: string
+          example: "Intento de acceder al USUARIO jose50 inexistente."
+
+    YaExisteUsuarioError:
+      type: object
+      properties:
+        name:
+          type: string
+        message:
+          type: string
+        details:
+          type: string

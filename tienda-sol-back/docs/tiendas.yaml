@@ -51,10 +51,32 @@ components:
       properties:
         username:
           type: string
-          example: "juanperez"
+          description: Username del vendedor dueño de la tienda
         nombre:
           type: string
-          example: "Tienda La Moderna"
         descripcion:
           type: string
-          example: "Artículos de bazar y hogar"
+
+    TiendaDTO:
+      type: object
+      properties:
+        nombre:
+          type: string
+        descripcion:
+          type: string
+      required:
+        - nombre
+        - descripcion
+
+    Error:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "InternalServerError"
+        message:
+          type: string
+          example: "Ocurrió un error inesperado."
+        details:
+          type: object
+          nullable: true

@@ -1,8 +1,9 @@
 openapi: 3.0.1
 info:
   title: API Notificaciones
-  version: "1.0.0"
-  description: Endpoints para consultar y marcar notificaciones
+  version: "1.0.1"
+  description: Endpoints para consultar y marcar notificaciones de los usuarios
+
 servers:
   - url: http://localhost:3000
 
@@ -11,17 +12,48 @@ tags:
     description: Operaciones sobre notificaciones de usuarios
 
 paths:
-  /notificaciones/noleidas:
+
+  /notificaciones:
     get:
       tags:
         - Notificaciones
-      summary: Obtener notificaciones no leídas del usuario autenticado
-      description: Retorna las notificaciones no leídas del usuario que hace la consulta
+      summary: Obtener todas las notificaciones del usuario autenticado
+      description: Retorna todas las notificaciones (leídas y no leídas) del usuario.
       parameters:
         - name: X-User
           in: header
           required: true
           description: Username del usuario
+          schema:
+            type: string
+            example: "jose50"
+      responses:
+        "200":
+          description: Lista de notificaciones del usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notificacion"
+        "401":
+          description: Usuario no autenticado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /notificaciones/noleidas:
+    get:
+      tags:
+        - Notificaciones
+      summary: Obtener notificaciones no leídas
+      description: Retorna solo las notificaciones no leídas del usuario.
+      parameters:
+        - name: X-User
+          in: header
+          required: true
+          description: Username del usuario autenticado
           schema:
             type: string
             example: "jose50"
@@ -34,14 +66,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Notificacion"
-              examples:
-                ejemplo:
-                  value:
-                    - _id: "654a8f0c3e8f9b0a1d2c3e00"
-                      usuarioDestino: "jose50"
-                      mensaje: "El pedido 123 cambió a estado ENVIADO"
-                      leida: false
-                      fechaAlta: "2025-10-01T12:34:56Z"
         "401":
           description: Usuario no autenticado
           content:
@@ -53,8 +77,8 @@ paths:
     get:
       tags:
         - Notificaciones
-      summary: Obtener notificaciones leídas del usuario
-      description: Retorna las notificaciones ya leídas del usuario.
+      summary: Obtener notificaciones leídas
+      description: Retorna solo las notificaciones leídas del usuario.
       parameters:
         - name: X-User
           in: header
@@ -84,19 +108,19 @@ paths:
       tags:
         - Notificaciones
       summary: Marcar una notificación como leída
-      description: Marca la notificación indicada como leída por el usuario.
+      description: Valida que el ID sea un ObjectId válido, valida permisos, y marca la notificación como leída.
       parameters:
         - name: id
           in: path
           required: true
-          description: ID de la notificación a marcar como leída
+          description: ID de la notificación
           schema:
             type: string
             example: "654a8f0c3e8f9b0a1d2c3e00"
         - name: X-User
           in: header
           required: true
-          description: Username del usuario
+          description: Username del usuario que marca la notificación
           schema:
             type: string
             example: "jose50"
@@ -108,21 +132,39 @@ paths:
               schema:
                 type: string
                 example: "La notificacion fue leida"
-        "403":
-          description: Usuario sin permiso para marcar la notificación
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-        "404":
-          description: Notificación no encontrada
+
+        "400":
+          description: Error de validación (ID inválido)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
 
+        "403":
+          description: Usuario sin permiso para marcar esta notificación
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        "404":
+          description: Notificación inexistente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        "409":
+          description: La notificación ya estaba marcada como leída
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+
 components:
   schemas:
+
     Notificacion:
       type: object
       properties:
@@ -147,16 +189,21 @@ components:
           format: date-time
           nullable: true
           example: null
+        pedido:
+          type: number
+          example: 123
 
     Error:
       type: object
       properties:
         name:
           type: string
-          example: "UsuarioSinPermisoError"
+          example: "ValidationError"
         message:
           type: string
-          example: "El usuario no tiene permiso"
+          example: "Los datos ingresados no son correctos"
         details:
-          type: object
+          type: array
           nullable: true
+          items:
+            type: string

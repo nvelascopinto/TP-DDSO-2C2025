@@ -2,53 +2,54 @@ openapi: 3.0.1
 info:
   title: API Productos
   version: "1.0.0"
-  description: Documentación de los endpoints de productos
+  description: Documentación de los endpoints de productos.
+
 servers:
   - url: http://localhost:3000
+
 tags:
   - name: Productos
-    description: Operaciones sobre productos
+    description: Operaciones sobre productos de vendedores.
 
 paths:
+
   /productos:
     post:
       tags:
         - Productos
       summary: Crear un nuevo producto
-      description: Crea un producto asociado al vendedor. El vendedor se obtiene del header `X-User`.
+      description: >
+        Crea un nuevo producto.  
+        El vendedor se obtiene desde el header **X-User**, que luego el sistema convierte en `req.user`.
+      parameters:
+        - name: X-User
+          in: header
+          required: true
+          description: Username del vendedor autenticado.
+          schema:
+            type: string
+            example: "jose50"
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/ProductoDTO"
-            examples:
-              ejemplo:
-                value:
-                  titulo: "Camisa deportiva"
-                  descripcion: "100% algodón, talle M"
-                  categoria: "Ropa"
-                  precio: 2500
-                  moneda: "PESO_ARG"
-                  stock: 10
-                  fotos:
-                    - "https://cdn.ejemplo.com/camisa.jpg"
-                  activo: true
       responses:
         "201":
-          description: Producto creado correctamente
+          description: Producto creado correctamente.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Producto"
         "400":
-          description: Datos inválidos
+          description: Error de validación (Zod).
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ZodValidationError"
         "401":
-          description: No autorizado (falta header X-User)
+          description: No autorizado (header faltante o rol incorrecto).
           content:
             application/json:
               schema:
@@ -57,130 +58,151 @@ paths:
     get:
       tags:
         - Productos
-      summary: Obtener todos los productos del vendedor
-      description: Retorna una lista paginada y filtrada de productos pertenecientes al vendedor.
+      summary: Obtener productos del vendedor autenticado
+      description: >
+        Retorna una lista paginada de productos del vendedor.  
+        Aplica filtros validados por Zod.
       parameters:
         - name: X-User
           in: header
           required: true
-          description: Username del vendedor
+          description: Username del vendedor autenticado.
           schema:
             type: string
             example: "jose50"
+
         - name: pagina
           in: query
           schema:
             type: integer
             example: 1
-          description: Número de página
+
         - name: limite
           in: query
           schema:
             type: integer
             example: 5
-          description: Cantidad de productos por página
+
         - name: minPrecio
           in: query
           schema:
             type: number
             example: 1000
+
         - name: maxPrecio
           in: query
           schema:
             type: number
             example: 5000
-        - name: nombre
+
+        - name: titulo
           in: query
           schema:
             type: string
-            example: "camisa"
+
         - name: categoria
           in: query
           schema:
             type: string
-            example: "Ropa"
+
         - name: descripcion
           in: query
           schema:
             type: string
-            example: "algodón"
+
         - name: orden
           in: query
           schema:
             type: string
             enum: [precioAsc, precioDesc, masVendido]
-            example: "precioAsc"
+
+        - name: active
+          in: query
+          schema:
+            type: string
+            enum: ["true", "false"]
+            example: "true"
+
       responses:
         "200":
-          description: Lista paginada de productos del vendedor
+          description: Lista paginada de productos.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  total:
-                    type: integer
-                    example: 10
-                  pagina:
-                    type: integer
-                    example: 1
-                  limite:
-                    type: integer
-                    example: 5
-                  productos:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Producto"
+                $ref: "#/components/schemas/Paginado"
+        "400":
+          description: Filtros inválidos (Zod).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ZodValidationError"
         "401":
-          description: No autorizado
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-        "404":
-          description: El vendedor no tiene productos
+          description: No autorizado.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
 
   /productos/{id}:
-    patch:
+    get:
       tags:
         - Productos
-      summary: Actualizar un producto existente
-      description: Permite al vendedor modificar su propio producto.
+      summary: Obtener un producto por ID
       parameters:
         - name: id
           in: path
           required: true
-          description: ID del producto a modificar
           schema:
             type: string
-            example: "64b1f0c3e8f9b0a1d2c3e4f5"
+      responses:
+        "200":
+          description: Producto encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Producto"
+        "400":
+          description: ID inválido (Zod).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ZodValidationError"
+        "404":
+          description: Producto inexistente.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductoInexistenteError"
+
+    patch:
+      tags:
+        - Productos
+      summary: Actualizar un producto existente
+      description: >
+        Permite modificar campos del producto del vendedor.  
+        El vendedor se valida con `req.user`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del producto.
+          schema:
+            type: string
         - name: X-User
           in: header
           required: true
-          description: Username del vendedor
+          description: Username del vendedor.
           schema:
             type: string
             example: "jose50"
+
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                precio:
-                  type: number
-                  example: 2800
-                activo:
-                  type: boolean
-                  example: true
-                aumentoStock:
-                  type: integer
-                  example: 5
+              $ref: "#/components/schemas/CambioProductoDTO"
+
       responses:
         "200":
           description: Producto actualizado correctamente
@@ -189,13 +211,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/Producto"
         "400":
-          description: Datos inválidos
+          description: Datos inválidos (Zod)
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ZodValidationError"
         "401":
-          description: Usuario no autorizado o sin permiso
+          description: El usuario no es el creador del producto.
           content:
             application/json:
               schema:
@@ -205,10 +227,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProductoInexistenteError"
 
 components:
   schemas:
+
     ProductoDTO:
       type: object
       required:
@@ -222,29 +245,34 @@ components:
       properties:
         titulo:
           type: string
-          example: "Camisa deportiva"
         descripcion:
           type: string
-          example: "100% algodón, talle M"
         categoria:
           type: string
-          example: "Ropa"
         precio:
           type: number
-          example: 2500
         moneda:
           type: string
           enum: [PESO_ARG, DOLAR_USA, REAL]
-          example: "PESO_ARG"
         stock:
           type: integer
-          example: 10
         fotos:
           type: array
           items:
             type: string
-          example:
-            - "https://cdn.ejemplo.com/camisa.jpg"
+        activo:
+          type: boolean
+
+    CambioProductoDTO:
+      type: object
+      description: Campos válidos para actualizar un producto.
+      properties:
+        precio:
+          type: number
+          example: 2800
+        aumentoStock:
+          type: integer
+          example: 5
         activo:
           type: boolean
           example: true
@@ -256,19 +284,55 @@ components:
           properties:
             _id:
               type: string
-              example: "64b1f0c3e8f9b0a1d2c3e4f5"
+            vendedor:
+              type: string
             cantVentas:
               type: integer
-              example: 12
+
+    Paginado:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            productos:
+              type: array
+              items:
+                $ref: "#/components/schemas/Producto"
+        pagina:
+          type: object
+          properties:
+            tamanio:
+              type: integer
+            totalElementos:
+              type: integer
+            totalPaginas:
+              type: integer
+            numero:
+              type: integer
+
+    ZodValidationError:
+      type: object
+      example:
+        name: "ValidationError"
+        message: "Los datos ingresados no son correctos"
+        details:
+          - "El titulo no puede estar vacio"
+          - "El precio no puede ser negativo"
+
+    ProductoInexistenteError:
+      type: object
+      example:
+        name: "ProductoInexistenteError"
+        message: "El producto solicitado no existe."
+        details: "Intento de acceder al PRODUCTO 64b1f0c3e8f9b0a1 inexistente."
 
     Error:
       type: object
       properties:
         name:
           type: string
-          example: "ProductoInexistenteError"
         message:
           type: string
-          example: "No existe un producto con ese ID"
         details:
-          type: object
+          nullable: true

@@ -52,7 +52,6 @@ const pedidoSchema = new mongoose.Schema(
     }
   },
   {
-    //timestamps: true,
     collection: "pedidos"
   }
 )

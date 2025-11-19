@@ -29,7 +29,6 @@ const notificacionSchema = new mongoose.Schema(
     }
   },
   {
-    //timestamps: true,
     collection: "notificaciones"
   }
 )
