@@ -1,9 +1,9 @@
 openapi: 3.0.1
 info:
   title: API Tiendas
-  version: "1.0.0"
+  version: "1.1.0"
   description: >
-    Endpoints para consultar información de tiendas registradas en el sistema.
+    Endpoints para consultar y buscar tiendas registradas en el sistema
 
 servers:
   - url: http://localhost:3000
@@ -13,6 +13,7 @@ tags:
     description: Operaciones relacionadas con tiendas de vendedores
 
 paths:
+
   /tiendas:
     get:
       tags:
@@ -44,14 +45,54 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /tiendas/{username}:
+    get:
+      tags:
+        - Tiendas
+      summary: Buscar tienda por vendedor
+      description: Busca todas las tiendas cuyo campo **username** coincida exactamente con el parámetro.
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: Username del vendedor de la tienda
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Tienda encontrada
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Tienda"
+              example:
+                - username: "juanperez"
+                  nombre: "Tienda La Moderna"
+                  descripcion: "Artículos de bazar y hogar"
+        "404":
+          description: No se encontró la tienda buscada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
+
     Tienda:
       type: object
       properties:
         username:
           type: string
-          description: Username del vendedor dueño de la tienda
+          description: Username del vendedor de la tienda
         nombre:
           type: string
         descripcion:
