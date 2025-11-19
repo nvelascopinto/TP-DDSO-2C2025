@@ -6,7 +6,6 @@ import Button from '../../components/Button/Button.jsx';
 import { api } from '../../services/mockService.js';
 import './CarritoPage.css';
 import Cart from '../../components/Cart/Cart.jsx';
-//import { crearPedido } from '../../services/pedidoService.js';
 
 const CarritoPage = ({ onLoginRequest, navigateTo }) => {
   const { cartItems, getCartTotal, clearCart } = useCart();

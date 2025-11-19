@@ -1,7 +1,5 @@
-
 import React, { useEffect, useState, useMemo } from 'react';
 import { useAuth } from '../../contexts/AppContext.jsx';
-//import { api } from '../../services/mockService.js';
 import Spinner from '../../components/Spinner/Spinner.jsx';
 import Button from '../../components/Button/Button.jsx';
 import './NotificationsPage.css';
@@ -10,28 +8,8 @@ import {getNotificaciones, getNotificacionesNoLeidas, getNotificacionesLeidas, m
 const NotificationsPage = ({ navigateTo }) => {
   const { currentUser } = useAuth();
   const [filteredNotifications, setFilteredNotifications] = useState([]);
-  //const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('unread');
-  
-  /*const fetchNotifications = async () => {
-    if (currentUser) {
-      try {
-        setLoading(true);
-        const data = await notificacionService.getNotificaciones(currentUser.username);
-        setNotifications(data);
-      } catch (error) {
-        console.error("Error fetching notifications:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-  };*/
-
-  /*useEffect(() => {
-    fetchNotifications();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser]);*/
 
   useEffect(() => {
   const fetchFilteredNotifications = async () => {

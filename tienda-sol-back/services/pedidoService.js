@@ -44,6 +44,7 @@ constructor(){
       }
       )
       .then((nuevoPedido) => {
+        nuevoPedido.validarStock()
         productoService.reducirStock(nuevoPedido.items)
         
         return pedidoRepository.crear(nuevoPedido)

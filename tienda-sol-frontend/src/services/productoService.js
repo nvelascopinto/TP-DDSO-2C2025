@@ -54,23 +54,6 @@ export async function crearProducto (usuario, productData){
     })
 }
 
-export async function eliminarProducto(productId, username) {
-    return apiBack.delete(`/productos/${productId}`,
-        {
-            headers: {
-                'X-User': username,
-            }
-        }
-    )
-    .then((response) => {
-        return 
-    })
-    .catch((error) => {
-      console.error("Error actualizando producto:", error);
-      throw error.response?.data || error;
-    });
-}
-
 export async function verificarStockProductos(productos) {
     try {
         // productos es un array de { productoId, cantidadSolicitada }

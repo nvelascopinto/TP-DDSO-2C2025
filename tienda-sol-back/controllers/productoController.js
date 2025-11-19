@@ -30,23 +30,6 @@ class ProductoController {
         res.status(201).json(nuevoProducto)
       )
   }
-  eliminar(req,res) {
-    return Promise.resolve()
-      .then(() => 
-        {return idMongoValidator.parse(req.params.id)}
-      )
-      .catch((e) => {
-        throw new ZodValidationError(e)
-      })      
-      .then((idProducto) =>
-        { const usuario = req.user
-          return productoService.eliminar(idProducto, usuario)}
-      ) .then(()=>{ 
-        res.status(204).json()
-        return
-      })
-  }
-  
   
   obtenerTodosDeVendedor(req, res) {
     return Promise.resolve()

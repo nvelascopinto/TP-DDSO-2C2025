@@ -24,30 +24,92 @@ const CartItem = ({ item }) => {
 
   const isMaxReached = item.cantidad >= item.producto.stock;
 
-
   return (
-    <div className="cart-item" role='listitem'>
+    <div 
+      className="cart-item" 
+      role="listitem"
+      aria-label={`Producto ${item.producto.titulo}`}
+    >
       <div className="cart-item__details">
-        <img src={item.producto.fotos[0]} alt={item.producto.titulo} className="cart-item__image" />
+        <img 
+          src={item.producto.fotos[0]} 
+          alt={`Imagen de ${item.producto.titulo}`} 
+          className="cart-item__image" 
+        />
+
         <div>
-          <h4 className="cart-item__title">{item.producto.titulo}</h4>
-          <p className="cart-item__price">${item.producto.precio.toFixed(2)}</p>
+          <h4 
+            className="cart-item__title"
+            aria-label={`Título: ${item.producto.titulo}`}
+          >
+            {item.producto.titulo}
+          </h4>
+
+          <p 
+            className="cart-item__price"
+            aria-label={`Precio unitario ${item.producto.precio.toFixed(2)} pesos`}
+          >
+            ${item.producto.precio.toFixed(2)}
+          </p>
+
           {isMaxReached && (
-            <p className="cart-item__max-stock">Has alcanzado el límite de unidades disponibles.</p>
+            <p 
+              className="cart-item__max-stock"
+              role="alert"
+            >
+              Has alcanzado el límite de unidades disponibles.
+            </p>
           )}
         </div>
       </div>
+
       <div className="cart-item__actions">
-        <div className="quantity-control">
-          <button onClick={handleDecrement} className="quantity-control__button">-</button>
-          <span className="quantity-control__display">{item.cantidad}</span>
-          <button onClick={handleIncrement} className="quantity-control__button"
-                  disabled={isMaxReached}>+</button>
+        <div 
+          className="quantity-control"
+          aria-label="Control de cantidad"
+        >
+          <button 
+            onClick={handleDecrement} 
+            className="quantity-control__button"
+            aria-label="Restar una unidad"
+            disabled={item.cantidad <= 1}
+          >
+            -
+          </button>
+
+          <span 
+            className="quantity-control__display"
+            aria-live="polite"
+          >
+            {item.cantidad}
+          </span>
+
+          <button 
+            onClick={handleIncrement} 
+            className="quantity-control__button"
+            aria-label="Sumar una unidad"
+            disabled={isMaxReached}
+          >
+            +
+          </button>
         </div>
-        <span className="cart-item__subtotal">${(item.producto.precio * item.cantidad).toFixed(2)}</span>
-        <button onClick={() => removeFromCart(item.producto._id)} className="cart-item__remove-button">
+
+        <span 
+          className="cart-item__subtotal"
+          aria-label={`Subtotal ${(
+            item.producto.precio * item.cantidad
+          ).toFixed(2)} pesos`}
+        >
+          ${(item.producto.precio * item.cantidad).toFixed(2)}
+        </span>
+
+        <button 
+          onClick={() => removeFromCart(item.producto._id)} 
+          className="cart-item__remove-button"
+          aria-label={`Eliminar ${item.producto.titulo} del carrito`}
+        >
           <span className="material-symbols-outlined">delete</span>
-        </button> 
+        </button>
       </div>
     </div>
   );

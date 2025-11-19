@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useAuth, usePedidos } from "../../contexts/AppContext.jsx";
 import './StateButton.css';
 import { TipoUsuario, EstadoPedido } from "../../../enums.js";
-// import { api } from "../../services/mockService.js";
 import {cambiarEstadoPedido} from '../../services/pedidoService.js';
 
 function PedidoAcciones({ pedido, onEstadoActualizado}) {
@@ -19,7 +18,6 @@ function PedidoAcciones({ pedido, onEstadoActualizado}) {
         try {
             await updatePedido(pedido._id, nuevoEstado);
             
-            // ✅ Llama a la función para refrescar la página padre
             if (onEstadoActualizado) {
                 onEstadoActualizado();
             }
@@ -27,8 +25,6 @@ function PedidoAcciones({ pedido, onEstadoActualizado}) {
             console.error('Error al cambiar estado:', error);
         }
   };
-  // Estados finales donde no hay botones visibles
-  // const estadosFinales = [EstadoPedido.CANCELADO, EstadoPedido.ENVIADO, EstadoPedido.ENTREGADO];
 
   const siguienteEstado = {
     [EstadoPedido.PENDIENTE]: EstadoPedido.CONFIRMADO,
@@ -75,100 +71,29 @@ function PedidoAcciones({ pedido, onEstadoActualizado}) {
     EstadoPedido.ENTREGADO,
     ].includes(estado);
 
-  // const handleConfirmar = () => {
-  //   //onConfirmar(pedido.id);
-  //   setEstado(EstadoPedido.CONFIRMADO);
-  //   updatePedido(pedido)
-  // };
+   return (
+    <div className="botones" role="group" aria-label="Acciones del pedido">
+      {esVendedor && siguienteEstado[estado] && (
+        <button
+          className="btn btn-primary"
+          onClick={handleSiguiente}
+          aria-label={`Cambiar estado a ${siguienteEstado[estado].replace("_", " ")}`}
+        >
+          Pasar a {siguienteEstado[estado].replace("_", " ")}
+        </button>
+      )}
 
-//   const handleEnviar = () => {
-//    // onEnviar(pedido.id);
-//     setEstado(EstadoPedido.ENVIADO);
-//     updatePedido(pedido)
-//   };
-
-// const handlePreparar = () => {
-//    // onPreparar(pedido.id);
-//     setEstado(EstadoPedido.EN_PREPARACION);
-//     updatePedido(pedido)
-//   };
-
-  // --- Botones dinámicos ---
-  // let botones = [];
-
-  // Rol: Comprador
-  // if (esComprador) {
-  //   const puedeCancelar = [EstadoPedido.PENDIENTE,EstadoPedido.CONFIRMADO,EstadoPedido.EN_PREPARACION].includes(estado);
-  //   botones.push(
-  //     <button
-  //       key="cancelar"
-  //       onClick={handleCancelar}
-  //       className="order-item__cancel-button"
-  //       disabled={!puedeCancelar}
-  //     >
-  //       Cancelar Pedido
-  //     </button>
-  //   );
-  // }
-
-  // //  Rol: Vendedor
-  // if (esVendedor) {
-  //   const puedeConfirmar = estado == EstadoPedido.PENDIENTE;
-  //   const puedePreparar = estado == EstadoPedido.CONFIRMADO;
-  //   const puedeEnviar = EstadoPedido.EN_PREPARACION;
-
-  //   botones.push(
-  //     <button
-  //       key="confirmar"
-  //       onClick={handleConfirmar}
-  //       className="order-item__confirm-button"
-  //       disabled={!puedeConfirmar}
-  //     >
-  //       Confirmar
-  //     </button>
-  //   );
-
-  //   botones.push(
-  //     <button
-  //       key="enviar"
-  //       onClick={handleEnviar}
-  //       className="order-item__send-button"
-  //       disabled={!puedeEnviar}
-  //     >
-  //       Enviar
-  //     </button>
-  //   );
-
-  //   botones.push(
-  //     <button
-  //       key="preparar"
-  //       onClick={handlePreparar}
-  //       className="order-item__preparar-button"
-  //       disabled={!puedePreparar}
-  //     >
-  //       Preparar
-  //     </button>
-  //   );
-  // }
-
-  // Si todos están deshabilitados, no se muestran
-  // const hayActivo = botones.some((b) => !b.props.disabled);
-  // if (!hayActivo) return null;
-
-  return (
-        <div className="botones">
-          {esVendedor && siguienteEstado[estado] && (
-            <button className="btn btn-primary" onClick={handleSiguiente}>
-              Pasar a {siguienteEstado[estado].replace("_", " ")}
-            </button>
-          )}
-
-          {puedeCancelar && (
-            <button className="btn btn-danger" onClick={handleCancelar}>
-              Cancelar pedido
-            </button>
-          )}
-      </div>)
+      {puedeCancelar && (
+        <button
+          className="btn btn-danger"
+          onClick={handleCancelar}
+          aria-label="Cancelar pedido"
+        >
+          Cancelar pedido
+        </button>
+      )}
+    </div>
+  );
 }
 
 export default PedidoAcciones;

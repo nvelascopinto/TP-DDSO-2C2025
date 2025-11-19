@@ -35,17 +35,20 @@ const AppContent = () => {
   // Obtener la ruta actual sin el "/"
   const currentRoute = location.pathname.slice(1) || 'home';
 
-  const navigateTo = (newView, store) => {
-    setAppError(null);
-    if (store) {
-      navigate('/tienda', { state: { tienda: store } });
-      return
-    }
-    
-        navigate(`/${newView === "home" ? '' : newView}`);
-      
-    
-  };
+const navigateTo = (newView, store) => {
+  setAppError(null);
+  if (store) {
+    // CAMBIO: Usar el username/id de la tienda en la URL
+    navigate(`/tienda/${store.username}`);
+    return;
+  }
+  
+  if (newView === "home" || newView === "" || newView === "/") {
+    navigate('/');
+  } else {
+    navigate(`/${newView}`);
+  }
+};
   const handleError = (errorDetails) => {
     console.error("Error capturado para navegación:", errorDetails);
     // Establecemos el error en el estado global
@@ -136,7 +139,7 @@ const AppContent = () => {
           />
 
           <Route 
-            path="/tienda" 
+            path="/tienda/:vendedorUsername" 
             element={
               
                  <StorePage />
@@ -190,7 +193,7 @@ const AppContent = () => {
             } 
           />
           <Route 
-            path="/historial-pedidos/:id" 
+            path="/historial-pedidos/:numero" 
             element={
               currentUser
                 ? <DetailsPedido navigateTo={navigateTo}/>
@@ -199,7 +202,7 @@ const AppContent = () => {
           />
 
           <Route 
-            path="/notificaciones/:id" 
+            path="/notificaciones/:numero" 
             element={
               currentUser
                 ? <DetailsPedido navigateTo={navigateTo}/>

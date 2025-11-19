@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { useAuth, usePedidos } from '../../contexts/AppContext.jsx';
-//import { api } from '../../services/mockService.js';
 import { EstadoPedido } from '../../../enums.js';
 import Spinner from '../../components/Spinner/Spinner.jsx';
 import './OrderHistoryPage.css';
@@ -42,14 +41,9 @@ const OrderHistoryPage = ({ navigateTo }) => {
     }, [pedidos]);
 
     const handleEstadoActualizado = () => {
-        //setRefreshKey(prev => prev + 1);
         getPedidosUser();
     };
 
-    // useEffect(() => {
-    //     getPedidosUser();
-    //     console.log(pedidos)
-    // }, [getPedidosUser]);
     
 
 
@@ -87,7 +81,7 @@ const OrderHistoryPage = ({ navigateTo }) => {
                                 </div>
                                 <div className="order-item__body">
                                         <div aria-label={`Ver detalles del pedido número ${pedido.numero}`}>
-                                        <Button onClick={() =>  navigateTo(`historial-pedidos/${pedido._id}`, null, pedido._id)} aria-label={`Ver detalles del pedido ${pedido._id}`}>
+                                        <Button onClick={() =>  navigateTo(`historial-pedidos/${pedido.numero}`, null, pedido._id)} aria-label={`Ver detalles del pedido ${pedido._id}`}>
                                             Ver Pedido
                                         </Button>
                                         </div>

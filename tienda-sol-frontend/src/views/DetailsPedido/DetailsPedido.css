@@ -11,10 +11,7 @@
    box-shadow: none;
     
   }
-  .pedidoDetails-page__title{
-    font-size: 1.6rem; 
-    padding: 0rem;
-  }
+  
 
   .pedidoDetails-page__total{
     margin-top: 0rem;
@@ -28,13 +25,20 @@
   }
 
 }
-
 .pedidoDetails-page__title{
-    font-size: 1.875rem; 
+    font-size: 1.3rem; 
+  
+}
+
+
+@media(min-width:768px) {
+  .pedidoDetails-page__title{
+    font-size: 2rem; 
     font-weight: 700;
     color: var(--color-text-primary);
 }
 
+}
 .product__table{
   padding-left: 4rem;
   padding-right: 4rem;
@@ -88,3 +92,95 @@
     padding-left: 2rem;
     padding-right: 2rem;
   }
+
+/* AGREGAR: Contenedor del header con flexbox */
+.order-item__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+/* AGREGAR: Fecha a la izquierda */
+.order-item__date {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+/* MODIFICAR: Estado a la derecha */
+.order-state-id {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* AGREGAR: Contenedor de acciones */
+.order-item__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* AGREGAR: Badge de estado */
+.status-badge {
+  padding: 0.375rem 0.875rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge--pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge--confirm {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status-badge--preparing {
+  background-color: #fde68a;
+  color: #92400e;
+}
+
+.status-badge--shipped {
+  background-color: #ddd6fe;
+  color: #5b21b6;
+}
+
+.status-badge--delivered {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status-badge--cancelled {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.status-badge--default {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+/* AGREGAR: Responsive para móviles */
+@media (max-width: 640px) {
+  .order-item__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .order-state-id {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* AGREGAR: Espaciado del botón de cambio de estado */
+.order-change-state {
+  margin-bottom: 1.5rem;
+}

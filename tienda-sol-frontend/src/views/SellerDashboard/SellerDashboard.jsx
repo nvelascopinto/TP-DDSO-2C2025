@@ -5,7 +5,7 @@ import Modal from '../../components/Modal/Modal.jsx';
 import ProductForm from '../../components/ProductsForm/ProductForm.jsx';
 import Button from '../../components/Button/Button.jsx';
 import './SellerDashboard.css';
-import { getProductosByVendedor, actualizarProducto, crearProducto, eliminarProducto } from '../../services/productoService.js';
+import { getProductosByVendedor, actualizarProducto, crearProducto } from '../../services/productoService.js';
 import { Pagination } from 'antd';
 import { Switch } from 'antd';
 
@@ -40,9 +40,9 @@ const SellerDashboard = () => {
     }
       
   }, [currentUser, currentPage, limite]);
-  const currentProducts = 
-                         productos?._embedded?.productos ||
-                         [];
+
+  const currentProducts = productos?._embedded?.productos || [];
+  
   useEffect(() => {
     fetchProductos();
   }, [fetchProductos]);
@@ -81,26 +81,6 @@ const SellerDashboard = () => {
       alert("No se pudo guardar el producto.");
     }
   };
-  
-  const handleDeleteProduct = async (productId) => {
-  if (!currentUser) return;
-
-  const confirmDelete = window.confirm("¿Está seguro de que quiere eliminar este producto?");
-  if (!confirmDelete) return;
-
-  try {
-
-    await eliminarProducto(productId, currentUser.username);
-    fetchProductos();
-    alert("Producto eliminado exitosamente.");
-    return;
-  } catch (error) {
-
-    console.error("Error eliminando producto:", error);
-    alert("No se pudo eliminar el producto.");
-    return;
-  }
-};
 
 const handleToggleActive = async (product,value) => {
   if (!currentUser) return;
@@ -168,9 +148,6 @@ const handleToggleActive = async (product,value) => {
                       <button onClick={() => handleOpenEditModal(p)} className="table-action-button" aria-label={`Editar producto ${p.titulo}`}>Editar
                       <span class="material-symbols-outlined">edit</span>
                       </button>
-                      <button type="button" onClick={() => handleDeleteProduct(p._id)} className="button-delete" aria-label={`Eliminar producto ${p.titulo}`}>
-                          <span class="material-symbols-outlined">delete</span>
-                      </button>
                     </td>
                   </tr>
                 ))}
@@ -192,7 +169,7 @@ const handleToggleActive = async (product,value) => {
       <Pagination 
               current={currentPage} 
               onChange={onChange} 
-              total={totalElements} // Total de elementos, no páginas
+              total={totalElements} 
               pageSize={limite}
               showSizeChanger={false}
               style={{ marginTop: '20px', textAlign: 'center' }}

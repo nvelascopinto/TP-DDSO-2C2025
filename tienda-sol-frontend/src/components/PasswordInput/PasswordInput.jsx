@@ -15,6 +15,7 @@ const PasswordInput = ({ id, name, placeholder }) => {
           className="form-input"
           placeholder={placeholder}
           required
+          minLength={8}
         />
         <span
           className="material-symbols-outlined password-icon"
@@ -23,6 +24,7 @@ const PasswordInput = ({ id, name, placeholder }) => {
             {showPassword ? "visibility" : "visibility_off"}
         </span>
       </div>
+        <p className='aviso__contraseña'>La contraseña debe tener al menos 8 caracteres</p>
     </div>
   );
 };

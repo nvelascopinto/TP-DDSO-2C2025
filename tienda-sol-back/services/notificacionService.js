@@ -9,16 +9,16 @@ class NotificacionService {
   }
   notificarCreacionPedido(destinatario, pedido) {
     const mensaje = "Un nuevo pedido fue realizado: #" + pedido.numero
-    const notificacion = new Notificacion(destinatario, mensaje, pedido._id)
+    const notificacion = new Notificacion(destinatario, mensaje, pedido.numero)
     return notificacionRepository.crear(notificacion)
   }
   crearSegunEstadoPedido(estadoActual, pedido) {
-    return this.notificarEstadoPedido(estadoActual, pedido.comprador, pedido._id, pedido.numero)
-      .then(() => this.notificarEstadoPedido(estadoActual, pedido.vendedor, pedido._id, pedido.numero))
+    return this.notificarEstadoPedido(estadoActual, pedido.comprador, pedido.numero)
+      .then(() => this.notificarEstadoPedido(estadoActual, pedido.vendedor, pedido.numero))
   }
 
-  notificarEstadoPedido(estado, destinatario, idPedido, numero) {
-    const notificacion = new Notificacion(destinatario, "El pedido # " + numero + " cambio a estado " + estado, idPedido)
+  notificarEstadoPedido(estado, destinatario, numero) {
+    const notificacion = new Notificacion(destinatario, "El pedido # " + numero + " cambio a estado " + estado, numero)
     return notificacionRepository.crear(notificacion)
   }
 

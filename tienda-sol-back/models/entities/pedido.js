@@ -42,7 +42,7 @@ export class Pedido {
     this.historialCambioPedidos.push(cambio)
   }
 
-  actualizarStock() {
+  validarStock() {
     this.items.forEach((item) => item.actualizarStock())
   }
 

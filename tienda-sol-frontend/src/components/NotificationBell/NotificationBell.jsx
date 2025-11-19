@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AppContext.jsx';
-//import { api } from '../../services/mockService.js';
 import './NotificationBell.css';
 import {getNotificacionesNoLeidas }from '../../services/notificacionService.js';
 

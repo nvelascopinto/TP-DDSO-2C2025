@@ -9,14 +9,14 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
     const [titulo, setTitulo] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [precio, setPrecio] = useState('');
-    const [stock, setStock] = useState('');
+    const [stock, setStock] = useState('1');
     const [moneda, setMoneda] = useState(Moneda.DOLAR_USA);
     const [fotos, setFotos] = useState([]);
     const [activo, setActivo] = useState(true);
     const [categoria, setCategoria] = useState('');
     const [cargando, setCargando] = useState(false);
+    const [errors, setErrors] = useState({});
 
-    // Función para subir imagen a Cloudinary
     const subirImagenCloudinary = async (file) => {
         const formData = new FormData();
         formData.append('file', file);
@@ -24,7 +24,7 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
         
         try {
             const response = await fetch(
-                `https://api.cloudinary.com/v1_1/dnzss87bx/image/upload`,
+                `https://api.cloudinary.com/v1_1/deyav6pbj/image/upload`,
                 {
                     method: 'POST',
                     body: formData
@@ -53,7 +53,9 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
         
         try {
             const url = await subirImagenCloudinary(file);
-            setFotos([...fotos, url]); // Agregar a las fotos existentes
+            setFotos([...fotos, url]);
+            
+            setErrors(prev => ({ ...prev, fotos: '' }));
             alert('Imagen subida exitosamente');
         } catch (error) {
             alert('Error al subir imagen: ' + error.message);
@@ -64,6 +66,17 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
 
     const handleRemoveImage = (index) => {
         setFotos(prev => prev.filter((_, i) => i !== index));
+    };
+
+    const handleStockChange = (e) => {
+        const value = e.target.value;
+        setStock(value);
+        
+        if (value && parseInt(value, 10) === 0) {
+            setErrors(prev => ({ ...prev, stock: 'El stock no puede ser 0' }));
+        } else {
+            setErrors(prev => ({ ...prev, stock: '' }));
+        }
     };
 
     useEffect(() => {
@@ -80,48 +93,80 @@ const ProductForm = ({ onSubmit, onCancel, initialData }) => {
         }
     }, [initialData]);
 
-const handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        const selectedCategoria = CATEGORIAS[categoria];
-        console.log("CATEGORIA"+ selectedCategoria)
-        let productData = []
-        if(!initialData) {
-            productData = {
-            titulo : titulo,
-            descripcion : descripcion,
-            precio: parseFloat(precio),
-            stock: parseInt(stock, 10),
-            moneda : moneda,
-            categoria: selectedCategoria,
-            activo: activo,
-            fotos : fotos
-        }
-        }else {
-            productData = {
-            id : id,
-            titulo : titulo,
-            descripcion : descripcion,
-            precio: parseFloat(precio),
-            stock: parseInt(stock, 10),
-            moneda : moneda,
-            categoria: selectedCategoria,
-            activo: activo,
-            fotos : fotos
-        }
+        
+        const newErrors = {};
+        
+        if (fotos.length === 0) {
+            newErrors.fotos = 'Debes subir una imagen del producto';
         }
         
-
-        if (!titulo || !descripcion || isNaN(productData.precio) || isNaN(productData.stock)) {
-            alert("Por favor, completa todos los campos correctamente.");
+        const stockValue = parseInt(stock, 10);
+        if (isNaN(stockValue) || stockValue === 0) {
+            newErrors.stock = 'El stock debe ser mayor a 0';
+        }
+        
+        const precioValue = parseFloat(precio);
+        if (isNaN(precioValue)) {
+            newErrors.precio = 'El precio debe ser un número válido';
+        }
+        
+        if (!titulo.trim()) {
+            newErrors.titulo = 'El título es requerido';
+        }
+        
+        if (!descripcion.trim()) {
+            newErrors.descripcion = 'La descripción es requerida';
+        }
+        
+        if (!categoria) {
+            newErrors.categoria = 'Debes seleccionar una categoría';
+        }
+        
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
             return;
+        }
+        
+        const selectedCategoria = CATEGORIAS[categoria];
+        console.log("CATEGORIA" + selectedCategoria);
+        
+        let productData = [];
+        if(!initialData) {
+            productData = {
+                titulo : titulo,
+                descripcion : descripcion,
+                precio: precioValue,
+                stock: stockValue,
+                moneda : moneda,
+                categoria: selectedCategoria,
+                activo: activo,
+                fotos : fotos
+            }
+        } else {
+            productData = {
+                id : id,
+                titulo : titulo,
+                descripcion : descripcion,
+                precio: precioValue,
+                stock: stockValue,
+                moneda : moneda,
+                categoria: selectedCategoria,
+                activo: activo,
+                fotos : fotos
+            }
         }
 
         onSubmit(productData, !initialData);
     };
 
-
     return (
-        <form onSubmit={handleSubmit} className="product-form">
+        <form 
+            onSubmit={handleSubmit} 
+            className="product-form"
+            aria-label="Formulario para crear o editar un producto"
+        >
             <div className="form-group">
                 <label htmlFor="titulo" className="form-label">Título</label>
                 <input
@@ -131,8 +176,15 @@ const handleSubmit = (e) => {
                     onChange={(e) => setTitulo(e.target.value)}
                     className="form-input"
                     required
+                    aria-required="true"
                 />
+                {errors.titulo && (
+                    <span style={{ color: 'red', fontSize: '0.875rem' }} role="alert">
+                        {errors.titulo}
+                    </span>
+                )}
             </div>
+
             <div className="form-group">
                 <label htmlFor="descripcion" className="form-label">Descripción</label>
                 <textarea
@@ -142,8 +194,15 @@ const handleSubmit = (e) => {
                     rows={3}
                     className="form-input"
                     required
+                    aria-required="true"
                 />
+                {errors.descripcion && (
+                    <span style={{ color: 'red', fontSize: '0.875rem' }} role="alert">
+                        {errors.descripcion}
+                    </span>
+                )}
             </div>
+
             <div className="form-grid">
                 <div className="form-group">
                     <label htmlFor="precio" className="form-label">Precio</label>
@@ -155,20 +214,35 @@ const handleSubmit = (e) => {
                         className="form-input"
                         required
                         step="0.01"
+                        aria-required="true"
                     />
+                    {errors.precio && (
+                        <span style={{ color: 'red', fontSize: '0.875rem' }} role="alert">
+                            {errors.precio}
+                        </span>
+                    )}
                 </div>
+
                 <div className="form-group">
                     <label htmlFor="stock" className="form-label">Stock</label>
                     <input
                         type="number"
                         id="stock"
                         value={stock}
-                        onChange={(e) => setStock(e.target.value)}
+                        onChange={handleStockChange}
                         className="form-input"
                         required
+                        min="1"
+                        aria-required="true"
                     />
+                    {errors.stock && (
+                        <span style={{ color: 'red', fontSize: '0.875rem' }} role="alert">
+                            {errors.stock}
+                        </span>
+                    )}
                 </div>
             </div>
+
             <div className="form-group">
                 <label htmlFor="categoria" className="form-label">Categoría</label>
                 <select
@@ -177,44 +251,70 @@ const handleSubmit = (e) => {
                     onChange={(e) => setCategoria(e.target.value)}
                     className="form-select"
                     required
+                    aria-required="true"
                 >
                     <option value="" disabled>Selecciona una categoría</option>
                     {Object.entries(CATEGORIAS).map(([key, value]) => (
                         <option key={key} value={key}>{value}</option>
                     ))}
                 </select>
+                {errors.categoria && (
+                    <span style={{ color: 'red', fontSize: '0.875rem' }} role="alert">
+                        {errors.categoria}
+                    </span>
+                )}
             </div>
-            
-            {/* Input de archivos */}
+
             <div className="form-group">
-                <label className="form-label">Imágenes</label>
+                <label className="form-label" htmlFor="fotos" 
+                    required
+                    aria-required="true">
+                    Imágenes <span style={{ color: 'red' }}>*</span>
+                </label>
+
                 <input
                     type="file"
                     id="fotos"
                     accept="image/*"
                     onChange={handleFileChange}
                     disabled={cargando}
+                    aria-busy={cargando ? "true" : "false"}
+                    aria-describedby="upload-status"
                 />
-                {cargando && <p>Subiendo imagen...</p>}
-                
-                {/* Mostrar imágenes subidas */}
+
+                {cargando && (
+                    <p id="upload-status" role="alert">
+                        Subiendo imagen...
+                    </p>
+                )}
+
+                {errors.fotos && (
+                    <span style={{ color: 'red', fontSize: '0.875rem', display: 'block', marginTop: '0.5rem' }} role="alert">
+                        {errors.fotos}
+                    </span>
+                )}
+
                 {fotos.length > 0 && (
-                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '1rem' }}>
+                    <div 
+                        style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '1rem' }}
+                        aria-label="Imágenes subidas"
+                    >
                         {fotos.map((url, index) => (
                             <div key={index} style={{ position: 'relative' }}>
-                                <img 
-                                    src={url} 
-                                    alt={`Imagen ${index}`} 
-                                    style={{ 
-                                        width: '100px', 
-                                        height: '100px', 
+                                <img
+                                    src={url}
+                                    alt={`Vista previa de la imagen ${index + 1}`}
+                                    style={{
+                                        width: '100px',
+                                        height: '100px',
                                         objectFit: 'cover',
                                         borderRadius: '0.5rem'
-                                    }} 
+                                    }}
                                 />
                                 <button
                                     type="button"
                                     onClick={() => handleRemoveImage(index)}
+                                    aria-label={`Eliminar imagen ${index + 1}`}
                                     style={{
                                         position: 'absolute',
                                         top: '5px',
@@ -236,12 +336,22 @@ const handleSubmit = (e) => {
                     </div>
                 )}
             </div>
-            
+
             <div className="form-actions">
-                <button type="button" onClick={onCancel} className="button-cancel">
+                <button 
+                    type="button" 
+                    onClick={onCancel} 
+                    className="button-cancel"
+                    aria-label="Cancelar y volver atrás"
+                >
                     Cancelar
                 </button>
-                <Button type="submit" variant="primary">
+
+                <Button 
+                    type="submit" 
+                    variant="primary"
+                    aria-label="Guardar producto"
+                >
                     Guardar Producto
                 </Button>
             </div>

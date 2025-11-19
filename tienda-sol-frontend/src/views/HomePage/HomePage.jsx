@@ -27,15 +27,11 @@ const HomePage = ({ onStoreSelect, currentUser, onError }) => {
         }
       } catch (error) {
         console.error("Error fetching tiendas:", error);
-      // Reportar el error al componente padre para que navegue
         if (onError) {
              
-             // 1. Determinar el estado (código) del error
              const status = error.response?.status || 
                             (error.code === 'ERR_NETWORK' ? 'ERR_NET' : '500');
 
-             // 2. Intentar obtener el mensaje detallado del backend
-             // El mensaje del backend puede estar en error.response.data.message, error.response.data.error, o ser el cuerpo de respuesta
              const backendMessage = error.response?.data?.message || 
                                     error.response?.data?.error || 
                                     (error.response?.data ? JSON.stringify(error.response.data) : null);
@@ -43,12 +39,9 @@ const HomePage = ({ onStoreSelect, currentUser, onError }) => {
              let message = 'Error en la comunicación con el servicio.';
              let details = 'No se pudieron cargar las tiendas. Por favor, verifica tu conexión a internet o intenta recargar la página.';
 
-             // Si tenemos un mensaje del backend, lo usamos como mensaje principal y detallado
              if (backendMessage) {
-                message = `Error ${status}: ${backendMessage.substring(0, 100)}`; // Usar el mensaje del backend
-                details = backendMessage;
+                message = `Error ${status}: ${backendMessage.substring(0, 100)}`; 
              } else {
-                 // Si NO hay mensaje del backend, usamos el mensaje genérico basado en el status
                  switch (status) {
                     case 404:
                         message = 'Recurso No Encontrado (404)';
@@ -68,7 +61,6 @@ const HomePage = ({ onStoreSelect, currentUser, onError }) => {
                  }
              }
 
-             // Llamar a onError para que el router navegue a ErrorPage
              onError({
                 status: status, 
                 message: message,

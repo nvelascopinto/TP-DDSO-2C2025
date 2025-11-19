@@ -5,15 +5,16 @@ import { ProductoModel } from "../../models/schemas/productoSchema.js";
 import app from "../../app.js";
 
 beforeAll(async () => {
-  await mongoose.connect("mongodb://localhost:27017/tp-ddso-test");
+  await mongoose.connect("mongodb://admin:secret@127.0.0.1:27017/tp-ddso-test?authSource=admin");
 })
 
 afterEach(async () => {
-  await mongoose.connection.dropDatabase();
+  await mongoose.connection.dropDatabase()
+  await mongoose.connection.close()
 })
 
 afterAll(async () => {
-  await mongoose.disconnect();
+  await mongoose.disconnect()
 })
 
 describe("pedidosController", () => {

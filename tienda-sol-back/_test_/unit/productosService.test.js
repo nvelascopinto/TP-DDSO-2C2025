@@ -1,7 +1,6 @@
 import { ProductoDTO } from "../../models/DTO/productoDTO.js"
 import { Producto } from "../../models/entities/producto.js"
 import { Usuario } from "../../models/entities/usuario.js"
-import { Vendedor } from "../../models/entities/vendedor.js"
 import { UsuarioSinPermisoError } from "../../errors/authorizationError.js"
 
 jest.mock("../../models/repositories/productoRepository.js", () => ({
@@ -30,7 +29,7 @@ describe("ProductosService", () => {
   })
 
   describe("crear", () => {
-    const vendedor = new Vendedor("pepe", "Pepe123", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor", "PepeStore")
+    const vendedor = new Usuario("pepe", "Pepe123", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
 
     let productoDTO = new ProductoDTO(
       "auriculares",
@@ -98,7 +97,7 @@ describe("ProductosService", () => {
   })
 
   describe("obtenerTodosDeVendedor", () => {
-    const vendedor = new Vendedor("pepe", "Pepe123", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor", "PepeStore")
+    const vendedor = new Usuario("pepe", "Pepe123", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
     const prod1 = new Producto(
       "pepe",
       "auriculares",

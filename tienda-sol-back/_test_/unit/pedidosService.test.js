@@ -3,7 +3,6 @@ import { ItemPedido } from "../../models/entities/itemPedido.js"
 import { Pedido } from "../../models/entities/pedido.js"
 import { Producto } from "../../models/entities/producto.js"
 import { Usuario } from "../../models/entities/usuario.js"
-import { Vendedor } from "../../models/entities/vendedor.js"
 import { estados } from "../../models/entities/estadosPedido.js"
 import { UsuarioSinPermisoError } from "../../errors/authorizationError.js"
 import { DomainMultipleErrors, EstadoInvalidoError } from "../../errors/domainValidationError.js"
@@ -27,7 +26,8 @@ jest.mock("../../services/productoService.js", () => ({
   default: {
     obtenerProducto: jest.fn(),
     update: jest.fn(),
-    actualizarCantidadVentas: jest.fn()
+    actualizarCantidadVentas: jest.fn(),
+    reducirStock: jest.fn()
   }
 }))
 
@@ -104,11 +104,13 @@ describe("PedidosService", () => {
       mockPedido.calcularTotal()
       mockPedido._id = 1
       mockNotificacionService.crearSegunPedido.mockResolvedValue("mock-notificacion")
+      
       mockProductoService.obtenerProducto.mockReturnValue(item)
       mockProductoService.update.mockResolvedValue(item)
       mockPedidoRepository.crear.mockReturnValue(mockPedido)
       const result = await pedidoService.crear(pedidoDTO, comprador)
 
+      expect(mockProductoService.reducirStock).toHaveBeenCalledTimes(1);
       expect(mockPedidoRepository.crear).toHaveBeenCalledTimes(1)
       expect(mockProductoService.obtenerProducto).toHaveBeenCalledWith(1)
       expect(mockProductoService.obtenerProducto).toHaveBeenCalledTimes(1)
@@ -123,7 +125,7 @@ describe("PedidosService", () => {
         itemsDTO: [
           {
             productoID: 1,
-            cantidad: 1
+            cantidad: 100000
           },
           {
             productoID: 2,
@@ -158,7 +160,7 @@ describe("PedidosService", () => {
       const item2 = new Producto("pepe", "licuadora", "licuadora de frutas", "Electrónica", 1000, "PESO_ARG", 5, null, true)
 
       item1._id = 1
-      item1._id = 2
+      item2._id = 2
       const direEntrega = new DireccionEntrega(
         "Avenida Siempre Viva",
         742,
@@ -171,14 +173,14 @@ describe("PedidosService", () => {
         -34.6037,
         -58.3816
       )
-      const itemPed = new ItemPedido(item1, 1, 15000)
+      const itemPed = new ItemPedido(item1, 1, 100000)
       const itemPed2 = new ItemPedido(item2, 4, 1000)
       const mockPedido = new Pedido("pepa", "pepe", [itemPed, itemPed2], "PESO_ARG", direEntrega, 1)
       mockPedido._id = 1
       mockProductoService.obtenerProducto.mockReturnValueOnce(item1).mockReturnValueOnce(item2)
 
       mockPedidoRepository.crear.mockReturnValue(mockPedido)
-      await expect(() => pedidoService.crear(pedidoDTO, comprador)).rejects.toThrow(ProductoStockInsuficienteError)
+      await expect(pedidoService.crear(pedidoDTO, comprador)).rejects.toThrow(ProductoStockInsuficienteError)
       expect(mockPedidoRepository.crear).toHaveBeenCalledTimes(0)
       expect(mockProductoService.obtenerProducto).toHaveBeenNthCalledWith(1, 1)
       expect(mockProductoService.obtenerProducto).toHaveBeenNthCalledWith(2, 2)
@@ -249,7 +251,7 @@ describe("PedidosService", () => {
       mockProductoService.obtenerProducto.mockReturnValueOnce(item1).mockReturnValueOnce(item2)
       mockPedidoRepository.crear.mockReturnValue(mockPedido)
 
-      await expect(() => pedidoService.crear(pedidoDTO, comprador)).rejects.toThrow(ProductoInactivoError)
+      await expect(pedidoService.crear(pedidoDTO, comprador)).rejects.toThrow(ProductoInactivoError)
 
       expect(mockPedidoRepository.crear).toHaveBeenCalledTimes(0)
       expect(mockProductoService.obtenerProducto).toHaveBeenNthCalledWith(1, 1)
@@ -364,7 +366,7 @@ describe("PedidosService", () => {
   })
 
   describe("consultar", () => {
-    const vendedor = new Vendedor("juanchi", "Juanchi123", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor", "JuanchiStore")
+    const vendedor = new Usuario("juanchi", "Juanchi123", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
 
     const comprador = new Usuario("juana", "Juana123","Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
     const item = new Producto(
@@ -433,7 +435,7 @@ describe("PedidosService", () => {
   })
 
   describe("cambioEstado", () => {
-    const vendedor = new Vendedor("juancito", "Juancito123", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor", "JuancitoSeller")
+    const vendedor = new Usuario("juancito", "Juancito123", "Juan Perez", "juan.perez@email.com", "+541112345678", "Vendedor")
 
     const comprador = new Usuario("juancho", "Juancho123","Juan Perez", "juan.perez@email.com", "+541112345678", "Comprador")
 

@@ -16,17 +16,6 @@ class ProductoService {
         productoGuardado
       )
   }
-  /************************** CREAR UN PRODUCTO **************************/
-  eliminar(productoID, vendedor) {
-    return Promise.resolve()
-      .then(() => {
-
-        vendedor.validarRol([tipoUsuario.VENDEDOR])
-        console.log("VALIDE VENDEDOR")
-        return productoRepository.eliminar(productoID)
-        
-      }) 
-  }
 
   /************************** CONSULTAR UN PRODUCTO **************************/
   obtenerProducto(id) {

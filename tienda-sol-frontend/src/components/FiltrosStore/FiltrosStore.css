@@ -133,7 +133,7 @@
   .precio-slider-wrapper {
     margin-right: 1rem;
     margin-left: 1rem;
-    padding-bottom: 40px; /* Más espacio para los valores */
+    padding-bottom: 2rem; /* Más espacio para los valores */
   }
 }
 .slider-values {

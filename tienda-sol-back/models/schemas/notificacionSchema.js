@@ -24,8 +24,7 @@ const notificacionSchema = new mongoose.Schema(
       type: Date
     },
     pedido: {
-      type: String,
-      ref: "Pedido",
+      type: Number,
       required: true
     }
   },

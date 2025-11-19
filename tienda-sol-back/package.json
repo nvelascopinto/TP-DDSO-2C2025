@@ -6,7 +6,11 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
+    "e2e":"NODE_ENV=test node --watch server.js",
     "test": "jest",
+    "test:unit": "jest unit/",
+    "test:integration": " NODE_ENV=test jest integration/",
+    "test:all": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint .",
     "format": "prettier . --write",

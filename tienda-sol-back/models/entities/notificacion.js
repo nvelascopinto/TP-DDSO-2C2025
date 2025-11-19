@@ -1,15 +1,15 @@
 import { UsuarioSinPermisoError } from "../../errors/authorizationError.js"
 import { YaLeidaError } from "../../errors/conflicError.js"
 export class Notificacion {
-  constructor(usuarioDestino, mensaje, idPedido) {
+  constructor(usuarioDestino, mensaje, numeroPedido) {
     this._id = null
     this.usuarioDestino = usuarioDestino
     this.mensaje = mensaje
     this.fechaAlta = new Date()
     this.leida = false
     this.fechaLeida = null
-    this.pedido = idPedido
-  }
+    this.pedido = numeroPedido
+  } 
 
   marcarComoleida(usuarioId) {
     if (usuarioId != this.usuarioDestino) {

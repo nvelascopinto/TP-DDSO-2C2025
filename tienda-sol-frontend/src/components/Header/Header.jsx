@@ -103,47 +103,57 @@ const Header = ({ navigateTo, currentRoute }) => {
     setIsProcessing(false);
   };
 
-  return (
-    <header className="header">
+   return (
+    <header className="header" role="banner">
       <div className="header__container container">
-       <div className = 'heder__home'>
-       <div 
-          className="header__logo"
-          onClick={() => { 
-            navigateTo('home');
-          }}
+        <div className='heder__home'>
+          <div 
+            className="header__logo"
+            onClick={() => { navigateTo('home'); }}
+            role="button"
+            tabIndex={0}
+            aria-label="Ir al inicio"
+          >
+            <img src={logo} alt="Logo Tienda Sol" className="header__logo-image" />
+            <span className="header__logo-text">Tienda Sol</span>
+          </div>
+        </div>
+
+        {/* menú hamburguesa */}
+        <button 
+          className="header__hamburger"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Abrir o cerrar menú"
+          aria-expanded={isMenuOpen}
+          aria-controls="main-navigation"
         >
-          <img src={logo} alt="Logo Tienda Sol" className="header__logo-image" />
-          <span className="header__logo-text">Tienda Sol</span>
+          <span className={`header__hamburger-line ${isMenuOpen ? 'open' : ''}`}></span>
+          <span className={`header__hamburger-line ${isMenuOpen ? 'open' : ''}`}></span>
+          <span className={`header__hamburger-line ${isMenuOpen ? 'open' : ''}`}></span>
+        </button>
+
+        <nav 
+          id="main-navigation"
+          className={`header__nav ${isMenuOpen ? 'open' : ''}`}
+          role="navigation"
+          aria-label="Menú principal"
+        >
+          <div className='button_home'>
+            <button
+              className={`header__nav-link header__home-icon ${activeTab === "home" ? "active" : ""}`}
+              onClick={() => handleNavigate("home")}
+              aria-label="Ir al inicio"
+            >
+              <span className="material-symbols-outlined">home</span>
+              <span className="header__nav-text">Inicio</span>
+            </button>
           </div>
 
-        </div>
-        
-        {/* menú hamburguesa*/}
-        
-          <button 
-            className="header__hamburger"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Menú"
-          >
-            <span className={`header__hamburger-line ${isMenuOpen ? 'open' : ''}`}></span>
-            <span className={`header__hamburger-line ${isMenuOpen ? 'open' : ''}`}></span>
-            <span className={`header__hamburger-line ${isMenuOpen ? 'open' : ''}`}></span>
-          </button>
-       
-        <nav className={`header__nav ${isMenuOpen ? 'open' : ''}`}>
-          <div className='button_home'>
-            <Button
-              className={`header__nav-link header__home-icon ${activeTab === "home" ? "active" : ""}`}
-              onClick={() => handleNavigate("home")}>
-              <span className="material-symbols-outlined">home</span>
-            </Button>
-          </div>
           {currentUser?.tipo === 'Comprador' && (
-              
             <button
               onClick={() => handleNavigate('historial-pedidos')}
               className={`header__nav-link ${activeTab === "historial-pedidos" ? "active" : ""}`}
+              aria-label="Ver historial de pedidos"
             >
               Mis Pedidos
             </button>
@@ -154,12 +164,14 @@ const Header = ({ navigateTo, currentRoute }) => {
               <button
                 onClick={() => handleNavigate('productos')}
                 className={`header__nav-link ${activeTab === "productos" ? "active" : ""}`}
+                aria-label="Ver productos"
               >
                 Productos
               </button>
               <button
                 onClick={() => handleNavigate('historial-pedidos')}
                 className={`header__nav-link ${activeTab === "historial-pedidos" ? "active" : ""}`}
+                aria-label="Ver pedidos"
               >
                 Pedidos
               </button>
@@ -170,57 +182,75 @@ const Header = ({ navigateTo, currentRoute }) => {
             <button
               className={`header__nav-link header__cart-icon ${activeTab === "carrito" ? "active" : ""}`}
               onClick={handleCartClick}
+              aria-label="Abrir carrito"
+              aria-haspopup="dialog"
             >
               <span className="material-symbols-outlined">
                 shopping_cart_checkout
               </span>
+              <span className="header__nav-text">Carrito</span>
               {cartItemCount > 0 && (
-                <span key={cartItemCount} className="header__cart-badge">
+                <span 
+                  key={cartItemCount} 
+                  className="header__cart-badge"
+                  aria-label={`${cartItemCount} artículos en el carrito`}
+                >
                   {cartItemCount}
                 </span>
               )}
-              
             </button>
           )}
-          
+
           {!isMobile && (
             <Drawer
-                  title="Carrito"
-                  closable={{ 'aria-label': 'Close Button' }}
-                  onClose={onClose}
-                  open={open}
-                  width={500}
-                >
-                <Cart handle={handleFinalizarCompra} onClose={onClose} isProcessing={isProcessing} navigateTo={navigateTo} />
+              title="Carrito"
+              closable={{ 'aria-label': 'Cerrar' }}
+              onClose={onClose}
+              open={open}
+              width={500}
+              aria-label="Carrito lateral"
+              role="dialog"
+            >
+              <Cart 
+                handle={handleFinalizarCompra} 
+                onClose={onClose} 
+                isProcessing={isProcessing} 
+                navigateTo={navigateTo} 
+              />
             </Drawer>
           )}
 
           {currentUser && (
             <>
-            <button
-              className={`header__nav-link header__notification-icon  ${activeTab === "notificaciones" ? "active" : ""}`}
-              onClick={() => handleNavigate('notificaciones')}
-            >
-              <NotificationBell />
-            </button>
-            <button
-               className={`header__nav-link header__profile-icon ${activeTab === "user" ? "active" : ""}`}
+              <button
+                className={`header__nav-link header__notification-icon  ${activeTab === "notificaciones" ? "active" : ""}`}
+                onClick={() => handleNavigate('notificaciones')}
+                aria-label="Ver notificaciones"
+              >
+                <span className="header__nav-text">Notificaciones</span>
+                <NotificationBell />
+              </button>
+
+              <button
+                className={`header__nav-link header__profile-icon ${activeTab === "user" ? "active" : ""}`}
                 onClick={() => handleNavigate('user')}
+                aria-label="Mi perfil"
               >
                 <span className="material-symbols-outlined">
                   account_circle
                 </span>
-            </button>
+                <span className="header__nav-text">Mi Perfil</span>
+              </button>
             </>
           )}
 
-
           {currentUser ? (
             <div className="header__user-info">
-              {/* <span className="header__user-greeting">
-                Hola, {currentUser.username.split(' ')[0]}
-              </span> */}
-              <button onClick={handleLogout} className="header__logout-button">
+              <button 
+                onClick={handleLogout} 
+                className="header__logout-button"
+                aria-label="Cerrar sesión"
+              >
                 Salir
               </button>
             </div>
@@ -229,6 +259,7 @@ const Header = ({ navigateTo, currentRoute }) => {
               <button 
                 onClick={() => handleNavigate('login')}
                 className="header__login-button"
+                aria-label="Iniciar sesión"
               >
                 Iniciar Sesión
               </button>
@@ -236,6 +267,7 @@ const Header = ({ navigateTo, currentRoute }) => {
               <button
                 onClick={() => handleNavigate('register')}
                 className="header__register-button"
+                aria-label="Crear cuenta"
               >
                 CREAR CUENTA
               </button>

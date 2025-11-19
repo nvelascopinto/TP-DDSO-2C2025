@@ -24,7 +24,11 @@ const ProductoItem = ({ item }) => {
 
   if (loading) {
     return (
-      <div className="producto producto--loading">
+      <div 
+        className="producto producto--loading"
+        aria-busy="true"
+        aria-label="Cargando información del producto"
+      >
         <Spinner>Cargando Producto...</Spinner>
       </div>
     );
@@ -32,16 +36,21 @@ const ProductoItem = ({ item }) => {
 
   if (error || !producto) {
     return (
-      <div className="producto producto--error">
+      <div 
+        className="producto producto--error"
+        role="alert"
+        aria-label="Error al cargar producto"
+      >
         <p>{error || 'Producto no disponible'}</p>
       </div>
     );
   }
 
- 
   return (
-    <article className="producto">
-    
+    <article 
+      className="producto"
+      aria-label={`Producto: ${producto.titulo}`}
+    >
       <div className="producto__image-container">
         <img 
           src={producto.fotos?.[0] || '/placeholder-image.jpg'} 
@@ -54,6 +63,7 @@ const ProductoItem = ({ item }) => {
         <h4 className="producto__title" title={producto.titulo}>
           {producto.titulo}
         </h4>
+
         <p className="producto__price-unit">
           ${item.precioUnitario} {producto.moneda || 'ARS'}
         </p>
@@ -61,12 +71,14 @@ const ProductoItem = ({ item }) => {
 
       <div className="producto__summary">
         <div className="producto__quantity">
-          <span className="producto__label">Cantidad: {item.cantidad}</span>
+          <span className="producto__label">
+            Cantidad: {item.cantidad}
+          </span>
         </div>
+
         <div className="producto__subtotal">
-          <span className="producto__label">Subtotal:  ${item.precioUnitario * item.cantidad} {producto.moneda || 'ARS'}</span>
-          <span className="producto__value producto__value--price">
-           
+          <span className="producto__label">
+            Subtotal: ${item.precioUnitario * item.cantidad} {producto.moneda || 'ARS'}
           </span>
         </div>
       </div>

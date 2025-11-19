@@ -4,9 +4,6 @@
   --color-text-secondary: #260c35;
   --color-accent-primary: #f2ead8;
   --color-accent-secondary: #75162D; 
-  /* --color-accent-secondary: #44B397; verde agua*/
-  /* --color-accent-secondary: #6561a1; */
-  /* --color-accent-secondary: #9c6ca6;  */
   --color-accent-highlight: #F2E5C6;
   --color-accent-lowlight: #f065b2a5;
   --color-accent-primary-transparent: #75162e43;
@@ -78,6 +75,6 @@ body {
 }
 
 .icon {
-    width: 1.75rem; /* 28px */
-    height: 1.75rem; /* 28px */
+    width: 1.75rem;
+    height: 1.75rem;
 }

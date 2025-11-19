@@ -20,8 +20,4 @@ productoRouter.get("/:id", (req, res) => {
   return productoController.obtenerProducto(req, res)
 })
 
-productoRouter.delete("/:id", authenticateUser("X-User") , (req, res) => {
-  return productoController.eliminar(req, res)
-})
-
 export default productoRouter

@@ -7,8 +7,6 @@ const ProductCard = ({ producto }) => {
   const { addToCart, showToast, cartItems, clearCart } = useCart();
   const { currentUser } = useAuth();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  //const [cantidadEnCarrito, setCantidadEnCarrito] = useState()
-  //const cantidadEnCarrito= 0
 
   const cantidadEnCarrito = cartItems.reduce((total, item) => {
     if (item.producto._id === producto._id) {
@@ -24,11 +22,6 @@ const ProductCard = ({ producto }) => {
     }
     const cantidadEnCarrito = cartItems.reduce((total, item) => {
     if (item.producto._id === producto._id) { return total + item.cantidad;}}, 0);
-
-   // if (cantidadEnCarrito >= producto.stock) {
-   //   showToast(`No puedes agregar más unidades. Stock disponible: ${producto.stock}`, 'error');
-    //  return;
-    //}
 
       if (cantidadEnCarrito >= producto.stock) {
       showToast(`No puedes agregar más unidades. Stock disponible: ${producto.stock}`, 'error');
@@ -67,9 +60,13 @@ const ProductCard = ({ producto }) => {
                            cantidadEnCarrito >= producto.stock;
 
 
-  return (
+return (
     <>
-      <div className="product-card">
+      <div 
+        className="product-card"
+        role="article"
+        aria-label={`Producto: ${producto.titulo}`}
+      >
         <img
           src={producto.fotos[0]}
           alt={producto.titulo}
@@ -89,26 +86,35 @@ const ProductCard = ({ producto }) => {
               onClick={handleAddToCart}
               className="product-card__button"
               disabled={agregarIsDisabled}
-              // disabled={currentUser ? currentUser.tipo == TipoUsuario.VENDEDOR : false}
+              aria-disabled={agregarIsDisabled ? "true" : "false"}
               aria-label={`Agregar ${producto.titulo} al carrito`}
             >
-            {producto.stock <= 0 ? 'Sin stock' 
-              : cantidadEnCarrito >= producto.stock ? 'Sin stock'
-              : 'Agregar'}
+              {producto.stock <= 0
+                ? 'Sin stock'
+                : cantidadEnCarrito >= producto.stock
+                ? 'Sin stock'
+                : 'Agregar'}
             </button>
           </div>
         </div>
       </div>
 
       {showConfirmModal ? (
-        <div className="modal-overlay" onClick={handleCancelReplace}>
+        <div 
+          className="modal-overlay" 
+          onClick={handleCancelReplace}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+          aria-describedby="modal-message"
+        >
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="modal-title">Cambiar vendedor</h3>
+            <h3 id="modal-title" className="modal-title">Cambiar vendedor</h3>
 
-            <p className="modal-message">
+            <p id="modal-message" className="modal-message">
               Tu carrito contiene productos de otro vendedor. <br />
               ¿Deseas vaciar el carrito y agregar este producto?
             </p>

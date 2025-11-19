@@ -18,6 +18,5 @@ export class ItemPedido {
   actualizarStock() {
     this.producto.estaDisponible() 
     this.producto.tieneStock(this.cantidad)
-    this.producto.reducirStock(this.cantidad)
   }
 }

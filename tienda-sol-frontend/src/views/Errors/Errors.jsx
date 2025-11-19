@@ -2,7 +2,6 @@ import React from 'react';
 import './Errors.css';
 import { errorMessages } from '../../services/errorMessage.js';
 
-// Usaremos valores por defecto por si se accede sin props
 const ErrorPage = ({ status = '500'}) => {
   
   const { title, message } = errorMessages[status] || errorMessages.default;

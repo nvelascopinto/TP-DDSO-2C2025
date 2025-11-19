@@ -8,10 +8,9 @@ const RegisterPage = ({ onRegister }) => {
   const [userType, setUserType] = useState("Comprador");
   const [errorMsg, setErrorMsg] = useState(null);
 
-  // manejo el envío del formulario
   const handleRegister = (e) => {
     e.preventDefault();
-    setErrorMsg(null); // limpia error anterior
+    setErrorMsg(null);
 
     const formData = new FormData(e.target);
     const data = {
@@ -40,7 +39,6 @@ const RegisterPage = ({ onRegister }) => {
     });
   };
 
-  // Clases para las pestañas "Soy Comprador / Soy Vendedor"
   const getTabClasses = (tab) => {
     let classes = "register-form__tab";
     if (tab === userType) {
@@ -52,7 +50,7 @@ const RegisterPage = ({ onRegister }) => {
   return (
     <div className="register-page" role="main" aria-labelledby="register-title">
       <div className="register-form__container">
-        {/* Tabs de tipo de usuario */}
+
         <div className="register-form__tabs" role="tablist" aria-label="Tipo de cuenta a registrar">
           <button onClick={() => setUserType('Comprador')} className={getTabClasses('Comprador')} aria-selected={userType === 'Comprador'} aria-controls="panel-Comprador">
             Soy Comprador
@@ -99,7 +97,7 @@ const RegisterPage = ({ onRegister }) => {
               id="password"
               name="password"
               placeholder="********"
-              aria-label="Contraseña"
+              aria-label="Contraseña (minimo 8 digitos)"
               aria-required="true"
 
             />
@@ -155,9 +153,10 @@ const RegisterPage = ({ onRegister }) => {
                     id="descripcion"
                     name="descripcion"
                     className="form-input"
-                    placeholder="Ingresa una descripción de tu tienda"
+                    placeholder="Ingresa una descripción de tu tienda (max 100 caracteres)"
                     required
                     aria-required="true" 
+                    maxLength={85}
                   />
                 </div>
               </div>

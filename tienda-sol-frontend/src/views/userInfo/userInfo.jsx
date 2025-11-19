@@ -7,7 +7,7 @@ import Button from '../../components/Button/Button.jsx';
 const UserProfile = ({navigateTo}) => {
   const [isEditing, setIsEditing] = useState(false);
   const {currentUser} = useAuth();
-  const [formData, setFormData] = useState(null); // Cambiado a null inicial
+  const [formData, setFormData] = useState(null); 
   
   const fetchUser = async () => {
     try {
@@ -22,14 +22,12 @@ const UserProfile = ({navigateTo}) => {
     }
   }
   
-  // ✅ useEffect FUERA de fetchUser, al nivel del componente
   useEffect(() => {
-    if (currentUser) { // Verifica que currentUser exista
+    if (currentUser) { 
       fetchUser();
     }
   }, [currentUser]);
   
-  // Mostrar loading mientras no hay datos
   if (isEditing || !formData) {
     return (
       <div className="profile-container">
