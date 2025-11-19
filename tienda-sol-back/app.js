@@ -2,15 +2,14 @@ import express from "express"
 import router from "./routes/index.js"
 import cors from 'cors'
 const app = express()
-app.use(cors({
-  origin: 'http://localhost:3002',
-  credentials: true,
-  methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-User']
-}))
 
+const allowedOrigins = [
+  'https://tiendasol10.netlify.app',
+  'http://localhost:3002'
+  
+];
 app.use(cors({
-  origin: 'https://tiendasol10.netlify.app',
+  origin: allowedOrigins,
   credentials: true,
   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-User']
