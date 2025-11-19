@@ -17,6 +17,14 @@ export class MongoDBClient {
           process.exit(1)
         })
     }
+    if(process.env.NODE_ENV == "production") {
+        return mongoose.connect(process.env.MONGODB_PROD)
+        .then(() => console.log("MongoDB produccion conectado"))
+        .catch((error) => {
+          console.error("Error conectando test DB:", error.message)
+          process.exit(1)
+        })
+    }
 
 
     console.log("Conectando a:", uri)

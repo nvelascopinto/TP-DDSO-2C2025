@@ -1,0 +1,20 @@
+
+# Carpetas de dependencias y temporales
+node_modules
+dist
+temp
+tmp
+_test_
+
+# Archivos de control de versiones y caché
+.git
+.gitignore
+.DS_Store
+
+# Archivos de entorno y logs
+.env
+*.log
+npm-debug.log*
+
+# Dockerfiles y archivos de configuración
+Dockerfile
