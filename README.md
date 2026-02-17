@@ -2,7 +2,7 @@
 
 Full Stack application developed with Node.js (Express) and Next.js, designed under a REST API architecture with MongoDB persistence. The project integrates an automated testing cycle with Jest for unit tests and Cypress for end-to-end (E2E) testing, ensuring software quality and stability. It includes technical documentation through Swagger and the use of Docker for deploying the solution on Render (backend) and Netlify (frontend), guaranteeing a stable and documented production environment.
 
-[📄 View Project Requirements](https://github.com/nvelascopinto/TP-DDSO-2C2025/blob/main/DDSO%20Enunciado.pdf)
+[📄 View Project Requirements](https://github.com/nvelascopinto/TP-DDSO-2C2025/blob/main/Enunciado.pdf)
 
 ## Technologies
 - **Backend:** Node.js, Express
