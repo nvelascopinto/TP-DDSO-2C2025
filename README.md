@@ -1,4 +1,4 @@
-# E-Commerce Plataform
+# E-Commerce Platform
 
 Full-stack application for e-commerce management, featuring catalog filtering, stock administration, order processing, and automated notifications. Developed with Node.js (Express) and Next.js under a REST API architecture with MongoDB persistence. The project integrates an automated testing cycle with Jest for unit tests and Cypress for end-to-end (E2E) testing, ensuring software quality and stability. It includes technical documentation through Swagger and the use of Docker for deploying the solution on Render (backend) and Netlify (frontend), guaranteeing a stable and documented production environment.
 
