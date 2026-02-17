@@ -1,61 +1,36 @@
-# Guía de Despliegue – Entrega 4
+# E-Commerce Plataform
 
-## Base de Datos - MongoDB Atlas
+Full Stack application developed with Node.js (Express) and Next.js, designed under a REST API architecture with MongoDB persistence. The project integrates an automated testing cycle with Jest for unit tests and Cypress for end-to-end (E2E) testing, ensuring software quality and stability. It includes technical documentation through Swagger and the use of Docker for deploying the solution on Render (backend) and Netlify (frontend), guaranteeing a stable and documented production environment.
 
-1. Crear un cluster  
-Name: tienda_sol_db  
-Provider: AWS  
-Región: Sao Paulo (sa-east-1)
+[📄 View Project Requirements](https://github.com/nvelascopinto/TP-DDSO-2C2025/blob/main/DDSO%20Enunciado.pdf)
 
-2. Crear un usuario  
-Username: tienda-sol-db  
-Password: root
+## Technologies
+- **Backend:** Node.js, Express
+- **Frontend:** Next.js, React
+- **Database:** MongoDB Atlas
+- **Testing:** Jest, Cypress
+- **Infrastructure:** Docker, Render (Backend), Netlify (Frontend)
 
-3. Seleccionar My Local Environment
+## Deployment Summary
 
-4. Añadir todas las IPs de Render a la IP Access List de MongoDB (se pueden obtener las IPs de render al presionar connect)
+### Database (MongoDB Atlas)
+* **Cluster:** `tienda_sol_db` hosted on AWS (sa-east-1).
+* **Access:** Configured via IP Access List to allow Render's traffic.
+* **Connection:** Established using the `MONGODB_PROD` URI string.
 
-5. Luego de crear el cluster, presionar:  
-connect -> compass -> copiar la url  
-Esa será la MONGODB_PROD
+### Backend (Render)
+* **Service Type:** Dockerized Web Service (Oregon Region).
+* **Deployment:** Pre-built Docker images pushed to Docker Hub.
+* **Health Check:** Configured at the `/health-check` endpoint.
+* **Environment Variables:** `MONGODB_PROD` linked to the Atlas cluster.
 
-## Backend - Render
+### Frontend (Netlify)
+* **CI/CD:** Connected via GitHub with a `/tienda-sol-frontend` base directory.
+* **Build Command:** `npm install && npm run build`.
+* **Environment Variables:** `VITE_API_URL` pointing to the Render backend service.
 
-1. Ir a new Web Service
-
-2. En el código fuente usar una imagen existente de docker (una subida en docker hub usando los siguientes comandos:  
-docker build  
-docker push  
-)
-
-3. En el health check poner el path /health-check
-
-4. Servicio: 2025-2c-grupo-10 (Región Oregon – Free).
-
-    a. Variables de entorno (Render):  
-    MONGODB_PROD = mongodb+srv://tienda-sol-db:root@cluster0.vcnaza6.mongodb.net/tienda_sol_db
-
-## Frontend - Netlify
-
-1. Conectar Netlify con GitHub
-
-2. Hacer fork del repositorio en caso de no contar con permisos para Netlify
-
-3. Sitio público tiendasol10.netlify.app
-
-4. Repositorio conectado: Github  
-Directorio base: /tienda-sol-frontend  
-Build: npm install && npm run build  
-Publish: /tienda-sol-frontend/dist  
-Funciones: /tienda-sol-frontend/netlify/functions/
-
-5. Variable de entorno:  
-VITE_API_URL= https://tienda-sol-backend-v1-0.onrender.com
-
-## Conexión y Verificación
-
-El frontend usa VITE_API_URL para comunicarse con la API de render.
-
-El backend debe permitir el dominio del frontend mediante la variable VITE_API_URL
-
-Dominio: https://tiendasol10.netlify.app/
+## Development Team
+- Nicole Velasco [@nvelascopinto](https://github.com/nvelascopinto)
+- Agustina Duric [@agustinaduric](https://github.com/agustinaduric)
+- Milagros Salafia [@MilagrosLu](https://github.com/MilagrosLu)
+- Maitena Aguero [@maiteaguero](https://github.com/maiteaguero)
